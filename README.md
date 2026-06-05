@@ -66,7 +66,7 @@ supported here without the build, runtime, and device checks behind it.
 
 ## Requirements
 
-- Unity Hub
+- Unity Hub 3.0+
 - Unity `6000.5.3f1`
 
 ## Getting started
@@ -98,9 +98,34 @@ than failing as a null.
 - `Assets/Art/` contains the small set of shared visual and physics assets.
 - `Assets/Settings/`, `Packages/`, and `ProjectSettings/` contain Unity configuration.
 
+## Continuous integration and releases
+
+Two GitHub Actions workflows drive the project.
+
+- **CI** ([`.github/workflows/unity-ci.yml`](.github/workflows/unity-ci.yml)) runs on every push and
+  pull request. It always validates the repository — `.meta` parity, asset GUIDs, package manifests,
+  and the single build scene — with no Unity license. The Unity test job runs only when the
+  `UNITY_LICENSE` secret is configured, and is skipped rather than passed when it is absent, so a
+  green check never stands in for tests that did not run. Fork pull requests cannot read the secret
+  and always skip that job; a maintainer runs the tests before merge. Set `UNITY_LICENSE` in the
+  repository secrets to a Unity personal license activation file to enable it.
+- **Release** ([`.github/workflows/release.yml`](.github/workflows/release.yml)) builds the macOS,
+  Windows, Linux, and Android players. Run it manually to produce build artifacts, or push a
+  `vMAJOR.MINOR.PATCH` tag to also publish a GitHub Release with those players attached and notes
+  generated from the commit history. The version itself lives in `ProjectSettings` as the bundle
+  version. iOS is not built in CI because Unity only emits an Xcode project there, which is not a
+  shippable artifact.
+
+Both workflows request minimal permissions and pin every action to an immutable commit SHA.
+
 ## Contributing
 
-Bug reports and focused pull requests are welcome. Use the required Unity version, test gameplay changes in Play Mode, include `.meta` files with new assets, and keep generated folders and credentials out of commits. Architecture and gameplay decisions are documented in [`docs/`](docs/).
+Bug reports and focused pull requests are welcome. Use the required Unity version, test gameplay
+changes in Play Mode, include `.meta` files with new assets, and keep generated folders and
+credentials out of commits. Follow [`AGENTS.md`](AGENTS.md) for the architecture rules a change must
+respect; architecture and gameplay decisions are documented in [`docs/`](docs/). Report suspected
+security issues privately through the repository's
+[security advisories](https://github.com/anxchywl/Pong/security/advisories/new), not a public issue.
 
 ## License
 
