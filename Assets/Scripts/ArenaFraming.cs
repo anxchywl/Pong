@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace Pong
 {
-    /// Keeps the whole court on screen at any shape of window, and lays it along the screen in
-    /// portrait. Framing only: no world geometry moves and nothing plays differently.
+    /// Keeps the whole court on screen at any shape of window, and lays it along the long axis in
+    /// portrait mode. Framing only: no world geometry moves and nothing plays differently.
+    /// Reacts to window resize every frame via a cheap size-change check.
     [RequireComponent(typeof(Camera))]
     public sealed class ArenaFraming : MonoBehaviour
     {
