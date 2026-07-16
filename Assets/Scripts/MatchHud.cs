@@ -1,36 +1,41 @@
-using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace Pong
 {
-    public sealed class MatchHud : MonoBehaviour
+    public sealed class MatchHud
     {
-        [SerializeField] private Text scoreText;
-        [SerializeField] private Text statusText;
+        private readonly VisualElement root;
+        private readonly Label leftScore;
+        private readonly Label rightScore;
+        private readonly Label modeLabel;
+        private readonly Label statusLabel;
 
-        public void ShowScore(MatchScore score)
+        public MatchHud(VisualElement documentRoot)
         {
-            scoreText.text = $"{score.Left}   {score.Right}";
+            root = documentRoot.Q<VisualElement>("hud");
+            leftScore = documentRoot.Q<Label>("left-score");
+            rightScore = documentRoot.Q<Label>("right-score");
+            modeLabel = documentRoot.Q<Label>("hud-mode");
+            statusLabel = documentRoot.Q<Label>("hud-status");
         }
 
-        public void ShowReady()
+        public void SetMode(string modeName)
         {
-            statusText.text = "GET READY";
+            modeLabel.text = modeName.ToUpperInvariant();
         }
 
-        public void ShowPaused()
+        public void Render(MatchState state)
         {
-            statusText.text = "PAUSED";
-        }
+            leftScore.text = state.LeftScore.ToString();
+            rightScore.text = state.RightScore.ToString();
+            root.EnableInClassList("is-hidden", state.Phase is MatchPhase.FrontEnd or MatchPhase.Paused);
 
-        public void ShowWinner(PlayerSide winner)
-        {
-            statusText.text = $"{winner.ToString().ToUpperInvariant()} WINS\nR / SELECT TO RESTART";
-        }
-
-        public void ClearStatus()
-        {
-            statusText.text = string.Empty;
+            statusLabel.text = state.Phase switch
+            {
+                MatchPhase.Serving => "GET READY",
+                MatchPhase.Won => state.Winner == PlayerSide.Left ? "YOU WIN" : "RIVAL WINS",
+                _ => string.Empty
+            };
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Pong
         private float currentSpeed;
 
         public event Action Served;
+        public event Action<Vector2> Bounced;
 
         public Vector2 Position => body.position;
         public Vector2 Velocity => body.linearVelocity;
@@ -49,10 +50,12 @@ namespace Pong
             if (collision.collider.TryGetComponent(out PaddleMovement paddle))
             {
                 BounceFrom(paddle, collision.collider.bounds.extents.y);
+                Bounced?.Invoke(body.position);
                 return;
             }
 
             MaintainSpeed();
+            Bounced?.Invoke(body.position);
         }
 
         public void PrepareServe(PlayerSide receivingSide)

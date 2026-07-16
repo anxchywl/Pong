@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee1405f60e754284bd7cfaf3b006dfb, type: 3}
+  m_Name: GameModes
+  m_EditorClassIdentifier: Pong.Runtime::Pong.GameModeCatalog
+  modes:
+  - id: classic
+    displayName: Classic
+    description: 'The original duel: you against a focused computer rival.'
+    playerSummary: 1 PLAYER
+    available: 1
+  - id: practice
+    displayName: Practice
+    description: A pressure-free court for learning timing and angles.
+    playerSummary: SOLO
+    available: 0
+  - id: ai
+    displayName: AI League
+    description: Face distinct opponents with readable play styles.
+    playerSummary: 1 PLAYER
+    available: 0
+  - id: local-multiplayer
+    displayName: Local Multiplayer
+    description: Share the court and settle it on one screen.
+    playerSummary: 2 PLAYERS
+    available: 0

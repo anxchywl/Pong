@@ -1,0 +1,111 @@
+:root {
+    --ink-strong: rgb(246, 243, 250);
+    --ink: rgb(196, 195, 210);
+    --ink-muted: rgb(126, 129, 150);
+    --surface: rgba(18, 20, 31, 0.96);
+    --surface-soft: rgba(29, 32, 47, 0.88);
+    --surface-hover: rgba(42, 45, 63, 0.96);
+    --line: rgba(196, 190, 221, 0.16);
+    --line-strong: rgba(214, 168, 255, 0.54);
+    --accent: rgb(214, 168, 255);
+    --accent-strong: rgb(229, 199, 255);
+    --accent-ink: rgb(23, 15, 29);
+    --danger: rgb(255, 126, 147);
+}
+
+.screen-layer {
+    background-color: rgb(8, 10, 17);
+}
+
+.ambient--left {
+    background-color: rgb(214, 168, 255);
+    opacity: 0.07;
+}
+
+.ambient--right {
+    background-color: rgb(255, 176, 126);
+    opacity: 0.055;
+}
+
+.top-bar {
+    border-bottom-color: rgba(214, 168, 255, 0.2);
+}
+
+.wordmark {
+    letter-spacing: 8px;
+}
+
+.display-title {
+    font-size: 56px;
+    letter-spacing: -1.8px;
+}
+
+.menu-button,
+.back-button,
+.tab-button,
+.text-button,
+.icon-button,
+.selection-card,
+.cosmetic-card {
+    transition-duration: 0.18s;
+}
+
+.menu-button:hover,
+.menu-button:focus,
+.back-button:hover,
+.back-button:focus,
+.tab-button:hover,
+.tab-button:focus,
+.selection-card:hover,
+.selection-card:focus,
+.cosmetic-card:hover,
+.cosmetic-card:focus {
+    translate: 3px 0;
+}
+
+.panel {
+    background-color: rgba(18, 20, 31, 0.95);
+    border-color: rgba(214, 168, 255, 0.18);
+}
+
+.match-preview__court {
+    background-color: rgb(9, 11, 20);
+    border-color: rgba(214, 168, 255, 0.22);
+}
+
+.preview-paddle,
+.preview-ball {
+    background-color: rgb(214, 168, 255);
+}
+
+.preview-paddle--right {
+    background-color: rgb(255, 176, 126);
+}
+
+.selection-card.is-selected,
+.cosmetic-card.is-selected,
+.tab-button.is-selected {
+    background-color: rgba(51, 38, 66, 0.94);
+    border-color: var(--accent);
+}
+
+.hud__score {
+    border-color: rgba(214, 168, 255, 0.26);
+}
+
+.modal-layer {
+    background-color: rgba(5, 6, 11, 0.78);
+}
+
+.modal-card {
+    background-color: rgb(18, 20, 31);
+    border-color: rgba(214, 168, 255, 0.5);
+}
+
+.theme-overlay__circuit-line {
+    background-color: rgba(214, 168, 255, 0.075);
+}
+
+.theme-overlay__scanline {
+    display: none;
+}
