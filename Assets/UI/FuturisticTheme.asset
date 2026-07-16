@@ -64,6 +64,124 @@ MonoBehaviour:
   - element: players-hint
     icon: 
     text: A goalkeeper defends the goal. An attacker meets the ball early.
+  - element: wordmark
+    icon: 
+    text: PONG
+  - element: mode-eyebrow
+    icon: 
+    text: PLAY YOUR WAY
+  - element: mode-title
+    icon: 
+    text: Game Mode
+  - element: mode-description
+    icon: 
+    text: Choose a ruleset. New modes slot into this library without changing the
+      menu.
+  - element: customization-eyebrow
+    icon: 
+    text: MAKE IT YOURS
+  - element: customization-title
+    icon: 
+    text: Customization
+  - element: customization-summary
+    icon: 
+    text: PREVIEW BEFORE YOU APPLY
+  - element: settings-eyebrow
+    icon: 
+    text: TUNE THE EXPERIENCE
+  - element: settings-title
+    icon: 
+    text: Settings
+  - element: settings-summary
+    icon: 
+    text: SAVED AUTOMATICALLY
+  - element: credits-eyebrow
+    icon: 
+    text: THE PEOPLE BEHIND THE PADDLES
+  - element: credits-title
+    icon: 
+    text: Credits
+  - element: credits-mark
+    icon: 
+    text: PONG
+  - element: credits-role
+    icon: 
+    text: Design, engineering and game feel
+  - element: shop-tab-theme
+    icon: 
+    text: THEME
+  - element: shop-tab-arena
+    icon: 
+    text: ARENA
+  - element: shop-tab-paddle
+    icon: 
+    text: PADDLE
+  - element: shop-tab-ball
+    icon: 
+    text: BALL
+  - element: shop-tab-hud
+    icon: 
+    text: HUD
+  - element: shop-tab-effects
+    icon: 
+    text: EFFECTS
+  - element: shop-tab-audio
+    icon: 
+    text: AUDIO
+  - element: collection-eyebrow
+    icon: 
+    text: COLLECTION
+  - element: collection-owned-caption
+    icon: 
+    text: UNLOCKED
+  - element: collection-theme-caption
+    icon: 
+    text: BELONGS TO
+  - element: collection-note
+    icon: 
+    text: Cosmetics belong to their world and cannot be mixed across themes.
+  - element: workshop-preview-caption
+    icon: 
+    text: LIVE PREVIEW
+  - element: workshop-reset-button
+    icon: 
+    text: RESET
+  - element: workshop-randomize-button
+    icon: ~
+    text: RANDOMIZE
+  - element: workshop-apply-button
+    icon: '>'
+    text: APPLY
+  - element: settings-tab-gameplay
+    icon: 
+    text: GAMEPLAY
+  - element: settings-tab-audio
+    icon: 
+    text: AUDIO
+  - element: settings-tab-graphics
+    icon: 
+    text: GRAPHICS
+  - element: settings-tab-controls
+    icon: 
+    text: CONTROLS
+  - element: settings-tab-accessibility
+    icon: 
+    text: ACCESSIBILITY
+  - element: settings-gameplay-title
+    icon: 
+    text: Match rules and pacing
+  - element: settings-audio-title
+    icon: 
+    text: Independent volume channels
+  - element: settings-graphics-title
+    icon: 
+    text: Display and synchronisation
+  - element: settings-controls-title
+    icon: 
+    text: Keyboard and controller input
+  - element: settings-accessibility-title
+    icon: 
+    text: Comfort and readability
   - element: pause-eyebrow
     icon: 
     text: SIMULATION SUSPENDED
@@ -124,78 +242,6 @@ MonoBehaviour:
   - element: back-button
     icon: <
     text: BACK
-  - element: 'settings-tab-gameplay'
-    icon: ''
-    text: 'GAMEPLAY'
-  - element: 'settings-tab-audio'
-    icon: ''
-    text: 'AUDIO'
-  - element: 'settings-tab-graphics'
-    icon: ''
-    text: 'GRAPHICS'
-  - element: 'settings-tab-controls'
-    icon: ''
-    text: 'CONTROLS'
-  - element: 'settings-tab-accessibility'
-    icon: ''
-    text: 'ACCESSIBILITY'
-  - element: 'settings-gameplay-title'
-    icon: ''
-    text: 'Match rules and pacing'
-  - element: 'settings-audio-title'
-    icon: ''
-    text: 'Independent volume channels'
-  - element: 'settings-graphics-title'
-    icon: ''
-    text: 'Display and synchronisation'
-  - element: 'settings-controls-title'
-    icon: ''
-    text: 'Keyboard and controller input'
-  - element: 'settings-accessibility-title'
-    icon: ''
-    text: 'Comfort and readability'
-  - element: 'wordmark'
-    icon: ''
-    text: 'PONG'
-  - element: 'mode-eyebrow'
-    icon: ''
-    text: 'PLAY YOUR WAY'
-  - element: 'mode-title'
-    icon: ''
-    text: 'Game Mode'
-  - element: 'mode-description'
-    icon: ''
-    text: 'Choose a ruleset. New modes slot into this library without changing the menu.'
-  - element: 'customization-eyebrow'
-    icon: ''
-    text: 'MAKE IT YOURS'
-  - element: 'customization-title'
-    icon: ''
-    text: 'Customization'
-  - element: 'customization-summary'
-    icon: ''
-    text: 'PREVIEW BEFORE YOU APPLY'
-  - element: 'settings-eyebrow'
-    icon: ''
-    text: 'TUNE THE EXPERIENCE'
-  - element: 'settings-title'
-    icon: ''
-    text: 'Settings'
-  - element: 'settings-summary'
-    icon: ''
-    text: 'SAVED AUTOMATICALLY'
-  - element: 'credits-eyebrow'
-    icon: ''
-    text: 'THE PEOPLE BEHIND THE PADDLES'
-  - element: 'credits-title'
-    icon: ''
-    text: 'Credits'
-  - element: 'credits-mark'
-    icon: ''
-    text: 'PONG'
-  - element: 'credits-role'
-    icon: ''
-    text: 'Design, engineering and game feel'
   victoryTitle: VICTORY CONFIRMED
   defeatTitle: MATCH COMPLETE
   primaryAccent: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}

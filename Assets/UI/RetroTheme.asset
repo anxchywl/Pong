@@ -64,6 +64,124 @@ MonoBehaviour:
   - element: players-hint
     icon: 
     text: GOALKEEPER HOLDS THE LINE. ATTACKER MEETS THE BALL EARLY.
+  - element: wordmark
+    icon: 
+    text: PONG
+  - element: mode-eyebrow
+    icon: 
+    text: SELECT YOUR GAME
+  - element: mode-title
+    icon: 
+    text: GAME MODE
+  - element: mode-description
+    icon: 
+    text: Choose a ruleset. New games slot into the cabinet without rewiring the
+      menu.
+  - element: customization-eyebrow
+    icon: 
+    text: CABINET WORKSHOP
+  - element: customization-title
+    icon: 
+    text: CUSTOMIZATION
+  - element: customization-summary
+    icon: 
+    text: PREVIEW BEFORE YOU APPLY
+  - element: settings-eyebrow
+    icon: 
+    text: SERVICE MENU
+  - element: settings-title
+    icon: 
+    text: SETTINGS
+  - element: settings-summary
+    icon: 
+    text: SAVED AUTOMATICALLY
+  - element: credits-eyebrow
+    icon: 
+    text: THE NAMES ON THE CABINET
+  - element: credits-title
+    icon: 
+    text: CREDITS
+  - element: credits-mark
+    icon: 
+    text: PONG
+  - element: credits-role
+    icon: 
+    text: DESIGN, ENGINEERING AND GAME FEEL
+  - element: shop-tab-theme
+    icon: 
+    text: THEME
+  - element: shop-tab-arena
+    icon: 
+    text: ARENA
+  - element: shop-tab-paddle
+    icon: 
+    text: PADDLE
+  - element: shop-tab-ball
+    icon: 
+    text: BALL
+  - element: shop-tab-hud
+    icon: 
+    text: HUD
+  - element: shop-tab-effects
+    icon: 
+    text: EFFECTS
+  - element: shop-tab-audio
+    icon: 
+    text: AUDIO
+  - element: collection-eyebrow
+    icon: 
+    text: IN THE CABINET
+  - element: collection-owned-caption
+    icon: 
+    text: UNLOCKED
+  - element: collection-theme-caption
+    icon: 
+    text: BELONGS TO
+  - element: collection-note
+    icon: 
+    text: Parts belong to their cabinet and cannot be mixed across worlds.
+  - element: workshop-preview-caption
+    icon: 
+    text: LIVE PREVIEW
+  - element: workshop-reset-button
+    icon: 
+    text: RESET
+  - element: workshop-randomize-button
+    icon: '[?]'
+    text: RANDOMIZE
+  - element: workshop-apply-button
+    icon: '[>]'
+    text: APPLY
+  - element: settings-tab-gameplay
+    icon: 
+    text: GAMEPLAY
+  - element: settings-tab-audio
+    icon: 
+    text: AUDIO
+  - element: settings-tab-graphics
+    icon: 
+    text: GRAPHICS
+  - element: settings-tab-controls
+    icon: 
+    text: CONTROLS
+  - element: settings-tab-accessibility
+    icon: 
+    text: ACCESSIBILITY
+  - element: settings-gameplay-title
+    icon: 
+    text: MATCH RULES AND PACING
+  - element: settings-audio-title
+    icon: 
+    text: CABINET VOLUME
+  - element: settings-graphics-title
+    icon: 
+    text: DISPLAY AND SYNC
+  - element: settings-controls-title
+    icon: 
+    text: CABINET CONTROLS
+  - element: settings-accessibility-title
+    icon: 
+    text: COMFORT AND READABILITY
   - element: pause-eyebrow
     icon: 
     text: SYSTEM HOLD
@@ -124,78 +242,6 @@ MonoBehaviour:
   - element: back-button
     icon: '[<]'
     text: BACK
-  - element: 'settings-tab-gameplay'
-    icon: ''
-    text: 'GAMEPLAY'
-  - element: 'settings-tab-audio'
-    icon: ''
-    text: 'AUDIO'
-  - element: 'settings-tab-graphics'
-    icon: ''
-    text: 'GRAPHICS'
-  - element: 'settings-tab-controls'
-    icon: ''
-    text: 'CONTROLS'
-  - element: 'settings-tab-accessibility'
-    icon: ''
-    text: 'ACCESSIBILITY'
-  - element: 'settings-gameplay-title'
-    icon: ''
-    text: 'MATCH RULES AND PACING'
-  - element: 'settings-audio-title'
-    icon: ''
-    text: 'CABINET VOLUME'
-  - element: 'settings-graphics-title'
-    icon: ''
-    text: 'DISPLAY AND SYNC'
-  - element: 'settings-controls-title'
-    icon: ''
-    text: 'CABINET CONTROLS'
-  - element: 'settings-accessibility-title'
-    icon: ''
-    text: 'COMFORT AND READABILITY'
-  - element: 'wordmark'
-    icon: ''
-    text: 'PONG'
-  - element: 'mode-eyebrow'
-    icon: ''
-    text: 'SELECT YOUR GAME'
-  - element: 'mode-title'
-    icon: ''
-    text: 'GAME MODE'
-  - element: 'mode-description'
-    icon: ''
-    text: 'Choose a ruleset. New games slot into the cabinet without rewiring the menu.'
-  - element: 'customization-eyebrow'
-    icon: ''
-    text: 'CABINET WORKSHOP'
-  - element: 'customization-title'
-    icon: ''
-    text: 'CUSTOMIZATION'
-  - element: 'customization-summary'
-    icon: ''
-    text: 'PREVIEW BEFORE YOU APPLY'
-  - element: 'settings-eyebrow'
-    icon: ''
-    text: 'SERVICE MENU'
-  - element: 'settings-title'
-    icon: ''
-    text: 'SETTINGS'
-  - element: 'settings-summary'
-    icon: ''
-    text: 'SAVED AUTOMATICALLY'
-  - element: 'credits-eyebrow'
-    icon: ''
-    text: 'THE NAMES ON THE CABINET'
-  - element: 'credits-title'
-    icon: ''
-    text: 'CREDITS'
-  - element: 'credits-mark'
-    icon: ''
-    text: 'PONG'
-  - element: 'credits-role'
-    icon: ''
-    text: 'DESIGN, ENGINEERING AND GAME FEEL'
   victoryTitle: PLAYER ONE WINS
   defeatTitle: CPU TAKES THE ROUND
   primaryAccent: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}

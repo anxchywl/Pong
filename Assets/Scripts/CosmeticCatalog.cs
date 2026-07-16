@@ -4,12 +4,16 @@ using UnityEngine;
 
 namespace Pong
 {
+    /// The workshop's categories, in rail order. Theme is not here: it selects a whole design
+    /// system rather than a cosmetic within one.
     public enum CosmeticCategory
     {
+        Arena,
         Paddle,
         Ball,
-        Arena,
-        Background
+        Hud,
+        Effects,
+        Audio
     }
 
     [CreateAssetMenu(menuName = "Pong/UI/Cosmetic Catalog")]

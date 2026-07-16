@@ -123,15 +123,16 @@ namespace Pong.Editor
         {
             GameModeCatalog catalog = LoadOrCreate<GameModeCatalog>(GameModesPath);
             SerializedProperty modes = new SerializedObject(catalog).FindProperty("modes");
-            modes.arraySize = 4;
+
+            // Local Multiplayer is gone as a mode: the seats decide who plays, so a mode that only
+            // meant "two humans" would contradict the players screen rather than add anything
+            modes.arraySize = 3;
             SetMode(modes.GetArrayElementAtIndex(0), "classic", "Classic",
-                "The original duel: you against a focused computer rival.", "1 PLAYER", true);
+                "The original duel, played by whoever takes a seat.", "1-4 PLAYERS", true);
             SetMode(modes.GetArrayElementAtIndex(1), "practice", "Practice",
                 "A pressure-free court for learning timing and angles.", "SOLO", false);
             SetMode(modes.GetArrayElementAtIndex(2), "ai", "AI League",
                 "Face distinct opponents with readable play styles.", "1 PLAYER", false);
-            SetMode(modes.GetArrayElementAtIndex(3), "local-multiplayer", "Local Multiplayer",
-                "Share the court and settle it on one screen.", "2 PLAYERS", false);
             modes.serializedObject.ApplyModifiedPropertiesWithoutUndo();
             return catalog;
         }
@@ -179,6 +180,21 @@ namespace Pong.Editor
                 ("credits-title", "", "CREDITS"),
                 ("credits-mark", "", "PONG"),
                 ("credits-role", "", "DESIGN, ENGINEERING AND GAME FEEL"),
+                ("shop-tab-theme", "", "THEME"),
+                ("shop-tab-arena", "", "ARENA"),
+                ("shop-tab-paddle", "", "PADDLE"),
+                ("shop-tab-ball", "", "BALL"),
+                ("shop-tab-hud", "", "HUD"),
+                ("shop-tab-effects", "", "EFFECTS"),
+                ("shop-tab-audio", "", "AUDIO"),
+                ("collection-eyebrow", "", "IN THE CABINET"),
+                ("collection-owned-caption", "", "UNLOCKED"),
+                ("collection-theme-caption", "", "BELONGS TO"),
+                ("collection-note", "", "Parts belong to their cabinet and cannot be mixed across worlds."),
+                ("workshop-preview-caption", "", "LIVE PREVIEW"),
+                ("workshop-reset-button", "", "RESET"),
+                ("workshop-randomize-button", "[?]", "RANDOMIZE"),
+                ("workshop-apply-button", "[>]", "APPLY"),
                 ("settings-tab-gameplay", "", "GAMEPLAY"),
                 ("settings-tab-audio", "", "AUDIO"),
                 ("settings-tab-graphics", "", "GRAPHICS"),
@@ -281,6 +297,21 @@ namespace Pong.Editor
                 ("credits-title", "", "Credits"),
                 ("credits-mark", "", "PONG"),
                 ("credits-role", "", "Design, engineering and game feel"),
+                ("shop-tab-theme", "", "THEME"),
+                ("shop-tab-arena", "", "ARENA"),
+                ("shop-tab-paddle", "", "PADDLE"),
+                ("shop-tab-ball", "", "BALL"),
+                ("shop-tab-hud", "", "HUD"),
+                ("shop-tab-effects", "", "EFFECTS"),
+                ("shop-tab-audio", "", "AUDIO"),
+                ("collection-eyebrow", "", "COLLECTION"),
+                ("collection-owned-caption", "", "UNLOCKED"),
+                ("collection-theme-caption", "", "BELONGS TO"),
+                ("collection-note", "", "Cosmetics belong to their world and cannot be mixed across themes."),
+                ("workshop-preview-caption", "", "LIVE PREVIEW"),
+                ("workshop-reset-button", "", "RESET"),
+                ("workshop-randomize-button", "~", "RANDOMIZE"),
+                ("workshop-apply-button", ">", "APPLY"),
                 ("settings-tab-gameplay", "", "GAMEPLAY"),
                 ("settings-tab-audio", "", "AUDIO"),
                 ("settings-tab-graphics", "", "GRAPHICS"),
@@ -356,60 +387,104 @@ namespace Pong.Editor
             CosmeticCatalog catalog = LoadOrCreate<CosmeticCatalog>(CosmeticsPath);
             SerializedObject serialized = new SerializedObject(catalog);
             SerializedProperty items = serialized.FindProperty("cosmetics");
-            items.arraySize = 16;
+            items.arraySize = 30;
             int index = 0;
 
+            // retro
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-arena-upright", "Upright Cabinet",
+                "Brass rails and a low dotted divider.", CosmeticCategory.Arena,
+                Hex("D8C97C"), Hex("8A7F4E"), 0.4f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-arena-phosphor", "Phosphor Court",
+                "A disciplined green monochrome court.", CosmeticCategory.Arena,
+                Hex("91B96C"), Hex("5C7444"), 0.5f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-arena-vector", "Vector Monitor",
+                "Thin bright strokes on true black.", CosmeticCategory.Arena,
+                Hex("9BE3C8"), Hex("2F6B57"), 0.65f);
             SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-paddle-cabinet", "Cabinet Pair",
-                "Warm player amber against a muted phosphor rival.", CosmeticCategory.Paddle,
+                "Warm amber against muted phosphor.", CosmeticCategory.Paddle,
                 Hex("F5B942"), Hex("6FA25C"), 0.35f);
             SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-paddle-terminal", "Terminal Pair",
-                "A monochrome green set inspired by service terminals.", CosmeticCategory.Paddle,
+                "A monochrome set from a service terminal.", CosmeticCategory.Paddle,
                 Hex("8DBB63"), Hex("C7D89A"), 0.45f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-paddle-amber", "Amber Deluxe",
+                "Both sides in amber, told apart by weight.", CosmeticCategory.Paddle,
+                Hex("FFD36B"), Hex("B37A1F"), 0.5f);
             SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-ball-white", "Pixel White",
-                "The clean high-contrast arcade standard.", CosmeticCategory.Ball,
+                "The high-contrast arcade standard.", CosmeticCategory.Ball,
                 Hex("F6EECB"), Hex("F6EECB"), 0.3f);
             SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-ball-amber", "Amber Dot",
-                "A warmer phosphor point with clear motion reads.", CosmeticCategory.Ball,
+                "A warmer point with a clear motion read.", CosmeticCategory.Ball,
                 Hex("FFD36B"), Hex("F5B942"), 0.5f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-arena-cabinet", "Upright Cabinet",
-                "Brass rails and a low-intensity dotted divider.", CosmeticCategory.Arena,
-                Hex("D8C97C"), new Color(0.85f, 0.79f, 0.49f, 0.42f), 0.4f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-arena-phosphor", "Phosphor Court",
-                "A disciplined green monochrome arena.", CosmeticCategory.Arena,
-                Hex("91B96C"), new Color(0.57f, 0.72f, 0.42f, 0.38f), 0.5f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-background-soft-crt", "Soft CRT",
-                "Subtle scanlines and a charcoal cabinet interior.", CosmeticCategory.Background,
-                Hex("050704"), Hex("161B11"), 0.35f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-background-sharp-crt", "Sharp CRT",
-                "Denser scanlines and deeper black levels.", CosmeticCategory.Background,
-                Hex("020302"), Hex("0C100A"), 0.78f);
-
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-paddle-ceramic", "Ceramic Pair",
-                "Soft violet and warm alloy surfaces.", CosmeticCategory.Paddle,
-                Hex("D6A8FF"), Hex("FFB07E"), 0.55f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-paddle-graphite", "Graphite Pair",
-                "Cool white ceramic against quiet graphite.", CosmeticCategory.Paddle,
-                Hex("EDF0F7"), Hex("8B91A6"), 0.4f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-ball-ion", "Ion Core",
-                "A restrained violet core with a soft edge.", CosmeticCategory.Ball,
-                Hex("E1C4FF"), Hex("D6A8FF"), 0.65f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-ball-pearl", "Pearl",
-                "Neutral ceramic white for maximum clarity.", CosmeticCategory.Ball,
-                Hex("F6F3FA"), Hex("C9C6D3"), 0.4f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-arena-glass", "Glass Circuit",
-                "Pale rails above a restrained violet circuit.", CosmeticCategory.Arena,
-                Hex("D4D0E4"), new Color(0.84f, 0.66f, 1f, 0.28f), 0.65f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-arena-quiet", "Quiet Alloy",
-                "Low-glare metal with a nearly invisible center guide.", CosmeticCategory.Arena,
-                Hex("A8ADBC"), new Color(0.66f, 0.68f, 0.74f, 0.2f), 0.3f);
-            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "future-background-orbital", "Orbital Dusk",
-                "Layered violet depth with sparse interface lines.", CosmeticCategory.Background,
-                Hex("080A11"), Hex("21192D"), 0.45f);
-            SetCosmetic(items.GetArrayElementAtIndex(index), "futuristic", "future-background-deep-field", "Deep Field",
-                "A darker field with more visible ambient circuitry.", CosmeticCategory.Background,
-                Hex("05060B"), Hex("15111F"), 0.82f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-hud-plate", "Score Plate",
+                "A bolted plate above the court.", CosmeticCategory.Hud,
+                Hex("F5B942"), Hex("6B5A24"), 0.4f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-hud-seven-seg", "Seven Segment",
+                "Digits cut from a segment display.", CosmeticCategory.Hud,
+                Hex("FFB43C"), Hex("5C3E10"), 0.6f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-effects-soft-crt", "Soft CRT",
+                "Gentle scanlines, charcoal interior.", CosmeticCategory.Effects,
+                Hex("050704"), Hex("161B11"), 0.3f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-effects-sharp-crt", "Sharp CRT",
+                "Denser scanlines and deeper blacks.", CosmeticCategory.Effects,
+                Hex("030403"), Hex("10140C"), 0.7f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-effects-bezel", "Cabinet Bezel",
+                "A heavy bezel closing in the picture.", CosmeticCategory.Effects,
+                Hex("070806"), Hex("1D2115"), 0.5f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-audio-square", "Square Wave",
+                "The original two-tone bleep.", CosmeticCategory.Audio,
+                Hex("F5B942"), Hex("6FA25C"), 0.5f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "retro", "retro-audio-cabinet", "Cabinet Speaker",
+                "Lower, boxier, a little further away.", CosmeticCategory.Audio,
+                Hex("C79A38"), Hex("4E7040"), 0.3f);
+            // futuristic
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-arena-glass", "Glass Court",
+                "Layered glass over a quiet ceramic floor.", CosmeticCategory.Arena,
+                Hex("C5C1DB"), Hex("6E6A85"), 0.45f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-arena-carbon", "Carbon Court",
+                "Matte carbon with a machined edge.", CosmeticCategory.Arena,
+                Hex("8E93A8"), Hex("43485C"), 0.35f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-arena-ceramic", "Ceramic Court",
+                "Warm white ceramic, softly lit.", CosmeticCategory.Arena,
+                Hex("E8E4F0"), Hex("9A94AE"), 0.55f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-paddle-alloy", "Alloy Pair",
+                "Anodised violet against warm bronze.", CosmeticCategory.Paddle,
+                Hex("D6A8FF"), Hex("FFB07E"), 0.45f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-paddle-ceramic", "Ceramic Pair",
+                "Bright ceramic with a soft falloff.", CosmeticCategory.Paddle,
+                Hex("F0EAFF"), Hex("FFD9BE"), 0.3f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-paddle-graphite", "Graphite Pair",
+                "Restrained graphite, lit only at the edge.", CosmeticCategory.Paddle,
+                Hex("A9A3BE"), Hex("6F6A82"), 0.25f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-ball-pearl", "Pearl",
+                "A clean neutral sphere.", CosmeticCategory.Ball,
+                Hex("F6F3FA"), Hex("D8D3E6"), 0.4f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-ball-ion", "Ion",
+                "A cool core with a short trail.", CosmeticCategory.Ball,
+                Hex("CFE6FF"), Hex("8FB6E6"), 0.7f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-hud-pane", "Glass Pane",
+                "The score floating on layered glass.", CosmeticCategory.Hud,
+                Hex("D6A8FF"), Hex("3A3550"), 0.4f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-hud-minimal", "Minimal",
+                "No frame. Type and nothing else.", CosmeticCategory.Hud,
+                Hex("F2EFF8"), Hex("2A2738"), 0.15f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-effects-clean", "Clean",
+                "No overlay. The court, precisely lit.", CosmeticCategory.Effects,
+                Hex("080A11"), Hex("121522"), 0.2f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-effects-lattice", "Lattice",
+                "A faint structural grid behind play.", CosmeticCategory.Effects,
+                Hex("080A11"), Hex("141830"), 0.5f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-effects-bloom", "Bloom",
+                "Light lifts a little off every surface.", CosmeticCategory.Effects,
+                Hex("090B14"), Hex("1A1E33"), 0.85f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-audio-sine", "Sine",
+                "Soft, tuned, almost musical.", CosmeticCategory.Audio,
+                Hex("D6A8FF"), Hex("FFB07E"), 0.5f);
+            SetCosmetic(items.GetArrayElementAtIndex(index++), "futuristic", "futuristic-audio-chamber", "Chamber",
+                "The same tones with air around them.", CosmeticCategory.Audio,
+                Hex("B79AE0"), Hex("E6A98A"), 0.75f);
 
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(catalog);
             return catalog;
         }
 

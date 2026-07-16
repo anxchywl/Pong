@@ -15,8 +15,8 @@ MonoBehaviour:
   modes:
   - id: classic
     displayName: Classic
-    description: 'The original duel: you against a focused computer rival.'
-    playerSummary: 1 PLAYER
+    description: The original duel, played by whoever takes a seat.
+    playerSummary: 1-4 PLAYERS
     available: 1
   - id: practice
     displayName: Practice
@@ -27,9 +27,4 @@ MonoBehaviour:
     displayName: AI League
     description: Face distinct opponents with readable play styles.
     playerSummary: 1 PLAYER
-    available: 0
-  - id: local-multiplayer
-    displayName: Local Multiplayer
-    description: Share the court and settle it on one screen.
-    playerSummary: 2 PLAYERS
     available: 0

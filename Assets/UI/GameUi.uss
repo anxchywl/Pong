@@ -451,6 +451,182 @@
     flex-grow: 1;
 }
 
+/* a workshop, not another settings page: categories to the left, the thing you are
+   changing large in the middle, what you own to the right, actions along the bottom */
+.workshop {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 4px 3% 0 3%;
+}
+
+.workshop__stage {
+    flex-grow: 1;
+    margin-right: 32px;
+}
+
+.workshop-preview {
+    flex-shrink: 0;
+}
+
+/* the preview is the centre of the screen: it is the biggest thing here on purpose */
+.workshop-preview__court {
+    height: 232px;
+    border-width: 1px;
+    border-color: var(--line);
+    border-radius: 12px;
+    background-color: var(--surface);
+    overflow: hidden;
+}
+
+.workshop-preview__hud {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    align-items: center;
+}
+
+.workshop-preview__score {
+    color: var(--ink-strong);
+    font-size: 20px;
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+}
+
+.workshop-preview__caption {
+    color: var(--ink-muted);
+    font-size: 9px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-top: 8px;
+    -unity-text-align: middle-center;
+}
+
+.workshop__options {
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    margin-top: 18px;
+}
+
+.workshop__collection {
+    width: 296px;
+    flex-shrink: 0;
+    padding: 22px;
+}
+
+.collection__title {
+    color: var(--ink-strong);
+    font-size: 22px;
+    -unity-font-style: bold;
+    margin-top: 2px;
+}
+
+.collection__description {
+    color: var(--ink);
+    font-size: 12px;
+    margin-top: 6px;
+    white-space: normal;
+}
+
+.collection__swatches {
+    flex-direction: row;
+    margin-top: 14px;
+}
+
+.collection__divider {
+    height: 1px;
+    margin: 18px 0 4px 0;
+    background-color: var(--line);
+}
+
+.collection__note {
+    color: var(--ink-muted);
+    font-size: 10px;
+    margin-top: 16px;
+    white-space: normal;
+}
+
+/* actions sit on one line at the foot of the screen: reset and randomize are quiet,
+   apply is the only thing that commits */
+.workshop__actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 12px 3% 16px 3%;
+}
+
+.workshop__dirty {
+    flex-grow: 1;
+    color: var(--accent);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 1.5px;
+}
+
+.menu-button--compact {
+    width: 148px;
+    height: 42px;
+    margin-left: 10px;
+    margin-bottom: 0;
+}
+
+/* deliberately not a .selection-card: those are the full-width mode cards, and inheriting
+   their 380px minimum turned every swatch into a slab */
+.option-card {
+    width: 132px;
+    height: 88px;
+    margin: 0 10px 10px 0;
+    padding: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-width: 1px;
+    border-color: var(--line);
+    border-radius: 10px;
+    background-color: var(--surface-soft);
+    transition-property: background-color, border-color, translate;
+    transition-duration: 0.11s;
+}
+
+.option-card:hover {
+    border-color: var(--ink-muted);
+    translate: 0 -2px;
+}
+
+.option-card.is-selected {
+    border-color: var(--accent);
+    background-color: var(--surface);
+}
+
+.option-card__title {
+    color: var(--ink);
+    font-size: 11px;
+    -unity-font-style: bold;
+}
+
+/* laid out rather than absolute: the 48px collection swatches are too big for a card this
+   size and were sitting under the title */
+.option-card__swatches {
+    flex-direction: row;
+}
+
+.option-card__swatches .cosmetic-card__swatch {
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+    border-radius: 7px;
+}
+
+.option-card.is-selected .option-card__title {
+    color: var(--ink-strong);
+}
+
+.option-card.is-locked {
+    opacity: 0.4;
+}
+
 /* the players screen mirrors the court: left side on the left, right on the right,
    so the seat you configure is the paddle you will use */
 .court-lineup {

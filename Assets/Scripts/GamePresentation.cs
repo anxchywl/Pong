@@ -38,14 +38,14 @@ namespace Pong
         public void Apply(
             GameTheme theme,
             CosmeticCatalog catalog,
-            PlayerPreferences preferences
+            CosmeticSelection selection
         )
         {
             activeTheme = theme;
-            CosmeticDefinition paddle = GetSelection(theme, catalog, preferences, CosmeticCategory.Paddle);
-            CosmeticDefinition ball = GetSelection(theme, catalog, preferences, CosmeticCategory.Ball);
-            CosmeticDefinition arena = GetSelection(theme, catalog, preferences, CosmeticCategory.Arena);
-            CosmeticDefinition background = GetSelection(theme, catalog, preferences, CosmeticCategory.Background);
+            CosmeticDefinition paddle = GetSelection(theme, catalog, selection, CosmeticCategory.Paddle);
+            CosmeticDefinition ball = GetSelection(theme, catalog, selection, CosmeticCategory.Ball);
+            CosmeticDefinition arena = GetSelection(theme, catalog, selection, CosmeticCategory.Arena);
+            CosmeticDefinition background = GetSelection(theme, catalog, selection, CosmeticCategory.Effects);
 
             Color leftColor = paddle?.PrimaryColor ?? theme.PlayerColor;
             Color rightColor = paddle?.SecondaryColor ?? theme.OpponentColor;
@@ -212,11 +212,11 @@ namespace Pong
         private static CosmeticDefinition GetSelection(
             GameTheme theme,
             CosmeticCatalog catalog,
-            PlayerPreferences preferences,
+            CosmeticSelection selection,
             CosmeticCategory category
         )
         {
-            return catalog.FindSelected(theme.Id, category, preferences.GetCosmetic(theme.Id, category));
+            return catalog.FindSelected(theme.Id, category, selection.Get(theme.Id, category));
         }
     }
 }

@@ -151,7 +151,7 @@ namespace Pong
                 themes,
                 cosmetics,
                 preferences,
-                ApplyThemeAndCosmetics,
+                PreviewSelection,
                 PlayClick
             );
             settingsView = new SettingsView(root, settings, ApplySettings, ApplyResolution, PlayClick);
@@ -172,7 +172,7 @@ namespace Pong
             };
             root.Q<Button>("players-back-button").clicked += NavigateBack;
             root.Q<Button>("mode-back-button").clicked += NavigateBack;
-            root.Q<Button>("customization-back-button").clicked += NavigateBack;
+            root.Q<Button>("customization-back-button").clicked += LeaveWorkshop;
             root.Q<Button>("settings-back-button").clicked += CloseSettings;
             root.Q<Button>("credits-back-button").clicked += NavigateBack;
             root.Q<Button>("win-restart-button").clicked += RestartFromWin;
@@ -241,7 +241,7 @@ namespace Pong
             if (state.Phase == MatchPhase.Won)
             {
                 Label title = root.Q<Label>("win-title");
-                GameTheme theme = GetActiveTheme();
+                GameTheme theme = ResolveTheme(preferences.Selection);
                 title.text = state.Winner == PlayerSide.Left ? theme.VictoryTitle : theme.DefeatTitle;
                 root.Q<Label>("win-score").text = $"{state.LeftScore}  —  {state.RightScore}";
                 winPanel.schedule.Execute(() => root.Q<Button>("win-restart-button").Focus());
@@ -301,6 +301,14 @@ namespace Pong
             navigator.Back();
         }
 
+        /// Anything previewed but not applied dies when the workshop closes.
+        private void LeaveWorkshop()
+        {
+            PlayClick();
+            customizationView.Discard();
+            navigator.Back();
+        }
+
         private void RestartFromPause()
         {
             settingsOpenedFromPause = false;
@@ -322,22 +330,29 @@ namespace Pong
 
         private void ApplyThemeAndCosmetics()
         {
-            GameTheme theme = GetActiveTheme();
-            CosmeticDefinition background = cosmetics.FindSelected(
+            PreviewSelection(preferences.Selection);
+        }
+
+        /// Renders any selection, committed or not. The workshop hands its draft here, which is
+        /// what makes a change visible before it is saved.
+        private void PreviewSelection(CosmeticSelection selection)
+        {
+            GameTheme theme = ResolveTheme(selection);
+            CosmeticDefinition effects = cosmetics.FindSelected(
                 theme.Id,
-                CosmeticCategory.Background,
-                preferences.GetCosmetic(theme.Id, CosmeticCategory.Background)
+                CosmeticCategory.Effects,
+                selection.Get(theme.Id, CosmeticCategory.Effects)
             );
-            float effectIntensity = background?.EffectIntensity ?? 0.5f;
-            presentation.Apply(theme, cosmetics, preferences);
+            float effectIntensity = effects?.EffectIntensity ?? 0.5f;
+            presentation.Apply(theme, cosmetics, selection);
             themePresenter.Apply(theme, effectIntensity);
             audioFeedback.ApplyTheme(theme);
             mainMenu.SetSelectedTheme(theme.DisplayName);
         }
 
-        private GameTheme GetActiveTheme()
+        private GameTheme ResolveTheme(CosmeticSelection selection)
         {
-            GameTheme theme = themes.Find(preferences.SelectedThemeId);
+            GameTheme theme = themes.Find(selection.ThemeId);
             if (theme != null)
             {
                 return theme;

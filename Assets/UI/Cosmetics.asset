@@ -13,11 +13,38 @@ MonoBehaviour:
   m_Name: Cosmetics
   m_EditorClassIdentifier: Pong.Runtime::Pong.CosmeticCatalog
   cosmetics:
+  - id: retro-arena-upright
+    themeId: retro
+    displayName: Upright Cabinet
+    description: Brass rails and a low dotted divider.
+    category: 0
+    primaryColor: {r: 0.84705883, g: 0.7882353, b: 0.4862745, a: 1}
+    secondaryColor: {r: 0.5411765, g: 0.49803922, b: 0.30588236, a: 1}
+    unlocked: 1
+    effectIntensity: 0.4
+  - id: retro-arena-phosphor
+    themeId: retro
+    displayName: Phosphor Court
+    description: A disciplined green monochrome court.
+    category: 0
+    primaryColor: {r: 0.5686275, g: 0.7254902, b: 0.42352942, a: 1}
+    secondaryColor: {r: 0.36078432, g: 0.45490196, b: 0.26666668, a: 1}
+    unlocked: 1
+    effectIntensity: 0.5
+  - id: retro-arena-vector
+    themeId: retro
+    displayName: Vector Monitor
+    description: Thin bright strokes on true black.
+    category: 0
+    primaryColor: {r: 0.60784316, g: 0.8901961, b: 0.78431374, a: 1}
+    secondaryColor: {r: 0.18431373, g: 0.41960785, b: 0.34117648, a: 1}
+    unlocked: 1
+    effectIntensity: 0.65
   - id: retro-paddle-cabinet
     themeId: retro
     displayName: Cabinet Pair
-    description: Warm player amber against a muted phosphor rival.
-    category: 0
+    description: Warm amber against muted phosphor.
+    category: 1
     primaryColor: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}
     secondaryColor: {r: 0.43529412, g: 0.63529414, b: 0.36078432, a: 1}
     unlocked: 1
@@ -25,17 +52,26 @@ MonoBehaviour:
   - id: retro-paddle-terminal
     themeId: retro
     displayName: Terminal Pair
-    description: A monochrome green set inspired by service terminals.
-    category: 0
+    description: A monochrome set from a service terminal.
+    category: 1
     primaryColor: {r: 0.5529412, g: 0.73333335, b: 0.3882353, a: 1}
     secondaryColor: {r: 0.78039217, g: 0.84705883, b: 0.6039216, a: 1}
     unlocked: 1
     effectIntensity: 0.45
+  - id: retro-paddle-amber
+    themeId: retro
+    displayName: Amber Deluxe
+    description: Both sides in amber, told apart by weight.
+    category: 1
+    primaryColor: {r: 1, g: 0.827451, b: 0.41960785, a: 1}
+    secondaryColor: {r: 0.7019608, g: 0.47843137, b: 0.12156863, a: 1}
+    unlocked: 1
+    effectIntensity: 0.5
   - id: retro-ball-white
     themeId: retro
     displayName: Pixel White
-    description: The clean high-contrast arcade standard.
-    category: 1
+    description: The high-contrast arcade standard.
+    category: 2
     primaryColor: {r: 0.9647059, g: 0.93333334, b: 0.79607844, a: 1}
     secondaryColor: {r: 0.9647059, g: 0.93333334, b: 0.79607844, a: 1}
     unlocked: 1
@@ -43,117 +79,207 @@ MonoBehaviour:
   - id: retro-ball-amber
     themeId: retro
     displayName: Amber Dot
-    description: A warmer phosphor point with clear motion reads.
-    category: 1
+    description: A warmer point with a clear motion read.
+    category: 2
     primaryColor: {r: 1, g: 0.827451, b: 0.41960785, a: 1}
     secondaryColor: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}
     unlocked: 1
     effectIntensity: 0.5
-  - id: retro-arena-cabinet
+  - id: retro-hud-plate
     themeId: retro
-    displayName: Upright Cabinet
-    description: Brass rails and a low-intensity dotted divider.
-    category: 2
-    primaryColor: {r: 0.84705883, g: 0.7882353, b: 0.4862745, a: 1}
-    secondaryColor: {r: 0.85, g: 0.79, b: 0.49, a: 0.42}
+    displayName: Score Plate
+    description: A bolted plate above the court.
+    category: 3
+    primaryColor: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}
+    secondaryColor: {r: 0.41960785, g: 0.3529412, b: 0.14117648, a: 1}
     unlocked: 1
     effectIntensity: 0.4
-  - id: retro-arena-phosphor
+  - id: retro-hud-seven-seg
     themeId: retro
-    displayName: Phosphor Court
-    description: A disciplined green monochrome arena.
-    category: 2
-    primaryColor: {r: 0.5686275, g: 0.7254902, b: 0.42352942, a: 1}
-    secondaryColor: {r: 0.57, g: 0.72, b: 0.42, a: 0.38}
+    displayName: Seven Segment
+    description: Digits cut from a segment display.
+    category: 3
+    primaryColor: {r: 1, g: 0.7058824, b: 0.23529412, a: 1}
+    secondaryColor: {r: 0.36078432, g: 0.24313726, b: 0.0627451, a: 1}
     unlocked: 1
-    effectIntensity: 0.5
-  - id: retro-background-soft-crt
+    effectIntensity: 0.6
+  - id: retro-effects-soft-crt
     themeId: retro
     displayName: Soft CRT
-    description: Subtle scanlines and a charcoal cabinet interior.
-    category: 3
+    description: Gentle scanlines, charcoal interior.
+    category: 4
     primaryColor: {r: 0.019607844, g: 0.02745098, b: 0.015686275, a: 1}
     secondaryColor: {r: 0.08627451, g: 0.105882354, b: 0.06666667, a: 1}
     unlocked: 1
-    effectIntensity: 0.35
-  - id: retro-background-sharp-crt
+    effectIntensity: 0.3
+  - id: retro-effects-sharp-crt
     themeId: retro
     displayName: Sharp CRT
-    description: Denser scanlines and deeper black levels.
-    category: 3
-    primaryColor: {r: 0.007843138, g: 0.011764706, b: 0.007843138, a: 1}
-    secondaryColor: {r: 0.047058824, g: 0.0627451, b: 0.039215688, a: 1}
+    description: Denser scanlines and deeper blacks.
+    category: 4
+    primaryColor: {r: 0.011764706, g: 0.015686275, b: 0.011764706, a: 1}
+    secondaryColor: {r: 0.0627451, g: 0.078431375, b: 0.047058824, a: 1}
     unlocked: 1
-    effectIntensity: 0.78
-  - id: future-paddle-ceramic
+    effectIntensity: 0.7
+  - id: retro-effects-bezel
+    themeId: retro
+    displayName: Cabinet Bezel
+    description: A heavy bezel closing in the picture.
+    category: 4
+    primaryColor: {r: 0.02745098, g: 0.03137255, b: 0.023529412, a: 1}
+    secondaryColor: {r: 0.11372549, g: 0.12941177, b: 0.08235294, a: 1}
+    unlocked: 1
+    effectIntensity: 0.5
+  - id: retro-audio-square
+    themeId: retro
+    displayName: Square Wave
+    description: The original two-tone bleep.
+    category: 5
+    primaryColor: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}
+    secondaryColor: {r: 0.43529412, g: 0.63529414, b: 0.36078432, a: 1}
+    unlocked: 1
+    effectIntensity: 0.5
+  - id: retro-audio-cabinet
+    themeId: retro
+    displayName: Cabinet Speaker
+    description: Lower, boxier, a little further away.
+    category: 5
+    primaryColor: {r: 0.78039217, g: 0.6039216, b: 0.21960784, a: 1}
+    secondaryColor: {r: 0.30588236, g: 0.4392157, b: 0.2509804, a: 1}
+    unlocked: 1
+    effectIntensity: 0.3
+  - id: futuristic-arena-glass
     themeId: futuristic
-    displayName: Ceramic Pair
-    description: Soft violet and warm alloy surfaces.
+    displayName: Glass Court
+    description: Layered glass over a quiet ceramic floor.
     category: 0
+    primaryColor: {r: 0.77254903, g: 0.75686276, b: 0.85882354, a: 1}
+    secondaryColor: {r: 0.43137255, g: 0.41568628, b: 0.52156866, a: 1}
+    unlocked: 1
+    effectIntensity: 0.45
+  - id: futuristic-arena-carbon
+    themeId: futuristic
+    displayName: Carbon Court
+    description: Matte carbon with a machined edge.
+    category: 0
+    primaryColor: {r: 0.5568628, g: 0.5764706, b: 0.65882355, a: 1}
+    secondaryColor: {r: 0.2627451, g: 0.28235295, b: 0.36078432, a: 1}
+    unlocked: 1
+    effectIntensity: 0.35
+  - id: futuristic-arena-ceramic
+    themeId: futuristic
+    displayName: Ceramic Court
+    description: Warm white ceramic, softly lit.
+    category: 0
+    primaryColor: {r: 0.9098039, g: 0.89411765, b: 0.9411765, a: 1}
+    secondaryColor: {r: 0.6039216, g: 0.5803922, b: 0.68235296, a: 1}
+    unlocked: 1
+    effectIntensity: 0.55
+  - id: futuristic-paddle-alloy
+    themeId: futuristic
+    displayName: Alloy Pair
+    description: Anodised violet against warm bronze.
+    category: 1
     primaryColor: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
     secondaryColor: {r: 1, g: 0.6901961, b: 0.49411765, a: 1}
     unlocked: 1
-    effectIntensity: 0.55
-  - id: future-paddle-graphite
+    effectIntensity: 0.45
+  - id: futuristic-paddle-ceramic
     themeId: futuristic
-    displayName: Graphite Pair
-    description: Cool white ceramic against quiet graphite.
-    category: 0
-    primaryColor: {r: 0.92941177, g: 0.9411765, b: 0.96862745, a: 1}
-    secondaryColor: {r: 0.54509807, g: 0.5686275, b: 0.6509804, a: 1}
-    unlocked: 1
-    effectIntensity: 0.4
-  - id: future-ball-ion
-    themeId: futuristic
-    displayName: Ion Core
-    description: A restrained violet core with a soft edge.
+    displayName: Ceramic Pair
+    description: Bright ceramic with a soft falloff.
     category: 1
-    primaryColor: {r: 0.88235295, g: 0.76862746, b: 1, a: 1}
-    secondaryColor: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
-    unlocked: 1
-    effectIntensity: 0.65
-  - id: future-ball-pearl
-    themeId: futuristic
-    displayName: Pearl
-    description: Neutral ceramic white for maximum clarity.
-    category: 1
-    primaryColor: {r: 0.9647059, g: 0.9529412, b: 0.98039216, a: 1}
-    secondaryColor: {r: 0.7882353, g: 0.7764706, b: 0.827451, a: 1}
-    unlocked: 1
-    effectIntensity: 0.4
-  - id: future-arena-glass
-    themeId: futuristic
-    displayName: Glass Circuit
-    description: Pale rails above a restrained violet circuit.
-    category: 2
-    primaryColor: {r: 0.83137256, g: 0.8156863, b: 0.89411765, a: 1}
-    secondaryColor: {r: 0.84, g: 0.66, b: 1, a: 0.28}
-    unlocked: 1
-    effectIntensity: 0.65
-  - id: future-arena-quiet
-    themeId: futuristic
-    displayName: Quiet Alloy
-    description: Low-glare metal with a nearly invisible center guide.
-    category: 2
-    primaryColor: {r: 0.65882355, g: 0.6784314, b: 0.7372549, a: 1}
-    secondaryColor: {r: 0.66, g: 0.68, b: 0.74, a: 0.2}
+    primaryColor: {r: 0.9411765, g: 0.91764706, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 0.8509804, b: 0.74509805, a: 1}
     unlocked: 1
     effectIntensity: 0.3
-  - id: future-background-orbital
+  - id: futuristic-paddle-graphite
     themeId: futuristic
-    displayName: Orbital Dusk
-    description: Layered violet depth with sparse interface lines.
+    displayName: Graphite Pair
+    description: Restrained graphite, lit only at the edge.
+    category: 1
+    primaryColor: {r: 0.6627451, g: 0.6392157, b: 0.74509805, a: 1}
+    secondaryColor: {r: 0.43529412, g: 0.41568628, b: 0.50980395, a: 1}
+    unlocked: 1
+    effectIntensity: 0.25
+  - id: futuristic-ball-pearl
+    themeId: futuristic
+    displayName: Pearl
+    description: A clean neutral sphere.
+    category: 2
+    primaryColor: {r: 0.9647059, g: 0.9529412, b: 0.98039216, a: 1}
+    secondaryColor: {r: 0.84705883, g: 0.827451, b: 0.9019608, a: 1}
+    unlocked: 1
+    effectIntensity: 0.4
+  - id: futuristic-ball-ion
+    themeId: futuristic
+    displayName: Ion
+    description: A cool core with a short trail.
+    category: 2
+    primaryColor: {r: 0.8117647, g: 0.9019608, b: 1, a: 1}
+    secondaryColor: {r: 0.56078434, g: 0.7137255, b: 0.9019608, a: 1}
+    unlocked: 1
+    effectIntensity: 0.7
+  - id: futuristic-hud-pane
+    themeId: futuristic
+    displayName: Glass Pane
+    description: The score floating on layered glass.
     category: 3
+    primaryColor: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
+    secondaryColor: {r: 0.22745098, g: 0.20784314, b: 0.3137255, a: 1}
+    unlocked: 1
+    effectIntensity: 0.4
+  - id: futuristic-hud-minimal
+    themeId: futuristic
+    displayName: Minimal
+    description: No frame. Type and nothing else.
+    category: 3
+    primaryColor: {r: 0.9490196, g: 0.9372549, b: 0.972549, a: 1}
+    secondaryColor: {r: 0.16470589, g: 0.15294118, b: 0.21960784, a: 1}
+    unlocked: 1
+    effectIntensity: 0.15
+  - id: futuristic-effects-clean
+    themeId: futuristic
+    displayName: Clean
+    description: No overlay. The court, precisely lit.
+    category: 4
     primaryColor: {r: 0.03137255, g: 0.039215688, b: 0.06666667, a: 1}
-    secondaryColor: {r: 0.12941177, g: 0.09803922, b: 0.1764706, a: 1}
+    secondaryColor: {r: 0.07058824, g: 0.08235294, b: 0.13333334, a: 1}
     unlocked: 1
-    effectIntensity: 0.45
-  - id: future-background-deep-field
+    effectIntensity: 0.2
+  - id: futuristic-effects-lattice
     themeId: futuristic
-    displayName: Deep Field
-    description: A darker field with more visible ambient circuitry.
-    category: 3
-    primaryColor: {r: 0.019607844, g: 0.023529412, b: 0.043137256, a: 1}
-    secondaryColor: {r: 0.08235294, g: 0.06666667, b: 0.12156863, a: 1}
+    displayName: Lattice
+    description: A faint structural grid behind play.
+    category: 4
+    primaryColor: {r: 0.03137255, g: 0.039215688, b: 0.06666667, a: 1}
+    secondaryColor: {r: 0.078431375, g: 0.09411765, b: 0.1882353, a: 1}
     unlocked: 1
-    effectIntensity: 0.82
+    effectIntensity: 0.5
+  - id: futuristic-effects-bloom
+    themeId: futuristic
+    displayName: Bloom
+    description: Light lifts a little off every surface.
+    category: 4
+    primaryColor: {r: 0.03529412, g: 0.043137256, b: 0.078431375, a: 1}
+    secondaryColor: {r: 0.101960786, g: 0.11764706, b: 0.2, a: 1}
+    unlocked: 1
+    effectIntensity: 0.85
+  - id: futuristic-audio-sine
+    themeId: futuristic
+    displayName: Sine
+    description: Soft, tuned, almost musical.
+    category: 5
+    primaryColor: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 0.6901961, b: 0.49411765, a: 1}
+    unlocked: 1
+    effectIntensity: 0.5
+  - id: futuristic-audio-chamber
+    themeId: futuristic
+    displayName: Chamber
+    description: The same tones with air around them.
+    category: 5
+    primaryColor: {r: 0.7176471, g: 0.6039216, b: 0.8784314, a: 1}
+    secondaryColor: {r: 0.9019608, g: 0.6627451, b: 0.5411765, a: 1}
+    unlocked: 1
+    effectIntensity: 0.75

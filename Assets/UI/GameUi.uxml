@@ -100,16 +100,57 @@
                     </ui:VisualElement>
                     <ui:Label name="customization-summary" text="CHANGES PREVIEW LIVE" class="selection-summary" />
                 </ui:VisualElement>
-                <ui:VisualElement class="tab-bar">
-                    <ui:Button name="paddle-tab" text="PADDLES" class="tab-button is-selected" />
-                    <ui:Button name="ball-tab" text="BALLS" class="tab-button" />
-                    <ui:Button name="arena-tab" text="ARENAS" class="tab-button" />
-                    <ui:Button name="background-tab" text="BACKGROUNDS" class="tab-button" />
-                    <ui:Button name="theme-tab" text="WORLDS" class="tab-button" />
+                <ui:VisualElement class="workshop">
+                    <ui:VisualElement class="category-rail">
+                        <ui:Button name="shop-tab-theme" text="THEME" class="rail-button is-selected" />
+                        <ui:Button name="shop-tab-arena" text="ARENA" class="rail-button" />
+                        <ui:Button name="shop-tab-paddle" text="PADDLE" class="rail-button" />
+                        <ui:Button name="shop-tab-ball" text="BALL" class="rail-button" />
+                        <ui:Button name="shop-tab-hud" text="HUD" class="rail-button" />
+                        <ui:Button name="shop-tab-effects" text="EFFECTS" class="rail-button" />
+                        <ui:Button name="shop-tab-audio" text="AUDIO" class="rail-button" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="workshop__stage">
+                        <ui:VisualElement name="workshop-preview" class="workshop-preview">
+                            <ui:VisualElement name="preview-court" class="workshop-preview__court">
+                                <ui:VisualElement name="preview-paddle-left" class="preview-paddle preview-paddle--left" />
+                                <ui:VisualElement name="preview-net" class="preview-net" />
+                                <ui:VisualElement name="preview-ball" class="preview-ball" />
+                                <ui:VisualElement name="preview-paddle-right" class="preview-paddle preview-paddle--right" />
+                                <ui:VisualElement name="preview-hud" class="workshop-preview__hud">
+                                    <ui:Label name="preview-score" text="0   1" class="workshop-preview__score" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:Label name="workshop-preview-caption" text="LIVE PREVIEW" class="workshop-preview__caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="shop-options" class="workshop__options" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="workshop__collection panel">
+                        <ui:Label name="collection-eyebrow" text="COLLECTION" class="eyebrow" />
+                        <ui:Label name="collection-title" text="Cabinet Pair" class="collection__title" />
+                        <ui:Label name="collection-description" text="" class="collection__description" />
+                        <ui:VisualElement name="collection-swatches" class="collection__swatches" />
+                        <ui:VisualElement class="collection__divider" />
+                        <ui:VisualElement class="detail-row">
+                            <ui:Label name="collection-owned-caption" text="UNLOCKED" class="detail-row__label" />
+                            <ui:Label name="collection-owned-value" text="4 / 4" class="detail-row__value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="detail-row">
+                            <ui:Label name="collection-theme-caption" text="BELONGS TO" class="detail-row__label" />
+                            <ui:Label name="collection-theme-value" text="Retro" class="detail-row__value" />
+                        </ui:VisualElement>
+                        <ui:Label name="collection-note" text="Cosmetics belong to their world and cannot be mixed across themes." class="collection__note" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:ScrollView class="screen-scroll">
-                    <ui:VisualElement name="cosmetic-card-list" class="card-grid card-grid--compact" />
-                </ui:ScrollView>
+
+                <ui:VisualElement class="workshop__actions">
+                    <ui:Label name="workshop-dirty" text="" class="workshop__dirty" />
+                    <ui:Button name="workshop-reset-button" text="RESET" class="text-button" />
+                    <ui:Button name="workshop-randomize-button" text="RANDOMIZE" class="menu-button menu-button--compact" />
+                    <ui:Button name="workshop-apply-button" text="APPLY" class="menu-button menu-button--primary menu-button--compact" />
+                </ui:VisualElement>
             </ui:VisualElement>
 
             <ui:VisualElement name="settings-screen" class="screen is-hidden">
