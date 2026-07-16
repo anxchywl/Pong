@@ -52,32 +52,25 @@ namespace Pong
 
         private void ApplyCopy(GameTheme theme)
         {
-            root.Q<Label>("menu-eyebrow").text = theme.MenuEyebrow;
-            root.Q<Label>("menu-title").text = theme.MenuTitle;
-            root.Q<Label>("menu-subtitle").text = theme.MenuSubtitle;
-            root.Q<Label>("pause-eyebrow").text = theme.PauseEyebrow;
-            root.Q<Label>("pause-title").text = theme.PauseTitle;
-            root.Q<Label>("left-score-caption").text = theme.PlayerScoreLabel;
-            root.Q<Label>("right-score-caption").text = theme.OpponentScoreLabel;
-            root.Q<Button>("play-button").text = $"{theme.PlayIcon}  PLAY";
-            root.Q<Button>("game-mode-button").text = $"{theme.GameModeIcon}  GAME MODE";
-            root.Q<Button>("skins-button").text = $"{theme.SkinsIcon}  SKINS";
-            root.Q<Button>("background-button").text = $"{theme.BackgroundIcon}  BACKGROUND";
-            root.Q<Button>("theme-button").text = $"{theme.ThemeIcon}  WORLD";
-            root.Q<Button>("settings-button").text = $"{theme.SettingsIcon}  SETTINGS";
-            root.Q<Button>("credits-button").text = $"{theme.CreditsIcon}  CREDITS";
-            root.Q<Button>("quit-button").text = $"{theme.QuitIcon}  QUIT";
-            root.Q<Button>("hud-pause-button").text = theme.PauseIcon;
-            root.Q<Button>("resume-button").text = $"{theme.PlayIcon}  RESUME";
-            root.Q<Button>("pause-restart-button").text = $"{theme.RestartIcon}  RESTART";
-            root.Q<Button>("pause-settings-button").text = $"{theme.SettingsIcon}  SETTINGS";
-            root.Q<Button>("pause-main-menu-button").text = $"{theme.HomeIcon}  MAIN MENU";
-            root.Q<Button>("pause-quit-button").text = $"{theme.QuitIcon}  QUIT";
-            root.Q<Button>("win-restart-button").text = $"{theme.RestartIcon}  PLAY AGAIN";
-            root.Q<Button>("win-main-menu-button").text = $"{theme.HomeIcon}  MAIN MENU";
+            foreach (ThemeCopyEntry entry in theme.Copy)
+            {
+                string text = entry.Compose();
+                root.Query<VisualElement>(name: entry.Element).ForEach(element => SetText(element, text));
+                root.Query<VisualElement>(className: entry.Element).ForEach(element => SetText(element, text));
+            }
+        }
 
-            root.Query<Button>(className: "back-button").ForEach(button =>
-                button.text = $"{theme.BackIcon}  BACK");
+        private static void SetText(VisualElement element, string text)
+        {
+            switch (element)
+            {
+                case Button button:
+                    button.text = text;
+                    break;
+                case Label label:
+                    label.text = text;
+                    break;
+            }
         }
 
         private void BuildOverlay(GameTheme theme, float effectIntensity)

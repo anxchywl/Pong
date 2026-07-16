@@ -8,6 +8,7 @@ namespace Pong
     public sealed class GameUiController : MonoBehaviour
     {
         [SerializeField] private MatchController match;
+        [SerializeField] private SeatDirector seats;
         [SerializeField] private GameModeCatalog gameModes;
         [SerializeField] private ThemeCatalog themes;
         [SerializeField] private CosmeticCatalog cosmetics;
@@ -27,6 +28,8 @@ namespace Pong
         private UiAudioFeedback audioFeedback;
         private UiThemePresenter themePresenter;
         private MainMenuView mainMenu;
+        private PlayersView playersView;
+        private Button playButton;
         private GameModeView gameModeView;
         private CustomizationView customizationView;
         private MatchHud hud;
@@ -64,6 +67,8 @@ namespace Pong
             ApplyThemeAndCosmetics();
             match.StateChanged += HandleMatchStateChanged;
             navigator.Changed += HandleScreenChanged;
+            seats.Roster.Changed += HandleRosterChanged;
+            HandleRosterChanged();
             HandleModeChanged();
             HandleScreenChanged(AppScreen.MainMenu);
         }
@@ -90,6 +95,18 @@ namespace Pong
             {
                 navigator.Changed -= HandleScreenChanged;
             }
+
+            if (seats != null)
+            {
+                seats.Roster.Changed -= HandleRosterChanged;
+            }
+        }
+
+        private void HandleRosterChanged()
+        {
+            mainMenu.RenderLineup();
+            playersView.Render();
+            playButton.SetEnabled(seats.Roster.IsPlayable);
         }
 
         private void BuildViews()
@@ -105,16 +122,15 @@ namespace Pong
             hud = new MatchHud(root);
             mainMenu = new MainMenuView(
                 root,
+                seats.Roster,
+                seats.Profiles,
                 StartSelectedMode,
-                () => navigator.Open(AppScreen.GameMode),
-                () => OpenCustomization(CosmeticCategory.Paddle),
-                () => OpenCustomization(CosmeticCategory.Background),
-                OpenThemes,
-                () => navigator.Open(AppScreen.Settings),
-                () => navigator.Open(AppScreen.Credits),
+                navigator.Open,
                 ShowQuitConfirmation,
                 PlayClick
             );
+            playersView = new PlayersView(root, seats.Roster, seats.Profiles, PlayClick);
+            playButton = root.Q<Button>("play-button");
             gameModeView = new GameModeView(root, gameModes, preferences, HandleModeChanged, PlayClick);
             customizationView = new CustomizationView(
                 root,
@@ -140,6 +156,7 @@ namespace Pong
                 PlayClick();
                 match.TogglePause();
             };
+            root.Q<Button>("players-back-button").clicked += NavigateBack;
             root.Q<Button>("mode-back-button").clicked += NavigateBack;
             root.Q<Button>("customization-back-button").clicked += NavigateBack;
             root.Q<Button>("settings-back-button").clicked += CloseSettings;
@@ -239,18 +256,6 @@ namespace Pong
         {
             settingsOpenedFromPause = false;
             match.StartMatch(settings.PointsToWin, settings.GameSpeed);
-        }
-
-        private void OpenCustomization(CosmeticCategory category)
-        {
-            customizationView.ShowCategory(category);
-            navigator.Open(AppScreen.Customization);
-        }
-
-        private void OpenThemes()
-        {
-            customizationView.ShowThemes();
-            navigator.Open(AppScreen.Customization);
         }
 
         private void OpenPauseSettings()

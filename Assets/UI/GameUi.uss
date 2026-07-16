@@ -42,26 +42,6 @@
     display: none;
 }
 
-.ambient {
-    position: absolute;
-    width: 520px;
-    height: 520px;
-    border-radius: 260px;
-    opacity: 0.08;
-}
-
-.ambient--left {
-    left: -260px;
-    bottom: -260px;
-    background-color: var(--accent);
-}
-
-.ambient--right {
-    right: -300px;
-    top: -320px;
-    background-color: rgb(87, 131, 255);
-}
-
 .top-bar,
 .footer-bar,
 .screen-header,
@@ -136,16 +116,26 @@
     letter-spacing: 1.5px;
 }
 
+/* columns stretch rather than float, so the menu fills its height instead of
+   leaving a band of dead space above and below */
 .main-content {
     flex-grow: 1;
-    justify-content: space-between;
-    padding: 54px 3% 40px 3%;
+    align-items: stretch;
+    padding: 32px 3% 24px 3%;
 }
 
 .main-content__navigation {
-    width: 49%;
+    flex-grow: 1;
     max-width: 620px;
     min-width: 420px;
+    margin-right: 40px;
+    justify-content: flex-start;
+}
+
+.nav-stack {
+    flex-grow: 1;
+    justify-content: center;
+    max-height: 420px;
 }
 
 .eyebrow {
@@ -292,13 +282,54 @@
     width: 39%;
     max-width: 490px;
     min-width: 350px;
-    padding: 28px;
+    padding: 24px;
+}
+
+.match-preview__header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+/* absorbs slack so the detail rows sit on the card's bottom edge at any height */
+.match-preview__spacer {
+    flex-grow: 1;
+    min-height: 12px;
+}
+
+.lineup {
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.lineup-row {
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
+    justify-content: space-between;
+}
+
+.lineup-row__seat {
+    color: var(--ink-muted);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 1.2px;
+}
+
+.lineup-row__occupant {
+    color: var(--ink);
+    font-size: 12px;
+}
+
+.lineup-row--vacant .lineup-row__occupant {
+    color: var(--ink-muted);
 }
 
 .match-preview__court {
-    height: 210px;
+    height: 148px;
     margin-top: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     border-width: 1px;
     border-color: var(--line);
     border-radius: 12px;
@@ -363,6 +394,65 @@
     color: var(--ink-strong);
     font-size: 12px;
     -unity-font-style: bold;
+}
+
+/* the players screen mirrors the court: left side on the left, right on the right,
+   so the seat you configure is the paddle you will use */
+.court-lineup {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 8px 3% 0 3%;
+}
+
+.court-lineup__side {
+    flex-grow: 1;
+    width: 50%;
+}
+
+.court-lineup__divider {
+    width: 1px;
+    margin: 8px 32px 8px 32px;
+    background-color: var(--line);
+}
+
+.seat-column {
+    flex-grow: 1;
+    margin-top: 12px;
+    max-height: 420px;
+}
+
+.seat-card {
+    flex-grow: 1;
+    margin-bottom: 12px;
+    padding: 16px 18px 16px 18px;
+    max-height: 132px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.seat-card__role {
+    color: var(--ink-muted);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+}
+
+.seat-card__occupant {
+    color: var(--ink-strong);
+    font-size: 20px;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.seat-card__hint {
+    color: var(--ink-muted);
+    font-size: 11px;
+}
+
+.seat-card--vacant .seat-card__occupant {
+    color: var(--ink-muted);
 }
 
 .input-hint {

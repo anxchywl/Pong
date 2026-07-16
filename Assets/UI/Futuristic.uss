@@ -17,16 +17,6 @@
     background-color: rgb(8, 10, 17);
 }
 
-.ambient--left {
-    background-color: rgb(214, 168, 255);
-    opacity: 0.07;
-}
-
-.ambient--right {
-    background-color: rgb(255, 176, 126);
-    opacity: 0.055;
-}
-
 .top-bar {
     border-bottom-color: rgba(214, 168, 255, 0.2);
 }

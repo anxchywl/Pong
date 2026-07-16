@@ -1,8 +1,32 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Pong
 {
+    /// One fixed string in the interface, addressed by the UXML name or class it belongs to.
+    [Serializable]
+    public sealed class ThemeCopyEntry
+    {
+        [Tooltip("A UXML name or class. Every element matching either is updated.")]
+        [SerializeField] private string element;
+        [SerializeField] private string icon;
+        [SerializeField] private string text;
+
+        public string Element => element;
+
+        public string Compose()
+        {
+            if (string.IsNullOrEmpty(icon))
+            {
+                return text;
+            }
+
+            return string.IsNullOrEmpty(text) ? icon : $"{icon}  {text}";
+        }
+    }
+
     public enum ThemeOverlayPattern
     {
         Scanlines,
@@ -32,27 +56,13 @@ namespace Pong
         [SerializeField] private string[] preferredFontNames;
 
         [Header("Interface language")]
-        [SerializeField] private string menuEyebrow;
-        [SerializeField] private string menuTitle;
-        [SerializeField] private string menuSubtitle;
-        [SerializeField] private string pauseEyebrow;
-        [SerializeField] private string pauseTitle;
+        [Tooltip("Every fixed string in the interface, addressed by UXML name or class. A theme " +
+            "rewrites the interface's whole voice here, and a new menu entry needs no code.")]
+        [SerializeField] private List<ThemeCopyEntry> copy = new List<ThemeCopyEntry>();
+
+        [Tooltip("Chosen at runtime by the result, so these cannot bind to a fixed element")]
         [SerializeField] private string victoryTitle;
         [SerializeField] private string defeatTitle;
-        [SerializeField] private string playerScoreLabel;
-        [SerializeField] private string opponentScoreLabel;
-        [SerializeField] private string playIcon;
-        [SerializeField] private string pauseIcon;
-        [SerializeField] private string backIcon;
-        [SerializeField] private string gameModeIcon;
-        [SerializeField] private string skinsIcon;
-        [SerializeField] private string backgroundIcon;
-        [SerializeField] private string themeIcon;
-        [SerializeField] private string settingsIcon;
-        [SerializeField] private string creditsIcon;
-        [SerializeField] private string quitIcon;
-        [SerializeField] private string restartIcon;
-        [SerializeField] private string homeIcon;
 
         [Header("Presentation")]
         [SerializeField] private Color primaryAccent = Color.white;
@@ -88,27 +98,9 @@ namespace Pong
         public string Description => description;
         public StyleSheet StyleSheet => styleSheet;
         public string[] PreferredFontNames => preferredFontNames;
-        public string MenuEyebrow => menuEyebrow;
-        public string MenuTitle => menuTitle;
-        public string MenuSubtitle => menuSubtitle;
-        public string PauseEyebrow => pauseEyebrow;
-        public string PauseTitle => pauseTitle;
+        public IReadOnlyList<ThemeCopyEntry> Copy => copy;
         public string VictoryTitle => victoryTitle;
         public string DefeatTitle => defeatTitle;
-        public string PlayerScoreLabel => playerScoreLabel;
-        public string OpponentScoreLabel => opponentScoreLabel;
-        public string PlayIcon => playIcon;
-        public string PauseIcon => pauseIcon;
-        public string BackIcon => backIcon;
-        public string GameModeIcon => gameModeIcon;
-        public string SkinsIcon => skinsIcon;
-        public string BackgroundIcon => backgroundIcon;
-        public string ThemeIcon => themeIcon;
-        public string SettingsIcon => settingsIcon;
-        public string CreditsIcon => creditsIcon;
-        public string QuitIcon => quitIcon;
-        public string RestartIcon => restartIcon;
-        public string HomeIcon => homeIcon;
         public Color PrimaryAccent => primaryAccent;
         public Color SecondaryAccent => secondaryAccent;
         public Color PlayerColor => playerColor;

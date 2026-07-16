@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UIElements;
 
@@ -20,12 +21,17 @@ namespace Pong.Editor
         private const string RetroParticleMaterialPath = "Assets/UI/RetroParticles.mat";
         private const string FuturisticParticleMaterialPath = "Assets/UI/FuturisticParticles.mat";
         private const string CosmeticsPath = "Assets/UI/Cosmetics.asset";
+        private const string InputProfilesPath = "Assets/UI/InputProfiles.asset";
+
+        // the goalkeepers sit at +/-7.5; attackers stand ahead of them with the centre left open
+        private const float AttackerColumn = 4.2f;
 
         [MenuItem("Pong/Setup Game UI")]
         public static void Run()
         {
             UnityEngine.SceneManagement.Scene scene = EditorSceneManager.OpenScene(ScenePath);
             PanelSettings panelSettings = CreatePanelSettings();
+            InputProfileCatalog inputProfiles = CreateInputProfiles();
             GameModeCatalog gameModes = CreateGameModes();
             GameTheme futuristic = CreateFuturisticTheme();
             GameTheme retro = CreateRetroTheme();
@@ -34,10 +40,11 @@ namespace Pong.Editor
             AssetDatabase.SaveAssets();
 
             RemoveLegacyUi();
+            SeatDirector seats = CreateSeats(inputProfiles);
             GameObject uiObject = CreateUiObject(panelSettings);
             CreateEventSystem();
             WirePresentation(uiObject.GetComponent<GamePresentation>());
-            WireController(uiObject.GetComponent<GameUiController>(), gameModes, themes, cosmetics);
+            WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
@@ -57,6 +64,42 @@ namespace Pong.Editor
             );
             EditorUtility.SetDirty(settings);
             return settings;
+        }
+
+        private static InputProfileCatalog CreateInputProfiles()
+        {
+            InputProfileCatalog catalog = LoadOrCreate<InputProfileCatalog>(InputProfilesPath);
+            catalog.name = "InputProfiles";
+            SerializedObject serialized = new SerializedObject(catalog);
+            SerializedProperty list = serialized.FindProperty("profiles");
+            list.arraySize = 3;
+            SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard",
+                "W and S", InputProfileKind.Keyboard, Key.W, Key.S);
+            SetProfile(list.GetArrayElementAtIndex(1), "keyboard-arrows", "Keyboard",
+                "Up and Down arrows", InputProfileKind.Keyboard, Key.UpArrow, Key.DownArrow);
+            SetProfile(list.GetArrayElementAtIndex(2), "gamepad", "Gamepad",
+                "Left stick or D-pad", InputProfileKind.Gamepad, Key.None, Key.None);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(catalog);
+            return catalog;
+        }
+
+        private static void SetProfile(
+            SerializedProperty property,
+            string id,
+            string displayName,
+            string hint,
+            InputProfileKind kind,
+            Key moveUp,
+            Key moveDown
+        )
+        {
+            property.FindPropertyRelative("id").stringValue = id;
+            property.FindPropertyRelative("displayName").stringValue = displayName;
+            property.FindPropertyRelative("hint").stringValue = hint;
+            property.FindPropertyRelative("kind").enumValueIndex = (int)kind;
+            property.FindPropertyRelative("moveUpKey").intValue = (int)moveUp;
+            property.FindPropertyRelative("moveDownKey").intValue = (int)moveDown;
         }
 
         private static GameModeCatalog CreateGameModes()
@@ -87,27 +130,45 @@ namespace Pong.Editor
                 "A cabinet-built world of crisp geometry, warm phosphor, scanlines, and immediate arcade feedback.");
             SetReference(serialized, "styleSheet", AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI/Retro.uss"));
             SetStringArray(serialized, "preferredFontNames", "Menlo", "Consolas", "Courier New");
-            SetString(serialized, "menuEyebrow", "INSERT COIN // QUICK MATCH");
-            SetString(serialized, "menuTitle", "READY PLAYER ONE");
-            SetString(serialized, "menuSubtitle", "First to the target score takes the cabinet.");
-            SetString(serialized, "pauseEyebrow", "SYSTEM HOLD");
-            SetString(serialized, "pauseTitle", "GAME PAUSED");
             SetString(serialized, "victoryTitle", "PLAYER ONE WINS");
             SetString(serialized, "defeatTitle", "CPU TAKES THE ROUND");
-            SetString(serialized, "playerScoreLabel", "P1");
-            SetString(serialized, "opponentScoreLabel", "CPU");
-            SetString(serialized, "playIcon", "[>]");
-            SetString(serialized, "pauseIcon", "[II]");
-            SetString(serialized, "backIcon", "[<]");
-            SetString(serialized, "gameModeIcon", "[M]");
-            SetString(serialized, "skinsIcon", "[S]");
-            SetString(serialized, "backgroundIcon", "[B]");
-            SetString(serialized, "themeIcon", "[W]");
-            SetString(serialized, "settingsIcon", "[*]");
-            SetString(serialized, "creditsIcon", "[i]");
-            SetString(serialized, "quitIcon", "[X]");
-            SetString(serialized, "restartIcon", "[R]");
-            SetString(serialized, "homeIcon", "[H]");
+            SetCopy(
+                serialized,
+                ("menu-eyebrow", "", "INSERT COIN // QUICK MATCH"),
+                ("menu-title", "", "READY PLAYER ONE"),
+                ("menu-subtitle", "", "First to the target score takes the cabinet."),
+                ("match-card-eyebrow", "", "NEXT MATCH"),
+                ("lineup-eyebrow", "", "AT THE CABINET"),
+                ("mode-caption", "", "MODE"),
+                ("world-caption", "", "WORLD"),
+                ("menu-footer-hint", "", "ENTER OR A TO CONFIRM"),
+                ("menu-footer-mark", "", "PONG  •  LOCAL BUILD"),
+                ("players-eyebrow", "", "CABINET SEATING"),
+                ("players-title", "", "PLAYERS"),
+                ("left-side-caption", "", "PLAYER ONE SIDE"),
+                ("right-side-caption", "", "PLAYER TWO SIDE"),
+                ("players-hint", "", "GOALKEEPER HOLDS THE LINE. ATTACKER MEETS THE BALL EARLY."),
+                ("pause-eyebrow", "", "SYSTEM HOLD"),
+                ("pause-title", "", "GAME PAUSED"),
+                ("left-score-caption", "", "P1"),
+                ("right-score-caption", "", "CPU"),
+                ("play-button", "[>]", "PLAY"),
+                ("players-button", "[P]", "PLAYERS"),
+                ("game-mode-button", "[M]", "GAME MODE"),
+                ("customization-button", "[C]", "CUSTOMIZATION"),
+                ("settings-button", "[*]", "SETTINGS"),
+                ("credits-button", "[i]", "CREDITS"),
+                ("quit-button", "[X]", "QUIT"),
+                ("hud-pause-button", "[II]", ""),
+                ("resume-button", "[>]", "RESUME"),
+                ("pause-restart-button", "[R]", "RESTART"),
+                ("pause-settings-button", "[*]", "SETTINGS"),
+                ("pause-main-menu-button", "[H]", "MAIN MENU"),
+                ("pause-quit-button", "[X]", "QUIT"),
+                ("win-restart-button", "[R]", "PLAY AGAIN"),
+                ("win-main-menu-button", "[H]", "MAIN MENU"),
+                ("back-button", "[<]", "BACK")
+            );
             SetColor(serialized, "primaryAccent", Hex("F5B942"));
             SetColor(serialized, "secondaryAccent", Hex("6FA25C"));
             SetColor(serialized, "playerColor", Hex("F5B942"));
@@ -147,27 +208,45 @@ namespace Pong.Editor
             SetReference(serialized, "styleSheet",
                 AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI/Futuristic.uss"));
             SetStringArray(serialized, "preferredFontNames", "Avenir Next", "Segoe UI", "Arial");
-            SetString(serialized, "menuEyebrow", "MATCH LINK READY");
-            SetString(serialized, "menuTitle", "Enter the arena.");
-            SetString(serialized, "menuSubtitle", "Precision play in a calm, responsive competition space.");
-            SetString(serialized, "pauseEyebrow", "SIMULATION SUSPENDED");
-            SetString(serialized, "pauseTitle", "Awaiting your return.");
             SetString(serialized, "victoryTitle", "VICTORY CONFIRMED");
             SetString(serialized, "defeatTitle", "MATCH COMPLETE");
-            SetString(serialized, "playerScoreLabel", "YOU");
-            SetString(serialized, "opponentScoreLabel", "RIVAL");
-            SetString(serialized, "playIcon", ">");
-            SetString(serialized, "pauseIcon", "II");
-            SetString(serialized, "backIcon", "<");
-            SetString(serialized, "gameModeIcon", "//");
-            SetString(serialized, "skinsIcon", "[]");
-            SetString(serialized, "backgroundIcon", "::");
-            SetString(serialized, "themeIcon", "||");
-            SetString(serialized, "settingsIcon", "<>");
-            SetString(serialized, "creditsIcon", "..");
-            SetString(serialized, "quitIcon", "X");
-            SetString(serialized, "restartIcon", "R");
-            SetString(serialized, "homeIcon", "H");
+            SetCopy(
+                serialized,
+                ("menu-eyebrow", "", "MATCH LINK READY"),
+                ("menu-title", "", "Enter the arena."),
+                ("menu-subtitle", "", "Precision play in a calm, responsive competition space."),
+                ("match-card-eyebrow", "", "NEXT MATCH"),
+                ("lineup-eyebrow", "", "LINEUP"),
+                ("mode-caption", "", "MODE"),
+                ("world-caption", "", "WORLD"),
+                ("menu-footer-hint", "", "ENTER OR A TO CONFIRM"),
+                ("menu-footer-mark", "", "PONG  •  LOCAL BUILD"),
+                ("players-eyebrow", "", "WHO IS PLAYING"),
+                ("players-title", "", "Players"),
+                ("left-side-caption", "", "LEFT SIDE"),
+                ("right-side-caption", "", "RIGHT SIDE"),
+                ("players-hint", "", "A goalkeeper defends the goal. An attacker meets the ball early."),
+                ("pause-eyebrow", "", "SIMULATION SUSPENDED"),
+                ("pause-title", "", "Awaiting your return."),
+                ("left-score-caption", "", "YOU"),
+                ("right-score-caption", "", "RIVAL"),
+                ("play-button", ">", "PLAY"),
+                ("players-button", "&&", "PLAYERS"),
+                ("game-mode-button", "//", "GAME MODE"),
+                ("customization-button", "::", "CUSTOMIZATION"),
+                ("settings-button", "<>", "SETTINGS"),
+                ("credits-button", "..", "CREDITS"),
+                ("quit-button", "X", "QUIT"),
+                ("hud-pause-button", "II", ""),
+                ("resume-button", ">", "RESUME"),
+                ("pause-restart-button", "R", "RESTART"),
+                ("pause-settings-button", "<>", "SETTINGS"),
+                ("pause-main-menu-button", "H", "MAIN MENU"),
+                ("pause-quit-button", "X", "QUIT"),
+                ("win-restart-button", "R", "PLAY AGAIN"),
+                ("win-main-menu-button", "H", "MAIN MENU"),
+                ("back-button", "<", "BACK")
+            );
             SetColor(serialized, "primaryAccent", Hex("D6A8FF"));
             SetColor(serialized, "secondaryAccent", Hex("FFB07E"));
             SetColor(serialized, "playerColor", Hex("D6A8FF"));
@@ -329,6 +408,81 @@ namespace Pong.Editor
             }
         }
 
+        /// The court gains an attacker column ahead of each goalkeeper. The goalkeepers stay exactly
+        /// where they were, so a one-per-side lineup is the same match it has always been.
+        private static SeatDirector CreateSeats(InputProfileCatalog profiles)
+        {
+            GameObject keeperLeft = GameObject.Find("Player Paddle");
+            GameObject keeperRight = GameObject.Find("Computer Paddle");
+
+            PaddleSeat[] seats =
+            {
+                ConfigureSeat(keeperLeft, PlayerSide.Left, SeatRole.Goalkeeper),
+                ConfigureSeat(
+                    ClonePaddle(keeperLeft, "Left Attacker", AttackerColumn * -1f),
+                    PlayerSide.Left,
+                    SeatRole.Attacker
+                ),
+                ConfigureSeat(keeperRight, PlayerSide.Right, SeatRole.Goalkeeper),
+                ConfigureSeat(
+                    ClonePaddle(keeperRight, "Right Attacker", AttackerColumn),
+                    PlayerSide.Right,
+                    SeatRole.Attacker
+                )
+            };
+
+            GameObject directorObject = GameObject.Find("Seats");
+            if (directorObject == null)
+            {
+                directorObject = new GameObject("Seats");
+            }
+
+            directorObject.transform.SetParent(GameObject.Find("Gameplay").transform, false);
+            SeatDirector director = Ensure<SeatDirector>(directorObject);
+
+            SerializedObject serialized = new SerializedObject(director);
+            SetReference(serialized, "profiles", profiles);
+            SerializedProperty seatProperty = serialized.FindProperty("seats");
+            seatProperty.arraySize = seats.Length;
+            for (int index = 0; index < seats.Length; index++)
+            {
+                seatProperty.GetArrayElementAtIndex(index).objectReferenceValue = seats[index];
+            }
+
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return director;
+        }
+
+        private static GameObject ClonePaddle(GameObject source, string name, float column)
+        {
+            Transform existing = source.transform.parent.Find(name);
+            GameObject clone = existing == null
+                ? Object.Instantiate(source, source.transform.parent)
+                : existing.gameObject;
+            clone.name = name;
+            clone.transform.localPosition = new Vector3(column, 0f, source.transform.localPosition.z);
+            return clone;
+        }
+
+        private static PaddleSeat ConfigureSeat(GameObject paddle, PlayerSide side, SeatRole role)
+        {
+            PlayerPaddleInput human = Ensure<PlayerPaddleInput>(paddle);
+            ComputerPaddleController computer = Ensure<ComputerPaddleController>(paddle);
+
+            SerializedObject computerSerialized = new SerializedObject(computer);
+            SetReference(computerSerialized, "ball", FindComponent<BallController>("Ball"));
+            computerSerialized.ApplyModifiedPropertiesWithoutUndo();
+
+            PaddleSeat seat = Ensure<PaddleSeat>(paddle);
+            SerializedObject serialized = new SerializedObject(seat);
+            SetEnum(serialized, "side", side);
+            SetEnum(serialized, "role", role);
+            SetReference(serialized, "humanInput", human);
+            SetReference(serialized, "computerInput", computer);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return seat;
+        }
+
         private static void WirePresentation(GamePresentation presentation)
         {
             SpriteRenderer player = FindComponent<SpriteRenderer>("Player Paddle");
@@ -386,6 +540,7 @@ namespace Pong.Editor
 
         private static void WireController(
             GameUiController controller,
+            SeatDirector seats,
             GameModeCatalog gameModes,
             ThemeCatalog themes,
             CosmeticCatalog cosmetics
@@ -393,11 +548,19 @@ namespace Pong.Editor
         {
             SerializedObject serialized = new SerializedObject(controller);
             SetReference(serialized, "match", Object.FindAnyObjectByType<MatchController>());
+            SetReference(serialized, "seats", seats);
             SetReference(serialized, "gameModes", gameModes);
             SetReference(serialized, "themes", themes);
             SetReference(serialized, "cosmetics", cosmetics);
             SetReference(serialized, "presentation", controller.GetComponent<GamePresentation>());
             serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // explicit null check: Unity's == operator, not ??, is what understands a missing component
+        private static T Ensure<T>(GameObject target) where T : Component
+        {
+            T component = target.GetComponent<T>();
+            return component == null ? target.AddComponent<T>() : component;
         }
 
         private static T LoadOrCreate<T>(string path) where T : ScriptableObject
@@ -466,6 +629,22 @@ namespace Pong.Editor
             property.FindPropertyRelative("secondaryColor").colorValue = secondary;
             property.FindPropertyRelative("unlocked").boolValue = true;
             property.FindPropertyRelative("effectIntensity").floatValue = effectIntensity;
+        }
+
+        private static void SetCopy(
+            SerializedObject serialized,
+            params (string Element, string Icon, string Text)[] entries
+        )
+        {
+            SerializedProperty list = serialized.FindProperty("copy");
+            list.arraySize = entries.Length;
+            for (int index = 0; index < entries.Length; index++)
+            {
+                SerializedProperty entry = list.GetArrayElementAtIndex(index);
+                entry.FindPropertyRelative("element").stringValue = entries[index].Element;
+                entry.FindPropertyRelative("icon").stringValue = entries[index].Icon;
+                entry.FindPropertyRelative("text").stringValue = entries[index].Text;
+            }
         }
 
         private static void SetString(SerializedObject serialized, string propertyName, string value)

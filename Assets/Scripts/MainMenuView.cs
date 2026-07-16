@@ -5,32 +5,39 @@ namespace Pong
 {
     public sealed class MainMenuView
     {
+        private readonly MatchRoster roster;
+        private readonly InputProfileCatalog profiles;
         private readonly Label modeValue;
         private readonly Label themeValue;
+        private readonly Label playerCount;
+        private readonly VisualElement lineup;
 
         public MainMenuView(
             VisualElement root,
+            MatchRoster roster,
+            InputProfileCatalog profiles,
             Action play,
-            Action gameMode,
-            Action skins,
-            Action background,
-            Action themes,
-            Action settings,
-            Action credits,
+            Action<AppScreen> open,
             Action quit,
             Action clickFeedback
         )
         {
+            this.roster = roster;
+            this.profiles = profiles;
             modeValue = root.Q<Label>("selected-mode-value");
             themeValue = root.Q<Label>("selected-theme-value");
+            playerCount = root.Q<Label>("match-card-count");
+            lineup = root.Q<VisualElement>("menu-lineup");
+
             Bind(root.Q<Button>("play-button"), play, clickFeedback);
-            Bind(root.Q<Button>("game-mode-button"), gameMode, clickFeedback);
-            Bind(root.Q<Button>("skins-button"), skins, clickFeedback);
-            Bind(root.Q<Button>("background-button"), background, clickFeedback);
-            Bind(root.Q<Button>("theme-button"), themes, clickFeedback);
-            Bind(root.Q<Button>("settings-button"), settings, clickFeedback);
-            Bind(root.Q<Button>("credits-button"), credits, clickFeedback);
+            Bind(root.Q<Button>("players-button"), () => open(AppScreen.Players), clickFeedback);
+            Bind(root.Q<Button>("game-mode-button"), () => open(AppScreen.GameMode), clickFeedback);
+            Bind(root.Q<Button>("customization-button"), () => open(AppScreen.Customization), clickFeedback);
+            Bind(root.Q<Button>("settings-button"), () => open(AppScreen.Settings), clickFeedback);
+            Bind(root.Q<Button>("credits-button"), () => open(AppScreen.Credits), clickFeedback);
             Bind(root.Q<Button>("quit-button"), quit, clickFeedback);
+
+            RenderLineup();
         }
 
         public void SetSelectedMode(string modeName)
@@ -41,6 +48,43 @@ namespace Pong
         public void SetSelectedTheme(string themeName)
         {
             themeValue.text = themeName;
+        }
+
+        /// Shows the lineup on the menu itself, so who is playing is visible without
+        /// opening the players screen to find out.
+        public void RenderLineup()
+        {
+            lineup.Clear();
+
+            foreach (CourtSeat seat in CourtSeat.All)
+            {
+                SeatAssignment assignment = roster.Get(seat);
+                if (!assignment.IsOccupied)
+                {
+                    continue;
+                }
+
+                VisualElement row = new VisualElement();
+                row.AddToClassList("lineup-row");
+
+                Label seatLabel = new Label(SeatLabel(seat));
+                seatLabel.AddToClassList("lineup-row__seat");
+                Label occupant = new Label(SeatDescription.Occupant(assignment, profiles));
+                occupant.AddToClassList("lineup-row__occupant");
+
+                row.Add(seatLabel);
+                row.Add(occupant);
+                lineup.Add(row);
+            }
+
+            int humans = roster.HumanCount;
+            playerCount.text = humans == 1 ? "1 PLAYER" : $"{humans} PLAYERS";
+        }
+
+        private static string SeatLabel(CourtSeat seat)
+        {
+            string side = seat.Side == PlayerSide.Left ? "LEFT" : "RIGHT";
+            return $"{side}  ·  {SeatDescription.Role(seat.Role)}";
         }
 
         private static void Bind(Button button, Action action, Action clickFeedback)

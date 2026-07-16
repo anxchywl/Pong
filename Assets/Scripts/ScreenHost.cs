@@ -12,6 +12,7 @@ namespace Pong
             screens = new Dictionary<AppScreen, VisualElement>
             {
                 [AppScreen.MainMenu] = root.Q<VisualElement>("main-menu-screen"),
+                [AppScreen.Players] = root.Q<VisualElement>("players-screen"),
                 [AppScreen.GameMode] = root.Q<VisualElement>("game-mode-screen"),
                 [AppScreen.Customization] = root.Q<VisualElement>("customization-screen"),
                 [AppScreen.Settings] = root.Q<VisualElement>("settings-screen"),
