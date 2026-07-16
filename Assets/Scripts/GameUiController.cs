@@ -74,7 +74,7 @@ namespace Pong
             settings = GameSettings.Load();
             settings.Sanitize();
             audioFeedback = new UiAudioFeedback(GetComponent<AudioSource>());
-            themePresenter = new UiThemePresenter(root);
+            themePresenter = new UiThemePresenter(root, document.panelSettings);
 
             BuildViews();
             ApplySettings();

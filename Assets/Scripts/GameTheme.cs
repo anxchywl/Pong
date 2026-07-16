@@ -52,7 +52,11 @@ namespace Pong
         [SerializeField] private string id;
         [SerializeField] private string displayName;
         [SerializeField, TextArea] private string description;
-        [SerializeField] private StyleSheet styleSheet;
+
+        [Tooltip("The theme's whole interface language. It imports the shared structure and this " +
+            "theme's own sheet, so swapping it swaps every screen at once.")]
+        [SerializeField] private ThemeStyleSheet themeStyleSheet;
+
         [SerializeField] private string[] preferredFontNames;
 
         [Header("Interface language")]
@@ -96,7 +100,7 @@ namespace Pong
         public string Id => id;
         public string DisplayName => displayName;
         public string Description => description;
-        public StyleSheet StyleSheet => styleSheet;
+        public ThemeStyleSheet ThemeStyleSheet => themeStyleSheet;
         public string[] PreferredFontNames => preferredFontNames;
         public IReadOnlyList<ThemeCopyEntry> Copy => copy;
         public string VictoryTitle => victoryTitle;

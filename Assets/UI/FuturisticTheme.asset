@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Futuristic
   description: A quiet competition space with layered glass, precise motion, ceramic
     surfaces, and restrained light.
-  styleSheet: {fileID: 7433441132597879392, guid: 026bf116f321a452685e8681bb2d8ca1, type: 3}
+  themeStyleSheet: {fileID: -4733365628477956816, guid: 2ae77f93457b549268aa45d0746a1400, type: 3}
   preferredFontNames:
   - Avenir Next
   - Segoe UI

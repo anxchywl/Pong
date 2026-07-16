@@ -7,25 +7,22 @@ namespace Pong
     public sealed class UiThemePresenter
     {
         private readonly VisualElement root;
+        private readonly PanelSettings panel;
         private readonly Dictionary<string, Font> fonts = new Dictionary<string, Font>();
-        private StyleSheet activeStyleSheet;
 
-        public UiThemePresenter(VisualElement root)
+        public UiThemePresenter(VisualElement root, PanelSettings panel)
         {
             this.root = root;
+            this.panel = panel;
         }
 
         public void Apply(GameTheme theme, float effectIntensity)
         {
-            if (activeStyleSheet != null)
+            // one assignment swaps the controls, the shared structure and this theme's language
+            // together, rather than adding and removing sheets behind the panel's back
+            if (theme.ThemeStyleSheet != null && panel.themeStyleSheet != theme.ThemeStyleSheet)
             {
-                root.styleSheets.Remove(activeStyleSheet);
-            }
-
-            activeStyleSheet = theme.StyleSheet;
-            if (activeStyleSheet != null)
-            {
-                root.styleSheets.Add(activeStyleSheet);
+                panel.themeStyleSheet = theme.ThemeStyleSheet;
             }
 
             ApplyFont(theme);

@@ -22,6 +22,8 @@ namespace Pong.Editor
         private const string FuturisticParticleMaterialPath = "Assets/UI/FuturisticParticles.mat";
         private const string CosmeticsPath = "Assets/UI/Cosmetics.asset";
         private const string InputProfilesPath = "Assets/UI/InputProfiles.asset";
+        private const string RetroThemeSheetPath = "Assets/UI/Themes/Retro.tss";
+        private const string FuturisticThemeSheetPath = "Assets/UI/Themes/Futuristic.tss";
 
         // the goalkeepers sit at +/-7.5; attackers stand ahead of them with the centre left open
         private const float AttackerColumn = 4.2f;
@@ -74,9 +76,10 @@ namespace Pong.Editor
             settings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
             settings.match = 0.5f;
             settings.sortingOrder = 10;
-            settings.themeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
-                "Assets/UI Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss"
-            );
+
+            // a theme's sheet is assigned at runtime; this is only what the editor shows before
+            // play, so the panel is never left with the bare default theme
+            settings.themeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(FuturisticThemeSheetPath);
             EditorUtility.SetDirty(settings);
             return settings;
         }
@@ -146,7 +149,8 @@ namespace Pong.Editor
             SetString(serialized, "displayName", "Retro");
             SetString(serialized, "description",
                 "A cabinet-built world of crisp geometry, warm phosphor, scanlines, and immediate arcade feedback.");
-            SetReference(serialized, "styleSheet", AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI/Retro.uss"));
+            SetReference(serialized, "themeStyleSheet",
+                AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(RetroThemeSheetPath));
             SetStringArray(serialized, "preferredFontNames", "Menlo", "Consolas", "Courier New");
             SetString(serialized, "victoryTitle", "PLAYER ONE WINS");
             SetString(serialized, "defeatTitle", "CPU TAKES THE ROUND");
@@ -262,8 +266,8 @@ namespace Pong.Editor
             SetString(serialized, "displayName", "Futuristic");
             SetString(serialized, "description",
                 "A quiet competition space with layered glass, precise motion, ceramic surfaces, and restrained light.");
-            SetReference(serialized, "styleSheet",
-                AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI/Futuristic.uss"));
+            SetReference(serialized, "themeStyleSheet",
+                AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(FuturisticThemeSheetPath));
             SetStringArray(serialized, "preferredFontNames", "Avenir Next", "Segoe UI", "Arial");
             SetString(serialized, "victoryTitle", "VICTORY CONFIRMED");
             SetString(serialized, "defeatTitle", "MATCH COMPLETE");

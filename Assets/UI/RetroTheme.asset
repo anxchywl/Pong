@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Retro
   description: A cabinet-built world of crisp geometry, warm phosphor, scanlines,
     and immediate arcade feedback.
-  styleSheet: {fileID: 7433441132597879392, guid: 5b96db1cc290b459e9e226196545b83e, type: 3}
+  themeStyleSheet: {fileID: -4733365628477956816, guid: 8352c2f4c2c8c44368e3fa2ea0db00da, type: 3}
   preferredFontNames:
   - Menlo
   - Consolas

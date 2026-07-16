@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <Style src="GameUi.uss" />
+    <!-- no Style element: the theme style sheet imports the shared sheet and then the theme's
+         own, so a theme's rules land after the structure they are overriding rather than before -->
     <ui:VisualElement name="game-ui" class="game-ui">
         <ui:VisualElement name="screen-layer" class="screen-layer">
             <ui:VisualElement name="main-menu-screen" class="screen screen--main">

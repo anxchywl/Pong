@@ -1,0 +1,6 @@
+/* Retro's design system as a Theme Style Sheet: the sanctioned way to swap an entire
+   interface language at once. Panel settings point at one of these, so the controls,
+   the shared structure and the theme's own language arrive together. */
+@import url("unity-theme://default");
+@import url("project://database/Assets/UI/GameUi.uss?fileID=7433441132597879392&guid=8212b6105ff384739af686a7019c4df1&type=3#GameUi");
+@import url("project://database/Assets/UI/Retro.uss?fileID=7433441132597879392&guid=5b96db1cc290b459e9e226196545b83e&type=3#Retro");
