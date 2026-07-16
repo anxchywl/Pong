@@ -3,6 +3,9 @@
 *.hlsl text eol=lf
 *.asmdef text eol=lf
 *.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
 *.meta text eol=lf
 *.unity text eol=lf
 *.prefab text eol=lf
@@ -15,4 +18,3 @@
 *.fbx binary
 *.wav binary
 *.mp3 binary
-

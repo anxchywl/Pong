@@ -24,6 +24,7 @@
 *.mdb
 *.opendb
 *.VC.db
+*.tmp
 
 # IDE and OS files
 .vs/
@@ -41,8 +42,9 @@ Thumbs.db
 *.pdb
 *.zip
 .env
+.env.*
+!.env.example
 
 # Crash reports
 sysinfo.txt
 crashlytics-build.properties
-

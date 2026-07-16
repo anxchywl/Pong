@@ -1,4 +1,4 @@
-name: Unity CI
+name: CI
 
 on:
   push:
@@ -9,33 +9,37 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    name: Build Unity project
+  repository:
+    name: Validate repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+
+      - name: Validate Unity project files
+        run: ./ci/validate-project.sh
+
+  tests:
+    name: Run Unity tests
     runs-on: ubuntu-latest
     env:
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
     steps:
-      - name: Checkout
+      - name: Check out repository
         if: ${{ env.UNITY_LICENSE != '' }}
-        uses: actions/checkout@v4
-        with:
-          lfs: true
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
 
-      - name: Build project
+      - name: Run tests
         if: ${{ env.UNITY_LICENSE != '' }}
-        uses: game-ci/unity-builder@v4
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9
         with:
-          targetPlatform: StandaloneLinux64
-          versionChangeset: ${{ github.sha }}
-
-      - name: Upload build artifact
-        if: ${{ env.UNITY_LICENSE != '' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pong-linux-${{ github.sha }}
-          path: build/
+          testMode: all
 
       - name: Explain missing Unity license
         if: ${{ env.UNITY_LICENSE == '' }}
-        run: echo "UNITY_LICENSE is not configured; Unity build is skipped. Add it in repository Settings > Secrets and variables > Actions."
+        run: echo "UNITY_LICENSE is not configured; repository validation still ran, but Unity tests were skipped."
