@@ -73,10 +73,12 @@ namespace Pong.Editor
             SerializedObject serialized = new SerializedObject(catalog);
             SerializedProperty list = serialized.FindProperty("profiles");
             list.arraySize = 3;
-            SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard",
-                "W and S", InputProfileKind.Keyboard, Key.W, Key.S);
-            SetProfile(list.GetArrayElementAtIndex(1), "keyboard-arrows", "Keyboard",
-                "Up and Down arrows", InputProfileKind.Keyboard, Key.UpArrow, Key.DownArrow);
+            // the layout belongs in the name: two players sharing a keyboard must tell their
+            // seats apart at a glance, not by reading the subtitle
+            SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard W/S",
+                "Left of the board", InputProfileKind.Keyboard, Key.W, Key.S);
+            SetProfile(list.GetArrayElementAtIndex(1), "keyboard-arrows", "Keyboard Arrows",
+                "Right of the board", InputProfileKind.Keyboard, Key.UpArrow, Key.DownArrow);
             SetProfile(list.GetArrayElementAtIndex(2), "gamepad", "Gamepad",
                 "Left stick or D-pad", InputProfileKind.Gamepad, Key.None, Key.None);
             serialized.ApplyModifiedPropertiesWithoutUndo();

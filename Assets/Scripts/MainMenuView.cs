@@ -50,8 +50,9 @@ namespace Pong
             themeValue.text = themeName;
         }
 
-        /// Shows the lineup on the menu itself, so who is playing is visible without
-        /// opening the players screen to find out.
+        /// Shows every seat on the menu itself, vacant ones included: who is playing is visible
+        /// without opening the players screen, and the empty seats are how a player discovers
+        /// that a third and fourth can join at all.
         public void RenderLineup()
         {
             lineup.Clear();
@@ -59,13 +60,10 @@ namespace Pong
             foreach (CourtSeat seat in CourtSeat.All)
             {
                 SeatAssignment assignment = roster.Get(seat);
-                if (!assignment.IsOccupied)
-                {
-                    continue;
-                }
 
                 VisualElement row = new VisualElement();
                 row.AddToClassList("lineup-row");
+                row.EnableInClassList("lineup-row--vacant", !assignment.IsOccupied);
 
                 Label seatLabel = new Label(SeatLabel(seat));
                 seatLabel.AddToClassList("lineup-row__seat");

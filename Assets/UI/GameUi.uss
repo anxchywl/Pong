@@ -278,11 +278,14 @@
     color: var(--danger);
 }
 
+/* sized by its contents rather than stretched to the column, so a short lineup leaves
+   quiet background instead of a bordered void */
 .match-preview {
     width: 39%;
     max-width: 490px;
     min-width: 350px;
     padding: 24px;
+    align-self: flex-start;
 }
 
 .match-preview__header {
@@ -292,10 +295,9 @@
     margin-bottom: 4px;
 }
 
-/* absorbs slack so the detail rows sit on the card's bottom edge at any height */
+/* four seat rows fill the card on their own; this only keeps the detail rows off them */
 .match-preview__spacer {
-    flex-grow: 1;
-    min-height: 12px;
+    height: 12px;
 }
 
 .lineup {
@@ -326,8 +328,10 @@
     color: var(--ink-muted);
 }
 
+/* roughly the court's own proportions: it reads as a court rather than as whatever
+   height happened to be left over */
 .match-preview__court {
-    height: 148px;
+    height: 196px;
     margin-top: 8px;
     margin-bottom: 16px;
     border-width: 1px;
@@ -405,21 +409,22 @@
     padding: 8px 3% 0 3%;
 }
 
+/* centred rather than top-aligned: four cards cannot fill this screen, so the slack is
+   split evenly and reads as breathing room instead of content that fell to the top */
 .court-lineup__side {
     flex-grow: 1;
     width: 50%;
+    justify-content: center;
 }
 
 .court-lineup__divider {
     width: 1px;
-    margin: 8px 32px 8px 32px;
+    margin: 48px 32px 48px 32px;
     background-color: var(--line);
 }
 
 .seat-column {
-    flex-grow: 1;
     margin-top: 12px;
-    max-height: 420px;
 }
 
 .seat-card {

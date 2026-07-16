@@ -22,110 +22,110 @@ MonoBehaviour:
   - Consolas
   - Courier New
   copy:
-  - element: 'menu-eyebrow'
-    icon: ''
-    text: 'INSERT COIN // QUICK MATCH'
-  - element: 'menu-title'
-    icon: ''
-    text: 'READY PLAYER ONE'
-  - element: 'menu-subtitle'
-    icon: ''
-    text: 'First to the target score takes the cabinet.'
-  - element: 'match-card-eyebrow'
-    icon: ''
-    text: 'NEXT MATCH'
-  - element: 'lineup-eyebrow'
-    icon: ''
-    text: 'AT THE CABINET'
-  - element: 'mode-caption'
-    icon: ''
-    text: 'MODE'
-  - element: 'world-caption'
-    icon: ''
-    text: 'WORLD'
-  - element: 'menu-footer-hint'
-    icon: ''
-    text: 'ENTER OR A TO CONFIRM'
-  - element: 'menu-footer-mark'
-    icon: ''
-    text: 'PONG  •  LOCAL BUILD'
-  - element: 'players-eyebrow'
-    icon: ''
-    text: 'CABINET SEATING'
-  - element: 'players-title'
-    icon: ''
-    text: 'PLAYERS'
-  - element: 'left-side-caption'
-    icon: ''
-    text: 'PLAYER ONE SIDE'
-  - element: 'right-side-caption'
-    icon: ''
-    text: 'PLAYER TWO SIDE'
-  - element: 'players-hint'
-    icon: ''
-    text: 'GOALKEEPER HOLDS THE LINE. ATTACKER MEETS THE BALL EARLY.'
-  - element: 'pause-eyebrow'
-    icon: ''
-    text: 'SYSTEM HOLD'
-  - element: 'pause-title'
-    icon: ''
-    text: 'GAME PAUSED'
-  - element: 'left-score-caption'
-    icon: ''
-    text: 'P1'
-  - element: 'right-score-caption'
-    icon: ''
-    text: 'CPU'
-  - element: 'play-button'
+  - element: menu-eyebrow
+    icon: 
+    text: INSERT COIN // QUICK MATCH
+  - element: menu-title
+    icon: 
+    text: READY PLAYER ONE
+  - element: menu-subtitle
+    icon: 
+    text: First to the target score takes the cabinet.
+  - element: match-card-eyebrow
+    icon: 
+    text: NEXT MATCH
+  - element: lineup-eyebrow
+    icon: 
+    text: AT THE CABINET
+  - element: mode-caption
+    icon: 
+    text: MODE
+  - element: world-caption
+    icon: 
+    text: WORLD
+  - element: menu-footer-hint
+    icon: 
+    text: ENTER OR A TO CONFIRM
+  - element: menu-footer-mark
+    icon: 
+    text: "PONG  \u2022  LOCAL BUILD"
+  - element: players-eyebrow
+    icon: 
+    text: CABINET SEATING
+  - element: players-title
+    icon: 
+    text: PLAYERS
+  - element: left-side-caption
+    icon: 
+    text: PLAYER ONE SIDE
+  - element: right-side-caption
+    icon: 
+    text: PLAYER TWO SIDE
+  - element: players-hint
+    icon: 
+    text: GOALKEEPER HOLDS THE LINE. ATTACKER MEETS THE BALL EARLY.
+  - element: pause-eyebrow
+    icon: 
+    text: SYSTEM HOLD
+  - element: pause-title
+    icon: 
+    text: GAME PAUSED
+  - element: left-score-caption
+    icon: 
+    text: P1
+  - element: right-score-caption
+    icon: 
+    text: CPU
+  - element: play-button
     icon: '[>]'
-    text: 'PLAY'
-  - element: 'players-button'
+    text: PLAY
+  - element: players-button
     icon: '[P]'
-    text: 'PLAYERS'
-  - element: 'game-mode-button'
+    text: PLAYERS
+  - element: game-mode-button
     icon: '[M]'
-    text: 'GAME MODE'
-  - element: 'customization-button'
+    text: GAME MODE
+  - element: customization-button
     icon: '[C]'
-    text: 'CUSTOMIZATION'
-  - element: 'settings-button'
+    text: CUSTOMIZATION
+  - element: settings-button
     icon: '[*]'
-    text: 'SETTINGS'
-  - element: 'credits-button'
+    text: SETTINGS
+  - element: credits-button
     icon: '[i]'
-    text: 'CREDITS'
-  - element: 'quit-button'
+    text: CREDITS
+  - element: quit-button
     icon: '[X]'
-    text: 'QUIT'
-  - element: 'hud-pause-button'
+    text: QUIT
+  - element: hud-pause-button
     icon: '[II]'
-    text: ''
-  - element: 'resume-button'
+    text: 
+  - element: resume-button
     icon: '[>]'
-    text: 'RESUME'
-  - element: 'pause-restart-button'
+    text: RESUME
+  - element: pause-restart-button
     icon: '[R]'
-    text: 'RESTART'
-  - element: 'pause-settings-button'
+    text: RESTART
+  - element: pause-settings-button
     icon: '[*]'
-    text: 'SETTINGS'
-  - element: 'pause-main-menu-button'
+    text: SETTINGS
+  - element: pause-main-menu-button
     icon: '[H]'
-    text: 'MAIN MENU'
-  - element: 'pause-quit-button'
+    text: MAIN MENU
+  - element: pause-quit-button
     icon: '[X]'
-    text: 'QUIT'
-  - element: 'win-restart-button'
+    text: QUIT
+  - element: win-restart-button
     icon: '[R]'
-    text: 'PLAY AGAIN'
-  - element: 'win-main-menu-button'
+    text: PLAY AGAIN
+  - element: win-main-menu-button
     icon: '[H]'
-    text: 'MAIN MENU'
-  - element: 'back-button'
+    text: MAIN MENU
+  - element: back-button
     icon: '[<]'
-    text: 'BACK'
-  victoryTitle: 'PLAYER ONE WINS'
-  defeatTitle: 'CPU TAKES THE ROUND'
+    text: BACK
+  victoryTitle: PLAYER ONE WINS
+  defeatTitle: CPU TAKES THE ROUND
   primaryAccent: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}
   secondaryAccent: {r: 0.43529412, g: 0.63529414, b: 0.36078432, a: 1}
   playerColor: {r: 0.9607843, g: 0.7254902, b: 0.25882354, a: 1}

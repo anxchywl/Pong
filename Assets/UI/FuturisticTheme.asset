@@ -22,110 +22,110 @@ MonoBehaviour:
   - Segoe UI
   - Arial
   copy:
-  - element: 'menu-eyebrow'
-    icon: ''
-    text: 'MATCH LINK READY'
-  - element: 'menu-title'
-    icon: ''
-    text: 'Enter the arena.'
-  - element: 'menu-subtitle'
-    icon: ''
-    text: 'Precision play in a calm, responsive competition space.'
-  - element: 'match-card-eyebrow'
-    icon: ''
-    text: 'NEXT MATCH'
-  - element: 'lineup-eyebrow'
-    icon: ''
-    text: 'LINEUP'
-  - element: 'mode-caption'
-    icon: ''
-    text: 'MODE'
-  - element: 'world-caption'
-    icon: ''
-    text: 'WORLD'
-  - element: 'menu-footer-hint'
-    icon: ''
-    text: 'ENTER OR A TO CONFIRM'
-  - element: 'menu-footer-mark'
-    icon: ''
-    text: 'PONG  •  LOCAL BUILD'
-  - element: 'players-eyebrow'
-    icon: ''
-    text: 'WHO IS PLAYING'
-  - element: 'players-title'
-    icon: ''
-    text: 'Players'
-  - element: 'left-side-caption'
-    icon: ''
-    text: 'LEFT SIDE'
-  - element: 'right-side-caption'
-    icon: ''
-    text: 'RIGHT SIDE'
-  - element: 'players-hint'
-    icon: ''
-    text: 'A goalkeeper defends the goal. An attacker meets the ball early.'
-  - element: 'pause-eyebrow'
-    icon: ''
-    text: 'SIMULATION SUSPENDED'
-  - element: 'pause-title'
-    icon: ''
-    text: 'Awaiting your return.'
-  - element: 'left-score-caption'
-    icon: ''
-    text: 'YOU'
-  - element: 'right-score-caption'
-    icon: ''
-    text: 'RIVAL'
-  - element: 'play-button'
+  - element: menu-eyebrow
+    icon: 
+    text: MATCH LINK READY
+  - element: menu-title
+    icon: 
+    text: Enter the arena.
+  - element: menu-subtitle
+    icon: 
+    text: Precision play in a calm, responsive competition space.
+  - element: match-card-eyebrow
+    icon: 
+    text: NEXT MATCH
+  - element: lineup-eyebrow
+    icon: 
+    text: LINEUP
+  - element: mode-caption
+    icon: 
+    text: MODE
+  - element: world-caption
+    icon: 
+    text: WORLD
+  - element: menu-footer-hint
+    icon: 
+    text: ENTER OR A TO CONFIRM
+  - element: menu-footer-mark
+    icon: 
+    text: "PONG  \u2022  LOCAL BUILD"
+  - element: players-eyebrow
+    icon: 
+    text: WHO IS PLAYING
+  - element: players-title
+    icon: 
+    text: Players
+  - element: left-side-caption
+    icon: 
+    text: LEFT SIDE
+  - element: right-side-caption
+    icon: 
+    text: RIGHT SIDE
+  - element: players-hint
+    icon: 
+    text: A goalkeeper defends the goal. An attacker meets the ball early.
+  - element: pause-eyebrow
+    icon: 
+    text: SIMULATION SUSPENDED
+  - element: pause-title
+    icon: 
+    text: Awaiting your return.
+  - element: left-score-caption
+    icon: 
+    text: YOU
+  - element: right-score-caption
+    icon: 
+    text: RIVAL
+  - element: play-button
     icon: '>'
-    text: 'PLAY'
-  - element: 'players-button'
+    text: PLAY
+  - element: players-button
     icon: '&&'
-    text: 'PLAYERS'
-  - element: 'game-mode-button'
-    icon: '//'
-    text: 'GAME MODE'
-  - element: 'customization-button'
+    text: PLAYERS
+  - element: game-mode-button
+    icon: //
+    text: GAME MODE
+  - element: customization-button
     icon: '::'
-    text: 'CUSTOMIZATION'
-  - element: 'settings-button'
-    icon: '<>'
-    text: 'SETTINGS'
-  - element: 'credits-button'
-    icon: '..'
-    text: 'CREDITS'
-  - element: 'quit-button'
-    icon: 'X'
-    text: 'QUIT'
-  - element: 'hud-pause-button'
-    icon: 'II'
-    text: ''
-  - element: 'resume-button'
+    text: CUSTOMIZATION
+  - element: settings-button
+    icon: <>
+    text: SETTINGS
+  - element: credits-button
+    icon: ..
+    text: CREDITS
+  - element: quit-button
+    icon: X
+    text: QUIT
+  - element: hud-pause-button
+    icon: II
+    text: 
+  - element: resume-button
     icon: '>'
-    text: 'RESUME'
-  - element: 'pause-restart-button'
-    icon: 'R'
-    text: 'RESTART'
-  - element: 'pause-settings-button'
-    icon: '<>'
-    text: 'SETTINGS'
-  - element: 'pause-main-menu-button'
-    icon: 'H'
-    text: 'MAIN MENU'
-  - element: 'pause-quit-button'
-    icon: 'X'
-    text: 'QUIT'
-  - element: 'win-restart-button'
-    icon: 'R'
-    text: 'PLAY AGAIN'
-  - element: 'win-main-menu-button'
-    icon: 'H'
-    text: 'MAIN MENU'
-  - element: 'back-button'
-    icon: '<'
-    text: 'BACK'
-  victoryTitle: 'VICTORY CONFIRMED'
-  defeatTitle: 'MATCH COMPLETE'
+    text: RESUME
+  - element: pause-restart-button
+    icon: R
+    text: RESTART
+  - element: pause-settings-button
+    icon: <>
+    text: SETTINGS
+  - element: pause-main-menu-button
+    icon: H
+    text: MAIN MENU
+  - element: pause-quit-button
+    icon: X
+    text: QUIT
+  - element: win-restart-button
+    icon: R
+    text: PLAY AGAIN
+  - element: win-main-menu-button
+    icon: H
+    text: MAIN MENU
+  - element: back-button
+    icon: <
+    text: BACK
+  victoryTitle: VICTORY CONFIRMED
+  defeatTitle: MATCH COMPLETE
   primaryAccent: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
   secondaryAccent: {r: 1, g: 0.6901961, b: 0.49411765, a: 1}
   playerColor: {r: 0.8392157, g: 0.65882355, b: 1, a: 1}
