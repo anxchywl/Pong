@@ -252,22 +252,28 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="hud" class="hud is-hidden">
-            <ui:VisualElement class="hud__mode panel-soft">
-                <ui:Label name="hud-mode" text="CLASSIC" class="hud__mode-label" />
-            </ui:VisualElement>
-            <ui:VisualElement class="hud__score panel-soft">
-                <ui:VisualElement class="hud__score-side">
-                    <ui:Label name="left-score-caption" text="YOU" class="hud__score-caption" />
-                    <ui:Label name="left-score" text="0" class="hud__score-value" />
+        <ui:VisualElement name="hud" class="hud is-hidden" picking-mode="Ignore">
+            <ui:VisualElement class="hud__bar">
+                <ui:VisualElement class="hud__slot hud__slot--start">
+                    <ui:Label name="hud-mode" text="CLASSIC" class="hud__mode-label" />
                 </ui:VisualElement>
-                <ui:Label text="—" class="hud__score-separator" />
-                <ui:VisualElement class="hud__score-side">
-                    <ui:Label name="right-score-caption" text="RIVAL" class="hud__score-caption" />
-                    <ui:Label name="right-score" text="0" class="hud__score-value" />
+                <ui:VisualElement class="hud__score">
+                    <ui:VisualElement class="hud__score-side">
+                        <ui:Label name="left-score-caption" text="YOU" class="hud__score-caption" />
+                        <ui:Label name="left-score" text="0" class="hud__score-value" />
+                        <ui:VisualElement name="left-progress" class="hud__pips" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="hud__score-divider" />
+                    <ui:VisualElement class="hud__score-side">
+                        <ui:Label name="right-score-caption" text="RIVAL" class="hud__score-caption" />
+                        <ui:Label name="right-score" text="0" class="hud__score-value" />
+                        <ui:VisualElement name="right-progress" class="hud__pips" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="hud__slot hud__slot--end">
+                    <ui:Button name="hud-pause-button" text="II" tooltip="Pause" class="icon-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:Button name="hud-pause-button" text="II" tooltip="Pause" class="icon-button" />
             <ui:Label name="hud-status" text="" class="hud__status" />
         </ui:VisualElement>
 

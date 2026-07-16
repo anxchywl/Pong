@@ -198,7 +198,7 @@
     border-radius: 0;
 }
 
-.hud__mode,
+/* the score sits in a cabinet plate: hard corners, a heavy drop edge, no radius anywhere */
 .hud__score,
 .icon-button {
     border-radius: 0;
@@ -208,16 +208,16 @@
 }
 
 .hud__score {
-    width: 238px;
-    margin-left: -119px;
-    height: 58px;
     border-right-width: 5px;
     border-bottom-width: 5px;
 }
 
 .hud__score-value {
-    font-size: 31px;
     letter-spacing: 2px;
+}
+
+.hud__pip {
+    height: 4px;
 }
 
 .hud__status {

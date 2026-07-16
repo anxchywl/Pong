@@ -11,10 +11,15 @@ namespace Pong
         [SerializeField] private SeatRole role;
         [SerializeField] private PlayerPaddleInput humanInput;
         [SerializeField] private ComputerPaddleController computerInput;
+        [SerializeField] private SpriteRenderer paddleRenderer;
+        [SerializeField] private SpriteRenderer glowRenderer;
 
         private PaddleMovement movement;
 
         public CourtSeat Seat => new CourtSeat(side, role);
+        public PlayerSide Side => side;
+        public SpriteRenderer Renderer => paddleRenderer;
+        public SpriteRenderer Glow => glowRenderer;
 
         // resolved lazily because a vacant seat is configured while its object is inactive
         private PaddleMovement Movement => movement != null ? movement : movement = GetComponent<PaddleMovement>();

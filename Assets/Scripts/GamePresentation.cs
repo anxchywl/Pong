@@ -7,11 +7,12 @@ namespace Pong
     {
         [SerializeField] private Camera gameplayCamera;
         [SerializeField] private BallController ballController;
-        [SerializeField] private SpriteRenderer playerPaddle;
-        [SerializeField] private SpriteRenderer computerPaddle;
+
+        [Tooltip("Every paddle on the court. Addressed by the side it defends rather than " +
+            "individually, so a court with four paddles themes as readily as one with two.")]
+        [SerializeField] private PaddleSeat[] paddles;
+
         [SerializeField] private SpriteRenderer ballRenderer;
-        [SerializeField] private SpriteRenderer playerGlow;
-        [SerializeField] private SpriteRenderer computerGlow;
         [SerializeField] private SpriteRenderer ballGlow;
         [SerializeField] private SpriteRenderer topWall;
         [SerializeField] private SpriteRenderer bottomWall;
@@ -46,8 +47,13 @@ namespace Pong
             CosmeticDefinition arena = GetSelection(theme, catalog, preferences, CosmeticCategory.Arena);
             CosmeticDefinition background = GetSelection(theme, catalog, preferences, CosmeticCategory.Background);
 
-            playerPaddle.color = paddle?.PrimaryColor ?? theme.PlayerColor;
-            computerPaddle.color = paddle?.SecondaryColor ?? theme.OpponentColor;
+            Color leftColor = paddle?.PrimaryColor ?? theme.PlayerColor;
+            Color rightColor = paddle?.SecondaryColor ?? theme.OpponentColor;
+            foreach (PaddleSeat seat in paddles)
+            {
+                seat.Renderer.color = seat.Side == PlayerSide.Left ? leftColor : rightColor;
+            }
+
             ballRenderer.color = ball?.PrimaryColor ?? theme.BallColor;
             topWall.color = arena?.PrimaryColor ?? theme.ArenaColor;
             bottomWall.color = arena?.PrimaryColor ?? theme.ArenaColor;
@@ -78,18 +84,18 @@ namespace Pong
         {
             float intensity = theme.GlowIntensity * Mathf.Lerp(0.7f, 1.3f, effectIntensity);
             bool glowVisible = intensity > 0.01f;
-            playerGlow.enabled = glowVisible;
-            computerGlow.enabled = glowVisible;
-            ballGlow.enabled = glowVisible;
 
-            Color playerColor = playerPaddle.color;
-            Color computerColor = computerPaddle.color;
+            foreach (PaddleSeat seat in paddles)
+            {
+                seat.Glow.enabled = glowVisible;
+                Color glow = seat.Renderer.color;
+                glow.a = intensity * 0.34f;
+                seat.Glow.color = glow;
+            }
+
+            ballGlow.enabled = glowVisible;
             Color currentBallColor = ballRenderer.color;
-            playerColor.a = intensity * 0.34f;
-            computerColor.a = intensity * 0.34f;
             currentBallColor.a = intensity * 0.42f;
-            playerGlow.color = playerColor;
-            computerGlow.color = computerColor;
             ballGlow.color = currentBallColor;
         }
 

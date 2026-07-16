@@ -79,8 +79,22 @@
     border-color: var(--accent);
 }
 
+/* the score reads as a pane of layered glass rather than a plate: soft fill, hairline
+   edge, generous radius, nothing hard */
 .hud__score {
+    background-color: rgba(18, 21, 34, 0.72);
+    border-width: 1px;
     border-color: rgba(214, 168, 255, 0.26);
+    border-radius: 18px;
+}
+
+.hud__pip {
+    height: 2px;
+    border-radius: 1px;
+}
+
+.icon-button {
+    border-radius: 14px;
 }
 
 .modal-layer {

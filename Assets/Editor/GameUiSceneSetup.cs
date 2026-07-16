@@ -31,6 +31,15 @@ namespace Pong.Editor
         private const float PaddleLength = 0.55f;
         private const float ArenaHalfHeight = 4.44f;
 
+        // the ball meets a paddle's face, so a paddle's width costs nothing in balance. About 1:4
+        // against its height reads as a solid bar; much wider and a short paddle turns into a square
+        private const float PaddleWidth = 0.13f;
+
+        // the arena filled 98% of the frame's width, leaving the HUD nowhere to live. This leaves a
+        // band above the wall deep enough for the score to sit clear of the court. Framing is a
+        // camera change only: no world geometry moves and nothing plays differently
+        private const float CameraSize = 6.9f;
+
         [MenuItem("Pong/Setup Game UI")]
         public static void Run()
         {
@@ -45,10 +54,11 @@ namespace Pong.Editor
             AssetDatabase.SaveAssets();
 
             RemoveLegacyUi();
-            SeatDirector seats = CreateSeats(inputProfiles);
+            FrameArena();
+            SeatDirector seats = CreateSeats(inputProfiles, out PaddleSeat[] paddles);
             GameObject uiObject = CreateUiObject(panelSettings);
             CreateEventSystem();
-            WirePresentation(uiObject.GetComponent<GamePresentation>());
+            WirePresentation(uiObject.GetComponent<GamePresentation>(), paddles);
             WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -415,14 +425,23 @@ namespace Pong.Editor
             }
         }
 
+        /// Pulls the camera back so the court no longer runs edge to edge and the HUD has margin
+        /// to live in. Nothing in the world moves, so the match plays exactly as before.
+        private static void FrameArena()
+        {
+            Camera camera = FindComponent<Camera>("Main Camera");
+            camera.orthographicSize = CameraSize;
+            EditorUtility.SetDirty(camera);
+        }
+
         /// The court gains an attacker column ahead of each goalkeeper. The goalkeepers stay exactly
         /// where they were, so a one-per-side lineup is the same match it has always been.
-        private static SeatDirector CreateSeats(InputProfileCatalog profiles)
+        private static SeatDirector CreateSeats(InputProfileCatalog profiles, out PaddleSeat[] seats)
         {
             GameObject keeperLeft = GameObject.Find("Player Paddle");
             GameObject keeperRight = GameObject.Find("Computer Paddle");
 
-            PaddleSeat[] seats =
+            seats = new[]
             {
                 ConfigureSeat(keeperLeft, PlayerSide.Left, SeatRole.Goalkeeper),
                 ConfigureSeat(
@@ -488,32 +507,41 @@ namespace Pong.Editor
 
             // author the size into the scene too, so the editor shows the paddle the game will use
             Vector3 scale = paddle.transform.localScale;
-            paddle.transform.localScale = new Vector3(scale.x, PaddleLength, scale.z);
+            paddle.transform.localScale = new Vector3(PaddleWidth, PaddleLength, scale.z);
 
+            // the attackers were cloned from the goalkeepers and carry a copy of their glow child
+            RemoveChild(paddle, "Player Glow");
+            RemoveChild(paddle, "Computer Glow");
+
+            SpriteRenderer renderer = paddle.GetComponent<SpriteRenderer>();
             PaddleSeat seat = Ensure<PaddleSeat>(paddle);
             SerializedObject serialized = new SerializedObject(seat);
             SetEnum(serialized, "side", side);
             SetEnum(serialized, "role", role);
             SetReference(serialized, "humanInput", human);
             SetReference(serialized, "computerInput", computer);
+            SetReference(serialized, "paddleRenderer", renderer);
+            SetReference(serialized, "glowRenderer",
+                CreateGlow(renderer, "Paddle Glow", new Vector3(1.85f, 1.16f, 1f)));
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return seat;
         }
 
-        private static void WirePresentation(GamePresentation presentation)
+        private static void WirePresentation(GamePresentation presentation, PaddleSeat[] seats)
         {
-            SpriteRenderer player = FindComponent<SpriteRenderer>("Player Paddle");
-            SpriteRenderer computer = FindComponent<SpriteRenderer>("Computer Paddle");
             SpriteRenderer ball = FindComponent<SpriteRenderer>("Ball");
             SerializedObject serialized = new SerializedObject(presentation);
             SetReference(serialized, "gameplayCamera", FindComponent<Camera>("Main Camera"));
             SetReference(serialized, "ballController", FindComponent<BallController>("Ball"));
-            SetReference(serialized, "playerPaddle", player);
-            SetReference(serialized, "computerPaddle", computer);
             SetReference(serialized, "ballRenderer", ball);
-            SetReference(serialized, "playerGlow", CreateGlow(player, "Player Glow", new Vector3(1.85f, 1.16f, 1f)));
-            SetReference(serialized, "computerGlow", CreateGlow(computer, "Computer Glow", new Vector3(1.85f, 1.16f, 1f)));
             SetReference(serialized, "ballGlow", CreateGlow(ball, "Ball Glow", new Vector3(1.9f, 1.9f, 1f)));
+
+            SerializedProperty paddleProperty = serialized.FindProperty("paddles");
+            paddleProperty.arraySize = seats.Length;
+            for (int index = 0; index < seats.Length; index++)
+            {
+                paddleProperty.GetArrayElementAtIndex(index).objectReferenceValue = seats[index];
+            }
             SetReference(serialized, "topWall", FindComponent<SpriteRenderer>("Top Wall"));
             SetReference(serialized, "bottomWall", FindComponent<SpriteRenderer>("Bottom Wall"));
             SetReference(serialized, "impactParticles", presentation.GetComponentInChildren<ParticleSystem>());
@@ -571,6 +599,15 @@ namespace Pong.Editor
             SetReference(serialized, "cosmetics", cosmetics);
             SetReference(serialized, "presentation", controller.GetComponent<GamePresentation>());
             serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void RemoveChild(GameObject parent, string name)
+        {
+            Transform child = parent.transform.Find(name);
+            if (child != null)
+            {
+                Object.DestroyImmediate(child.gameObject);
+            }
         }
 
         // explicit null check: Unity's == operator, not ??, is what understands a missing component

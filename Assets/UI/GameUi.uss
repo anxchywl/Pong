@@ -52,8 +52,6 @@
 .setting-row,
 .binding-row,
 .confirmation-actions,
-.hud,
-.hud__score,
 .debug-panel {
     flex-direction: row;
     align-items: center;
@@ -803,84 +801,116 @@
     background-color: var(--line);
 }
 
+/* the HUD lives in the margin the camera now leaves above the court, so it is never
+   competing with the ball for the same pixels. It spans the screen and ignores picking, so
+   its children can be placed against the frame rather than against the score's own height */
 .hud {
     position: absolute;
-    left: 32px;
-    right: 32px;
-    top: 24px;
-    height: 64px;
-    justify-content: space-between;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
-.hud__mode {
-    width: 122px;
-    height: 38px;
-    justify-content: center;
+.hud__bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 40px 0 40px;
+}
+
+/* equal-weight end slots keep the score optically centred without absolute positioning */
+.hud__slot {
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud__slot--end {
+    justify-content: flex-end;
 }
 
 .hud__mode-label {
-    color: var(--ink);
-    font-size: 10px;
+    color: var(--ink-muted);
+    font-size: 12px;
     -unity-font-style: bold;
-    letter-spacing: 1.5px;
-    -unity-text-align: middle-center;
+    letter-spacing: 2.5px;
 }
 
+/* padded rather than fixed-size, so a theme can put a frame around the score without
+   having to know how tall its contents are */
 .hud__score {
-    position: absolute;
-    left: 50%;
-    margin-left: -102px;
-    top: 0;
-    width: 204px;
-    height: 52px;
-    justify-content: center;
-}
-
-.hud__score-value {
-    width: 66px;
-    color: var(--ink-strong);
-    font-size: 28px;
-    -unity-font-style: bold;
-    -unity-text-align: middle-center;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px 24px 16px 24px;
 }
 
 .hud__score-side {
-    width: 72px;
+    width: 104px;
     align-items: center;
-    justify-content: center;
+}
+
+.hud__score-divider {
+    width: 1px;
+    height: 34px;
+    margin: 6px 20px 0 20px;
+    background-color: var(--line);
+}
+
+/* the score is the one thing a player looks for mid-rally: it gets the largest type
+   on screen and nothing else competes at this size */
+.hud__score-value {
+    color: var(--ink-strong);
+    font-size: 46px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
 }
 
 .hud__score-caption {
     color: var(--ink-muted);
-    font-size: 7px;
+    font-size: 9px;
     -unity-font-style: bold;
-    letter-spacing: 1px;
-    margin-bottom: -2px;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
 }
 
-.hud__score-separator {
-    color: var(--ink-muted);
-    font-size: 17px;
+/* one pip per point needed to win: how much match is left, without doing arithmetic */
+.hud__pips {
+    flex-direction: row;
+    margin-top: 6px;
+}
+
+.hud__pip {
+    width: 12px;
+    height: 3px;
+    margin: 0 2px 0 2px;
+    background-color: var(--line);
+}
+
+.hud__pip--won {
+    background-color: var(--accent);
 }
 
 .icon-button {
     width: 42px;
     height: 38px;
-    margin-left: auto;
     border-radius: 11px;
     font-size: 12px;
     letter-spacing: 2px;
 }
 
+/* announcements belong on the court, where the player is already looking, rather than
+   tucked under the score where they collided with the progress pips */
 .hud__status {
     position: absolute;
     left: 25%;
     right: 25%;
-    top: 90px;
-    color: rgba(242, 247, 250, 0.78);
-    font-size: 14px;
+    top: 30%;
+    color: var(--ink-muted);
+    font-size: 15px;
     -unity-font-style: bold;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     -unity-text-align: middle-center;
 }
 
