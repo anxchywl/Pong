@@ -398,6 +398,59 @@
     -unity-font-style: bold;
 }
 
+/* a category rail beside one panel of content. Shared by settings and the customization
+   workshop: only the selected category is on screen, so neither needs to scroll */
+.workbench {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 8px 3% 8px 3%;
+}
+
+.category-rail {
+    width: 208px;
+    flex-shrink: 0;
+    margin-right: 36px;
+    padding-top: 4px;
+}
+
+.rail-button {
+    height: 42px;
+    margin-bottom: 6px;
+    padding: 0 16px 0 16px;
+    border-width: 0;
+    border-left-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--ink-muted);
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1.6px;
+    -unity-text-align: middle-left;
+}
+
+.rail-button:hover {
+    color: var(--ink);
+    background-color: var(--surface-soft);
+}
+
+/* the selected category is marked on the rail itself rather than by a moving highlight,
+   so the eye can find where it is without animation */
+.rail-button.is-selected {
+    color: var(--ink-strong);
+    border-color: var(--accent);
+    background-color: var(--surface-soft);
+}
+
+.workbench__body {
+    flex-grow: 1;
+}
+
+.settings-section {
+    flex-grow: 1;
+}
+
 /* the players screen mirrors the court: left side on the left, right on the right,
    so the seat you configure is the paddle you will use */
 .court-lineup {

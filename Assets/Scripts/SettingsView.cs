@@ -7,6 +7,12 @@ namespace Pong
 {
     public sealed class SettingsView
     {
+        private static readonly string[] Categories =
+        {
+            "gameplay", "audio", "graphics", "controls", "accessibility"
+        };
+
+        private readonly CategoryRail rail;
         private readonly GameSettings settings;
         private readonly Action settingsChanged;
         private readonly Action<Resolution> resolutionChanged;
@@ -22,12 +28,14 @@ namespace Pong
             VisualElement root,
             GameSettings settings,
             Action settingsChanged,
-            Action<Resolution> resolutionChanged
+            Action<Resolution> resolutionChanged,
+            Action clickFeedback
         )
         {
             this.settings = settings;
             this.settingsChanged = settingsChanged;
             this.resolutionChanged = resolutionChanged;
+            rail = new CategoryRail(root, "settings-tab-", "settings-panel-", Categories, clickFeedback);
 
             pointsValue = root.Q<Label>("points-value");
             speedValue = root.Q<Label>("speed-value");
@@ -41,6 +49,12 @@ namespace Pong
             BindGraphics(root);
             BindAccessibility(root);
             RefreshLabels();
+        }
+
+        /// Settings opened from a pause menu should not resume wherever the player last was.
+        public void ShowFirstCategory()
+        {
+            rail.Select(Categories[0]);
         }
 
         private void BindGameplay(VisualElement root)

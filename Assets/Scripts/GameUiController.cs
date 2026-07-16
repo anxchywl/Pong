@@ -31,6 +31,7 @@ namespace Pong
         private PlayersView playersView;
         private Button playButton;
         private GameModeView gameModeView;
+        private SettingsView settingsView;
         private CustomizationView customizationView;
         private MatchHud hud;
         private PauseMenuView pauseMenu;
@@ -153,7 +154,7 @@ namespace Pong
                 ApplyThemeAndCosmetics,
                 PlayClick
             );
-            _ = new SettingsView(root, settings, ApplySettings, ApplyResolution);
+            settingsView = new SettingsView(root, settings, ApplySettings, ApplyResolution, PlayClick);
             pauseMenu = new PauseMenuView(
                 root,
                 match.ResumeMatch,
@@ -274,6 +275,7 @@ namespace Pong
         private void OpenPauseSettings()
         {
             settingsOpenedFromPause = true;
+            settingsView.ShowFirstCategory();
             screenLayer.RemoveFromClassList("is-hidden");
             pauseMenu.SetVisible(false);
             screenHost.Show(AppScreen.Settings);
