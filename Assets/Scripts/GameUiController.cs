@@ -53,6 +53,19 @@ namespace Pong
 
         private void OnEnable()
         {
+            // a missing seat director means the scene predates the court seats, and every later
+            // failure would be a confusing null rather than the one fact that matters
+            if (seats == null)
+            {
+                Debug.LogError(
+                    "GameUiController has no SeatDirector, so the court has no seats. " +
+                    "Run Pong > Setup Game UI to author them, then enter play mode again.",
+                    this
+                );
+                enabled = false;
+                return;
+            }
+
             document = GetComponent<UIDocument>();
             root = document.rootVisualElement;
             preferences = new PlayerPreferences();
