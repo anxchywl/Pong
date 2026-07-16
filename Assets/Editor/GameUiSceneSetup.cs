@@ -26,6 +26,11 @@ namespace Pong.Editor
         // the goalkeepers sit at +/-7.5; attackers stand ahead of them with the centre left open
         private const float AttackerColumn = 4.2f;
 
+        // the square sprite is 2.56 world units per unit of local scale, so 0.55 is a paddle about
+        // 1.4 units tall: roughly a sixth of the arena, as Pong has always been
+        private const float PaddleLength = 0.55f;
+        private const float ArenaHalfHeight = 4.44f;
+
         [MenuItem("Pong/Setup Game UI")]
         public static void Run()
         {
@@ -474,6 +479,16 @@ namespace Pong.Editor
             SerializedObject computerSerialized = new SerializedObject(computer);
             SetReference(computerSerialized, "ball", FindComponent<BallController>("Ball"));
             computerSerialized.ApplyModifiedPropertiesWithoutUndo();
+
+            PaddleMovement movement = paddle.GetComponent<PaddleMovement>();
+            SerializedObject movementSerialized = new SerializedObject(movement);
+            SetFloat(movementSerialized, "fullLength", PaddleLength);
+            SetFloat(movementSerialized, "arenaHalfHeight", ArenaHalfHeight);
+            movementSerialized.ApplyModifiedPropertiesWithoutUndo();
+
+            // author the size into the scene too, so the editor shows the paddle the game will use
+            Vector3 scale = paddle.transform.localScale;
+            paddle.transform.localScale = new Vector3(scale.x, PaddleLength, scale.z);
 
             PaddleSeat seat = Ensure<PaddleSeat>(paddle);
             SerializedObject serialized = new SerializedObject(seat);

@@ -6,19 +6,28 @@ namespace Pong
     public sealed class PaddleMovement : MonoBehaviour
     {
         [SerializeField, Min(0.1f)] private float speed = 8f;
-        [SerializeField] private Vector2 verticalLimits = new Vector2(-3.8f, 3.8f);
-        [SerializeField, Min(0.1f)] private float fullLength = 2.1f;
+
+        [Tooltip("Distance from the centre line to a wall's inner face. Travel is derived from " +
+            "this and the paddle's own height, so a paddle can never leave the arena.")]
+        [SerializeField, Min(0.1f)] private float arenaHalfHeight = 4.44f;
+
+        [Tooltip("Local Y scale at full length. The sprite is 2.56 world units per unit of scale.")]
+        [SerializeField, Min(0.01f)] private float fullLength = 0.55f;
 
         private Rigidbody2D body;
+        private BoxCollider2D box;
         private float direction;
         private Vector2 activeLimits;
 
         public Vector2 Position => body.position;
 
+        // resolved lazily because a vacant seat is configured while its object is inactive
+        private BoxCollider2D Box => box != null ? box : box = GetComponent<BoxCollider2D>();
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
-            activeLimits = verticalLimits;
+            SetLengthScale(1f);
         }
 
         private void FixedUpdate()
@@ -32,29 +41,23 @@ namespace Pong
             body.MovePosition(new Vector2(body.position.x, nextY));
         }
 
-        /// Shortens the paddle while keeping the reach of its outer edges, so a shorter paddle still
-        /// covers the wall it defends and a full-length paddle behaves exactly as it always has.
+        /// Sets the paddle's length and re-derives how far it may travel. The limit is measured from
+        /// the collider rather than assumed from local scale: the sprite is not one unit tall, and
+        /// assuming it was let paddles travel through the walls and off the screen.
         public void SetLengthScale(float scale)
         {
             float length = fullLength * Mathf.Clamp(scale, 0.3f, 1f);
             Vector3 localScale = transform.localScale;
             transform.localScale = new Vector3(localScale.x, length, localScale.z);
 
-            float reclaimed = (fullLength - length) * 0.5f;
-            activeLimits = new Vector2(verticalLimits.x - reclaimed, verticalLimits.y + reclaimed);
+            float halfHeight = Box.size.y * length * 0.5f;
+            float travel = Mathf.Max(0f, arenaHalfHeight - halfHeight);
+            activeLimits = new Vector2(-travel, travel);
         }
 
         public void SetDirection(float value)
         {
             direction = Mathf.Clamp(value, -1f, 1f);
-        }
-
-        private void OnValidate()
-        {
-            if (verticalLimits.x > verticalLimits.y)
-            {
-                verticalLimits = new Vector2(verticalLimits.y, verticalLimits.x);
-            }
         }
     }
 }
