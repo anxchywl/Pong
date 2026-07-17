@@ -624,10 +624,14 @@ namespace Pong.Editor
 
         /// Pulls the camera back so the court no longer runs edge to edge and the HUD has margin
         /// to live in. Nothing in the world moves, so the match plays exactly as before.
+        ///
+        /// ArenaFraming takes it from here at runtime, where the window's shape is known. The size
+        /// set here is what a 16:9 window keeps, and what the editor shows before play.
         private static void FrameArena()
         {
             Camera camera = FindComponent<Camera>("Main Camera");
             camera.orthographicSize = CameraSize;
+            Ensure<ArenaFraming>(camera.gameObject);
             EditorUtility.SetDirty(camera);
         }
 

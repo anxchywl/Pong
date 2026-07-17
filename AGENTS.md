@@ -22,6 +22,7 @@ When documentation and the project disagree, verify behavior in Unity and update
 - `MatchShortcuts` turns the Pause and Restart actions into match commands.
 - `SeatDeviceWatcher` keeps a seat's claim across a pad disconnecting and reconnecting.
 - `Goal` reports a score; `MatchHud` renders match state.
+- `ArenaFraming` frames the court for the window; it never moves world geometry.
 
 Keep these responsibilities separate. Do not add a global manager, service locator, or static mutable state.
 
@@ -39,6 +40,7 @@ never a branch in `PlayerPaddleInput`.
 - A goal awards one point and prepares the next serve toward the conceding side.
 - Paddle movement is clamped to the arena and performed through `Rigidbody2D`.
 - Ball launch behavior is deterministic.
+- The whole court stays on screen at every aspect ratio, portrait included.
 - Runtime references are explicit serialized fields or same-object required components.
 - Generated Unity folders and secrets are never committed.
 

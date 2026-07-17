@@ -25,6 +25,7 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 | `GameUiController` | Composes UI views, routes user intent, and observes match state |
 | `ScreenNavigator` / `ScreenHost` | Maintain deterministic front-end navigation and visible screens |
 | `MatchHud` / screen views | Render one focused part of the UI document |
+| `ArenaFraming` | Keeps the whole court on screen at any aspect, and lays it along the screen in portrait |
 | `GamePresentation` | Applies the active theme and scoped cosmetics to renderers, glow layers, particles, audio, and the camera |
 | `GameTheme` / `ThemeCatalog` | Define independent visual identities and make them runtime-switchable |
 | `GameModeCatalog` / `CosmeticCatalog` | Provide data-driven mode and theme-scoped cosmetic content |
@@ -143,6 +144,25 @@ cancel itself out.
 
 The remaining `Gamepad.all` reads, in `PlayersView` and `SeatDescription`, enumerate devices so a
 player can pick one and so a pad can be numbered by plug order. That is device discovery, not input.
+
+## Framing and orientation
+
+The court is 19.2 by 9.4 world units and never changes. What changes is how it is framed.
+
+`ArenaFraming` reads the window's aspect each time it changes and asks `ArenaFrame` for a size and a
+roll. In landscape the camera keeps the framing the game has always had — a 16:9 or ultrawide window
+needs less room than that, and the band it leaves above the wall is where the HUD lives — and pulls
+back only when a narrow window such as 4:3 would otherwise crop a goal. It used to clear the goals by
+a tenth of a unit at 4:3, which was luck rather than design.
+
+In portrait the camera rolls a quarter turn, so the court's long axis runs down the screen's long
+axis and the paddles sit at the top and bottom. Nothing in the world moves and no rule changes: it is
+the same match seen sideways, and `PlayerSide.Left` is simply drawn at the bottom. This is why
+portrait needs no zooming out to fit and no separate arena: a court laid along a phone is a court
+that suits a phone.
+
+`ArenaFrame` is pure maths, so `ArenaFrameTests` checks every shape a screen comes in — ultrawide
+through phone portrait — rather than every device.
 
 ## Devices
 
