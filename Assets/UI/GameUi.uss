@@ -123,17 +123,40 @@
 }
 
 .main-content__navigation {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 470px;
+    justify-content: center;
+}
+
+/* the card column takes the rest of the row and centres the card in it, so the card
+   sits midway between the nav and the right edge instead of hugging the nav */
+.main-content__match {
     flex-grow: 1;
-    max-width: 620px;
-    min-width: 420px;
-    margin-right: 40px;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-stack {
-    flex-grow: 1;
-    justify-content: center;
-    max-height: 420px;
+    width: 430px;
+    align-self: flex-start;
+    margin-top: 28px;
+}
+
+.main-content__navigation > .display-title,
+.main-content__navigation > .lede {
+    align-self: flex-start;
+    width: 430px;
+}
+
+.main-content__navigation > .lede {
+    -unity-text-align: middle-left;
+}
+
+.main-content__navigation > .menu-button-row {
+    align-self: flex-start;
+    width: 430px;
+    margin-top: 14px;
 }
 
 .eyebrow {
@@ -189,6 +212,17 @@
     transition-duration: 0.11s;
 }
 
+.menu-button .unity-button__text,
+.back-button .unity-button__text,
+.tab-button .unity-button__text,
+.text-button .unity-button__text,
+.icon-button .unity-button__text,
+.selection-card .unity-button__text,
+.cosmetic-card .unity-button__text,
+.rail-button .unity-button__text {
+    color: inherit;
+}
+
 .menu-button {
     height: 46px;
     max-width: 430px;
@@ -201,23 +235,38 @@
     -unity-text-align: middle-left;
 }
 
-.menu-button:hover,
-.menu-button:focus,
-.back-button:hover,
-.back-button:focus,
-.tab-button:hover,
-.tab-button:focus,
-.text-button:hover,
-.text-button:focus,
-.icon-button:hover,
-.icon-button:focus,
-.selection-card:hover,
-.selection-card:focus,
-.cosmetic-card:hover,
-.cosmetic-card:focus {
+/* :enabled is load-bearing: Unity's built-in .unity-button:hover:enabled rule
+   out-specifies a plain .menu-button:hover and repaints the button grey */
+.menu-button:hover:enabled,
+.menu-button:focus:enabled,
+.back-button:hover:enabled,
+.back-button:focus:enabled,
+.tab-button:hover:enabled,
+.tab-button:focus:enabled,
+.text-button:hover:enabled,
+.text-button:focus:enabled,
+.icon-button:hover:enabled,
+.icon-button:focus:enabled,
+.selection-card:hover:enabled,
+.selection-card:focus:enabled,
+.cosmetic-card:hover:enabled,
+.cosmetic-card:focus:enabled {
     background-color: var(--surface-hover);
     border-color: var(--line-strong);
+    color: var(--ink);
+    outline-width: 0;
     translate: 2px 0;
+}
+
+.menu-button:focus,
+.back-button:focus,
+.tab-button:focus,
+.text-button:focus,
+.icon-button:focus,
+.selection-card:focus,
+.cosmetic-card:focus,
+.rail-button:focus {
+    outline-width: 0;
 }
 
 .menu-button:active,
@@ -244,10 +293,25 @@
     color: var(--accent-ink);
 }
 
-.menu-button--primary:hover,
-.menu-button--primary:focus {
+.menu-button--primary:hover:enabled,
+.menu-button--primary:focus:enabled {
     background-color: var(--accent-strong);
     border-color: var(--accent-strong);
+    color: var(--accent-ink);
+}
+
+.unity-button:hover:enabled,
+.unity-button:focus:enabled {
+    background-color: var(--surface-hover);
+    color: var(--ink);
+    outline-width: 0;
+}
+
+.unity-button.menu-button--primary:hover:enabled,
+.unity-button.menu-button--primary:focus:enabled {
+    background-color: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: var(--accent-ink);
 }
 
 .menu-button--danger {
@@ -279,11 +343,10 @@
 /* sized by its contents rather than stretched to the column, so a short lineup leaves
    quiet background instead of a bordered void */
 .match-preview {
-    width: 39%;
+    width: 92%;
     max-width: 490px;
     min-width: 350px;
     padding: 24px;
-    align-self: flex-start;
 }
 
 .match-preview__header {
@@ -430,7 +493,7 @@
     -unity-text-align: middle-left;
 }
 
-.rail-button:hover {
+.rail-button:hover:enabled {
     color: var(--ink);
     background-color: var(--surface-soft);
 }
@@ -453,6 +516,8 @@
 
 /* a workshop, not another settings page: categories to the left, the thing you are
    changing large in the middle, what you own to the right, actions along the bottom */
+/* stretch, not center: the columns own the full height of the screen and distribute
+   their own slack, so the workshop does not float in a band with dead space above it */
 .workshop {
     flex-grow: 1;
     flex-direction: row;
@@ -462,16 +527,22 @@
 
 .workshop__stage {
     flex-grow: 1;
+    max-width: 980px;
     margin-right: 32px;
+    justify-content: center;
 }
 
 .workshop-preview {
-    flex-shrink: 0;
+    flex-shrink: 1;
 }
 
-/* the preview is the centre of the screen: it is the biggest thing here on purpose */
+/* the preview is the centre of the screen: it is the biggest thing here on purpose.
+   It grows with the window between bounds rather than sitting at one fixed height */
 .workshop-preview__court {
-    height: 232px;
+    flex-grow: 1;
+    height: auto;
+    min-height: 180px;
+    max-height: 340px;
     border-width: 1px;
     border-color: var(--line);
     border-radius: 12px;
@@ -503,17 +574,26 @@
     -unity-text-align: middle-center;
 }
 
+/* grow: 0 so the option grid takes only the rows it needs; the slack belongs to the
+   court above it, which is the thing worth making bigger */
 .workshop__options {
-    flex-grow: 1;
+    flex-grow: 0;
+    flex-shrink: 0;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
     margin-top: 18px;
 }
 
+/* the card matches the stage's height instead of a fixed 520px, so it never overshoots
+   a short window nor leaves a gap under itself on a tall one */
 .workshop__collection {
-    width: 296px;
+    width: 22%;
+    min-width: 264px;
+    max-width: 320px;
     flex-shrink: 0;
+    align-self: center;
+    max-height: 100%;
     padding: 22px;
 }
 
@@ -590,8 +670,9 @@
     transition-duration: 0.11s;
 }
 
-.option-card:hover {
+.option-card:hover:enabled {
     border-color: var(--ink-muted);
+    background-color: var(--surface-hover);
     translate: 0 -2px;
 }
 
@@ -706,17 +787,33 @@
 
 .screen-header {
     min-height: 76px;
+    padding: 4px 3% 16px 0;
+    align-items: center;
     border-bottom-width: 1px;
     border-bottom-color: var(--line);
 }
 
+/* in flow with a fixed-width gutter rather than absolute: absolute let the button slide
+   under the title whenever the header's side padding was narrower than the button */
 .back-button {
     width: 74px;
     height: 34px;
-    margin-right: 22px;
+    margin-right: 32px;
+    margin-bottom: 0;
+    flex-shrink: 0;
     border-radius: 9px;
     font-size: 10px;
     letter-spacing: 1px;
+    -unity-text-align: middle-center;
+}
+
+.screen-header__titles {
+    flex-grow: 1;
+}
+
+/* tighter than the standalone eyebrow: it is a kicker sitting on the title here */
+.screen-header__titles > .eyebrow {
+    margin-bottom: 4px;
 }
 
 .screen-title {
@@ -726,8 +823,11 @@
     letter-spacing: -0.5px;
 }
 
+/* pushed to the far edge and dropped onto the title's baseline rather than floating
+   mid-header */
 .selection-summary {
     margin-left: auto;
+    margin-bottom: 7px;
 }
 
 .screen-description {

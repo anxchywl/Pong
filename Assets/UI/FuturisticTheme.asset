@@ -209,9 +209,6 @@ MonoBehaviour:
   - element: settings-button
     icon: <>
     text: SETTINGS
-  - element: credits-button
-    icon: ..
-    text: CREDITS
   - element: quit-button
     icon: X
     text: QUIT

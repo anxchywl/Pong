@@ -34,7 +34,6 @@ namespace Pong
             Bind(root.Q<Button>("game-mode-button"), () => open(AppScreen.GameMode), clickFeedback);
             Bind(root.Q<Button>("customization-button"), () => open(AppScreen.Customization), clickFeedback);
             Bind(root.Q<Button>("settings-button"), () => open(AppScreen.Settings), clickFeedback);
-            Bind(root.Q<Button>("credits-button"), () => open(AppScreen.Credits), clickFeedback);
             Bind(root.Q<Button>("quit-button"), quit, clickFeedback);
 
             RenderLineup();

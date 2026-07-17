@@ -40,17 +40,24 @@
     transition-duration: 0.18s;
 }
 
-.menu-button:hover,
-.menu-button:focus,
-.back-button:hover,
-.back-button:focus,
-.tab-button:hover,
-.tab-button:focus,
-.selection-card:hover,
-.selection-card:focus,
-.cosmetic-card:hover,
-.cosmetic-card:focus {
+.menu-button:hover:enabled,
+.menu-button:focus:enabled,
+.back-button:hover:enabled,
+.back-button:focus:enabled,
+.tab-button:hover:enabled,
+.tab-button:focus:enabled,
+.selection-card:hover:enabled,
+.selection-card:focus:enabled,
+.cosmetic-card:hover:enabled,
+.cosmetic-card:focus:enabled {
     translate: 3px 0;
+    color: var(--ink);
+    outline-width: 0;
+}
+
+.menu-button--primary:hover:enabled,
+.menu-button--primary:focus:enabled {
+    color: var(--accent-ink);
 }
 
 .panel {
@@ -77,6 +84,8 @@
 .tab-button.is-selected {
     background-color: rgba(51, 38, 66, 0.94);
     border-color: var(--accent);
+    color: var(--ink);
+    outline-width: 0;
 }
 
 /* the score reads as a pane of layered glass rather than a plate: soft fill, hairline

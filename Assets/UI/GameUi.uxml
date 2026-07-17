@@ -20,10 +20,10 @@
                             <ui:Button name="settings-button" text="SETTINGS" class="menu-button" />
                         </ui:VisualElement>
                         <ui:VisualElement class="menu-button-row">
-                            <ui:Button name="credits-button" text="CREDITS" class="text-button" />
                             <ui:Button name="quit-button" text="QUIT" class="text-button text-button--danger" />
                         </ui:VisualElement>
                     </ui:VisualElement>
+                    <ui:VisualElement class="main-content__match">
                     <ui:VisualElement class="match-preview panel">
                         <ui:VisualElement class="match-preview__header">
                             <ui:Label name="match-card-eyebrow" text="NEXT MATCH" class="eyebrow" />
@@ -47,6 +47,7 @@
                             <ui:Label name="selected-theme-value" text="Futuristic" class="detail-row__value" />
                         </ui:VisualElement>
                     </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement class="footer-bar">
                     <ui:Label name="menu-footer-hint" text="ENTER OR A TO CONFIRM" class="footer-bar__hint" />
@@ -57,7 +58,7 @@
             <ui:VisualElement name="players-screen" class="screen is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="players-back-button" text="BACK" class="back-button" />
-                    <ui:VisualElement>
+                    <ui:VisualElement class="screen-header__titles">
                         <ui:Label name="players-eyebrow" text="WHO IS PLAYING" class="eyebrow" />
                         <ui:Label name="players-title" text="Players" class="screen-title" />
                     </ui:VisualElement>
@@ -80,7 +81,7 @@
             <ui:VisualElement name="game-mode-screen" class="screen is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="mode-back-button" text="BACK" class="back-button" />
-                    <ui:VisualElement>
+                    <ui:VisualElement class="screen-header__titles">
                         <ui:Label name="mode-eyebrow" text="PLAY YOUR WAY" class="eyebrow" />
                         <ui:Label name="mode-title" text="Game Mode" class="screen-title" />
                     </ui:VisualElement>
@@ -95,7 +96,7 @@
             <ui:VisualElement name="customization-screen" class="screen is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="customization-back-button" text="BACK" class="back-button" />
-                    <ui:VisualElement>
+                    <ui:VisualElement class="screen-header__titles">
                         <ui:Label name="customization-eyebrow" text="MAKE IT YOURS" class="eyebrow" />
                         <ui:Label name="customization-title" text="Customization" class="screen-title" />
                     </ui:VisualElement>
@@ -157,7 +158,7 @@
             <ui:VisualElement name="settings-screen" class="screen is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="settings-back-button" text="BACK" class="back-button" />
-                    <ui:VisualElement>
+                    <ui:VisualElement class="screen-header__titles">
                         <ui:Label name="settings-eyebrow" text="TUNE THE EXPERIENCE" class="eyebrow" />
                         <ui:Label name="settings-title" text="Settings" class="screen-title" />
                     </ui:VisualElement>
@@ -281,7 +282,7 @@
             <ui:VisualElement name="credits-screen" class="screen is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="credits-back-button" text="BACK" class="back-button" />
-                    <ui:VisualElement>
+                    <ui:VisualElement class="screen-header__titles">
                         <ui:Label name="credits-eyebrow" text="THE PEOPLE BEHIND THE PADDLES" class="eyebrow" />
                         <ui:Label name="credits-title" text="Credits" class="screen-title" />
                     </ui:VisualElement>
