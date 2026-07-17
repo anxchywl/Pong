@@ -18,6 +18,7 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 | `CourtSeat` / `SeatAssignment` | Identify a seat and who occupies it, without Unity dependencies |
 | `MatchRoster` | Owns the lineup rules: goalkeeper before attacker, one profile per paddle |
 | `SeatDirector` | Pushes the roster onto the court's paddles and owns the paddle length rule |
+| `SeatDeviceWatcher` | Pauses when a seated pad leaves and rebinds when it returns |
 | `PaddleSeat` | One physical paddle: its seat, its renderers, and which intent drives it |
 | `InputProfileCatalog` | Keyboard layouts and gamepad profiles as data, each naming a control scheme |
 | `Goal` | Reports which side scored when the ball enters a trigger |
@@ -142,6 +143,32 @@ cancel itself out.
 
 The remaining `Gamepad.all` reads, in `PlayersView` and `SeatDescription`, enumerate devices so a
 player can pick one and so a pad can be numbered by plug order. That is device discovery, not input.
+
+## Devices
+
+A seat claims a profile and, for a gamepad, one device id. `SeatDeviceWatcher` watches pads arrive
+and leave and keeps the court honest about it:
+
+- **A claimed pad leaves.** The seat keeps its claim and the match pauses. The paddle would stop
+  anyway once its device is gone, but a live ball would go on scoring against a player holding a
+  dead pad, so a pulled cable costs a pause rather than the point or the seat.
+- **It comes back.** The seat never let go, so the pad picks its paddle up again. Resuming is left
+  to the player, who may not have both hands back yet.
+- **A different pad arrives.** Nothing happens. It has a different device id, so it cannot inherit a
+  seat by turning up; the player reseats it from the Players screen. This is also what a reconnect
+  looks like when the platform does not give a pad its own id back.
+- **An unclaimed pad leaves.** Nothing happens. Keyboard seats carry no device and never answer to
+  one leaving.
+
+A real pad carries a description, so the Input System keeps it in `disconnectedDevices` and restores
+its id when it returns. A virtual device has none, which is why `SeatDeviceTests` models a reconnect
+by re-adding the same instance: adding a fresh one would be a different pad entirely.
+
+Reassignment needs no help from any of this. `MatchRoster` already gives one profile and device
+exactly one paddle, so a later claim vacates the earlier seat.
+
+The pause menu is what a player sees when a pad drops, because the match is simply paused. A prompt
+naming the lost pad would need a string in both theme copy tables and is not written yet.
 
 `GameplayInputTests` presses keys on a virtual keyboard and watches the court, so the path from
 device to action to intent to physics is covered rather than assumed. It has to opt out of two

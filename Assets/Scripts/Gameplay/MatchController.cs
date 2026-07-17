@@ -91,12 +91,21 @@ namespace Pong
                 return;
             }
 
-            if (phase is MatchPhase.Serving or MatchPhase.Playing)
+            PauseMatch();
+        }
+
+        /// Pauses without resuming an already-paused match, which toggling cannot express. A player
+        /// losing their pad mid-rally needs this rather than a toggle.
+        public void PauseMatch()
+        {
+            if (phase is not (MatchPhase.Serving or MatchPhase.Playing))
             {
-                phaseBeforePause = phase;
-                Time.timeScale = 0f;
-                SetPhase(MatchPhase.Paused);
+                return;
             }
+
+            phaseBeforePause = phase;
+            Time.timeScale = 0f;
+            SetPhase(MatchPhase.Paused);
         }
 
         public void ResumeMatch()

@@ -74,6 +74,27 @@ namespace Pong
             Assign(seat, SeatAssignment.Empty);
         }
 
+        /// True when a seat is driven by this device. Keyboard seats carry no device, so they never
+        /// answer to one leaving.
+        public bool IsDeviceClaimed(int deviceId)
+        {
+            if (deviceId == SeatAssignment.NoDevice)
+            {
+                return false;
+            }
+
+            foreach (CourtSeat seat in CourtSeat.All)
+            {
+                SeatAssignment assignment = Get(seat);
+                if (assignment.Occupant == SeatOccupant.Human && assignment.DeviceId == deviceId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// Finds the seat currently driven by a profile and device, if any.
         public bool TryFindClaim(string profileId, int deviceId, out CourtSeat claimed)
         {

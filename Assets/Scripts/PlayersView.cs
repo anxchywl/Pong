@@ -7,7 +7,7 @@ namespace Pong
 {
     /// The lineup screen. Laid out like the court itself: left side on the left, right on the
     /// right, goalkeeper above attacker, so a seat's position is its paddle's position.
-    public sealed class PlayersView
+    public sealed class PlayersView : IDisposable
     {
         private readonly MatchRoster roster;
         private readonly InputProfileCatalog profiles;
@@ -29,7 +29,23 @@ namespace Pong
             leftSeats = root.Q<VisualElement>("left-seats");
             rightSeats = root.Q<VisualElement>("right-seats");
             summary = root.Q<Label>("players-summary");
+
+            // the cards name the pads on this machine, so one arriving or leaving dates them
+            InputSystem.onDeviceChange += HandleDeviceChange;
             Render();
+        }
+
+        public void Dispose()
+        {
+            InputSystem.onDeviceChange -= HandleDeviceChange;
+        }
+
+        private void HandleDeviceChange(InputDevice device, InputDeviceChange change)
+        {
+            if (device is Gamepad)
+            {
+                Render();
+            }
         }
 
         public void Render()

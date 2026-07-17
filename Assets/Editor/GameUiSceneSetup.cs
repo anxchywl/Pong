@@ -61,6 +61,7 @@ namespace Pong.Editor
             FrameArena();
             SeatDirector seats = CreateSeats(inputProfiles, controls, out PaddleSeat[] paddles);
             CreateMatchShortcuts(controls);
+            CreateSeatDeviceWatcher(seats);
             GameObject uiObject = CreateUiObject(panelSettings);
             CreateEventSystem(controls);
             WirePresentation(uiObject.GetComponent<GamePresentation>(), paddles);
@@ -534,6 +535,17 @@ namespace Pong.Editor
 
         /// Adding the module binds it to the Input System package's own default actions, which sit
         /// in a package and cannot be edited. Points it at ours instead.
+        /// Pads arriving and leaving are a device concern, so this watches them beside the seats
+        /// rather than inside them.
+        private static void CreateSeatDeviceWatcher(SeatDirector seats)
+        {
+            SeatDeviceWatcher watcher = Ensure<SeatDeviceWatcher>(seats.gameObject);
+            SerializedObject serialized = new SerializedObject(watcher);
+            SetReference(serialized, "seats", seats);
+            SetReference(serialized, "match", Object.FindAnyObjectByType<MatchController>());
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// Pause and restart read input, and the match must not. They live beside it instead.
         private static void CreateMatchShortcuts(InputActionAsset controls)
         {

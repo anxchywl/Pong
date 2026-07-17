@@ -20,6 +20,7 @@ When documentation and the project disagree, verify behavior in Unity and update
 - `PaddleMovement` owns bounded physics movement.
 - `PlayerPaddleInput` and `ComputerPaddleController` provide movement intent.
 - `MatchShortcuts` turns the Pause and Restart actions into match commands.
+- `SeatDeviceWatcher` keeps a seat's claim across a pad disconnecting and reconnecting.
 - `Goal` reports a score; `MatchHud` renders match state.
 
 Keep these responsibilities separate. Do not add a global manager, service locator, or static mutable state.

@@ -104,6 +104,7 @@ namespace Pong
         private void OnDisable()
         {
             UnhookShortcuts();
+            playersView?.Dispose();
             if (match != null)
             {
                 match.StateChanged -= HandleMatchStateChanged;

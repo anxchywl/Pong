@@ -10,6 +10,28 @@ namespace Pong.Tests
         private static readonly CourtSeat RightAttacker = new CourtSeat(PlayerSide.Right, SeatRole.Attacker);
 
         [Test]
+        public void IsDeviceClaimed_FindsTheSeatDrivenByAPad()
+        {
+            MatchRoster roster = new MatchRoster();
+            roster.Assign(
+                new CourtSeat(PlayerSide.Right, SeatRole.Goalkeeper),
+                SeatAssignment.Human("gamepad", 42)
+            );
+
+            Assert.That(roster.IsDeviceClaimed(42), Is.True);
+            Assert.That(roster.IsDeviceClaimed(7), Is.False);
+        }
+
+        [Test]
+        public void IsDeviceClaimed_IgnoresKeyboardSeats()
+        {
+            MatchRoster roster = new MatchRoster();
+
+            // the default lineup seats a keyboard player, whose device id is NoDevice
+            Assert.That(roster.IsDeviceClaimed(SeatAssignment.NoDevice), Is.False);
+        }
+
+        [Test]
         public void Reset_SeatsOneHumanAgainstOneComputer()
         {
             MatchRoster roster = new MatchRoster();

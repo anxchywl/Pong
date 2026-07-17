@@ -30,6 +30,13 @@ namespace Pong
             Roster.Changed -= Apply;
         }
 
+        /// Rebinds the court without the lineup having changed. A pad that left or came back is the
+        /// same roster driven by different hardware.
+        public void Refresh()
+        {
+            Apply();
+        }
+
         private void Apply()
         {
             foreach (PaddleSeat seat in seats)
