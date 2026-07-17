@@ -52,13 +52,14 @@ The project targets desktop today. Nothing below is claimed without a check that
 | Platform | State |
 | --- | --- |
 | macOS | builds as a universal player (`Pong > Build > macOS`), launches with a clean log, and a full match has been played to a win on it |
-| Windows, Linux | build entries exist under `Pong > Build`, but neither has been built or run |
-| Android, iOS, iPadOS | source compatible. The UI and the court adapt, safe areas are respected, and touch drags the paddles. No build has been attempted and no device has run it |
+| Windows, Linux | players build cleanly (`Pong > Build`) as PE32+ and ELF x86-64 binaries. Neither has been launched: there is no Windows or Linux machine here |
+| Android | an installable APK builds (`Pong > Build > Android`): IL2CPP, ARM64, minSdk 26. No device has run it |
+| iOS, iPadOS | the Xcode project generates and compiles unsigned against a device SDK. Signing, a developer account and hardware are needed to go further |
 
 The UI adapts to the room it has rather than the device it is on, and every screen is measured at
 phone, tablet and desktop widths. The court is framed for the window it is in, portrait included, and
-a paddle is dragged with a finger. All of it is verified in the editor against simulated devices;
-none of it has been built for or run on a phone or tablet.
+a paddle is dragged with a finger. Every platform now builds from this repository; what remains
+unverified is behavior on physical devices, which no simulator can stand in for.
 
 Cross-platform support is an incremental migration in progress. Do not describe a platform as
 supported here without the build, runtime, and device checks behind it.

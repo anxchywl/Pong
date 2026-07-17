@@ -31,6 +31,20 @@ namespace Pong.Editor
             Build(BuildTarget.StandaloneLinux64, Path.Combine(Root(), "Linux", "Pong"));
         }
 
+        [MenuItem("Pong/Build/Android")]
+        public static void Android()
+        {
+            Build(BuildTarget.Android, Path.Combine(Root(), "Android", "Pong.apk"));
+        }
+
+        /// Produces the Xcode project. Signing and a device take it from there; Unity's part of an
+        /// iOS build ends here.
+        [MenuItem("Pong/Build/iOS")]
+        public static void IOS()
+        {
+            Build(BuildTarget.iOS, Path.Combine(Root(), "iOS"));
+        }
+
         /// Builds the scenes the project actually ships, in the order it ships them, so a build can
         /// never disagree with the editor about what the game is.
         private static void Build(BuildTarget target, string location)
