@@ -28,7 +28,8 @@ Gameplay lives in `Assets/Scripts/Gameplay/` as `Pong.Gameplay`, which reference
 nothing else. Input, presentation, and UI live in `Assets/Scripts/` as `Pong.Runtime`, which
 references `Pong.Gameplay`. Never invert that dependency, and never add an input, UI, or platform
 package reference to `Pong.Gameplay` — the split exists so a hardware read inside gameplay fails to
-compile. See `docs/ARCHITECTURE.md` for what is still waiting to move across.
+compile. A new device becomes a control scheme in `PongControls` and an `InputProfileCatalog` entry,
+never a branch in `PlayerPaddleInput`.
 
 ## Project invariants
 

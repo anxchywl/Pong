@@ -91,19 +91,20 @@ than by review.
 | `Pong.Gameplay` | `Assets/Scripts/Gameplay/` | nothing but the engine |
 | `Pong.Runtime` | `Assets/Scripts/` | `Pong.Gameplay`, `Unity.InputSystem`, `Unity.ugui` |
 
-`Pong.Gameplay` holds the rules, the score, the seat identities, and the physics bodies:
-`MatchScore`, `MatchState`, `PlayerSide`, `CourtSeat`, `SeatAssignment`, `PaddleMovement`,
-`BallController`, and `ComputerPaddleController`. It cannot reference the Input System, so a hardware
-read inside it is a compile error rather than a review comment. Gameplay consumes intent —
-`PaddleMovement.SetDirection` is the whole surface — and never asks which device produced it.
+`Pong.Gameplay` holds the match, the rules, the score, the lineup, and the physics bodies:
+`MatchController`, `MatchScore`, `MatchState`, `Goal`, `PlayerSide`, `CourtSeat`, `SeatAssignment`,
+`MatchRoster`, `InputProfileCatalog`, `PaddleMovement`, `BallController`, and
+`ComputerPaddleController`. It cannot reference the Input System, so a hardware read inside it is a
+compile error rather than a review comment. Gameplay consumes intent — `PaddleMovement.SetDirection`
+is the whole surface — and never asks which device produced it.
+
+`InputProfileCatalog` belongs here despite its name. A profile is an abstract input binding: an id, a
+name, and the control scheme it answers to. The bindings themselves live in `PongControls`, so the
+catalog needs no Input System reference, and `MatchRoster` can name a seat's driver without either of
+them knowing what a keyboard is.
 
 `Pong.Runtime` holds input, presentation, and UI, and depends on `Pong.Gameplay` in that direction
 only. The dependency must never be inverted.
-
-Three types belong in `Pong.Gameplay` but cannot move there yet, because each reaches something that
-needs the Input System: `MatchController` reads `Keyboard.current` for pause and restart, `Goal`
-holds a `MatchController` reference, and `MatchRoster` reads `InputProfileCatalog.DefaultProfileId`.
-They move once input is expressed as actions rather than device reads.
 
 ## Input
 
