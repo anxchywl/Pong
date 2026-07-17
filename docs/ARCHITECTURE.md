@@ -104,6 +104,29 @@ needs the Input System: `MatchController` reads `Keyboard.current` for pause and
 holds a `MatchController` reference, and `MatchRoster` reads `InputProfileCatalog.DefaultProfileId`.
 They move once input is expressed as actions rather than device reads.
 
+## Input
+
+`Assets/UI/PongControls.inputactions` is the project's own Input Actions asset. It holds two maps:
+
+- **UI** drives menu navigation and is bound by the scene's `InputSystemUIInputModule`.
+- **Gameplay** describes `Move`, `Pause`, and `Restart` as intent, under the `KeyboardLeft`,
+  `KeyboardRight`, and `Gamepad` schemes.
+
+Adding an `InputSystemUIInputModule` binds it to the Input System package's own default actions,
+which live inside an immutable package: nothing in this project could add a binding or a scheme to
+them. `GameUiSceneSetup` therefore repoints the module at this asset. The module resolves each of its
+actions by map and action name and leaves a null behind when a name does not match, rather than
+failing, so the UI map deliberately mirrors the package default's action names exactly. Renaming a UI
+action there costs a kind of menu input silently; `UiInputBindingTests` exists to catch that.
+
+The UI map still carries the default's Joystick and XR bindings. They are inherited rather than
+intended, and can be pruned once there is a reason to touch them.
+
+Using the Input System package is not the same as being device independent. Gameplay still reads
+`Keyboard.current` and `Gamepad.all` directly, and the Gameplay map is not consumed yet: paddles,
+pause, and restart continue to poll devices. Routing them through these actions is what lets
+`MatchController`, `Goal`, and `MatchRoster` move into `Pong.Gameplay`.
+
 ## Dependency boundaries
 
 - `MatchScore` must remain independent of Unity APIs so its rules stay fast to test.

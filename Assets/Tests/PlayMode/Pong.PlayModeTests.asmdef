@@ -3,7 +3,8 @@
     "rootNamespace": "Pong.Tests",
     "references": [
         "Pong.Runtime",
-        "Pong.Gameplay"
+        "Pong.Gameplay",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

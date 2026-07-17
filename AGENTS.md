@@ -5,6 +5,7 @@
 - `ProjectSettings/ProjectVersion.txt` defines the required Unity editor version.
 - `Packages/manifest.json` and `Packages/packages-lock.json` define package dependencies.
 - `ProjectSettings/EditorBuildSettings.asset` defines the playable scene.
+- `Assets/UI/PongControls.inputactions` defines input actions, bindings, and control schemes.
 - `Assets/Scenes/Main.unity` defines scene composition and inspector wiring.
 - `Assets/Scripts/` defines runtime behavior.
 - `docs/ARCHITECTURE.md` and `docs/GAMEPLAY.md` define intended boundaries and rules.

@@ -22,6 +22,7 @@ namespace Pong.Editor
         private const string FuturisticParticleMaterialPath = "Assets/UI/FuturisticParticles.mat";
         private const string CosmeticsPath = "Assets/UI/Cosmetics.asset";
         private const string InputProfilesPath = "Assets/UI/InputProfiles.asset";
+        private const string ControlsPath = "Assets/UI/PongControls.inputactions";
         private const string RetroThemeSheetPath = "Assets/UI/Themes/Retro.tss";
         private const string FuturisticThemeSheetPath = "Assets/UI/Themes/Futuristic.tss";
 
@@ -531,12 +532,66 @@ namespace Pong.Editor
             source.spatialBlend = 0f;
         }
 
+        /// Adding the module binds it to the Input System package's own default actions, which live
+        /// inside an immutable package: the project cannot add a binding or a scheme to them.
+        /// Repointing it at the project's asset re-resolves every reference by map and action name,
+        /// so the UI map must keep naming its actions exactly as the package default does.
         private static void CreateEventSystem()
         {
             GameObject eventSystemObject = new GameObject("Event System");
             EventSystem eventSystem = eventSystemObject.AddComponent<EventSystem>();
             eventSystem.sendNavigationEvents = true;
-            eventSystemObject.AddComponent<InputSystemUIInputModule>();
+            InputSystemUIInputModule module = eventSystemObject.AddComponent<InputSystemUIInputModule>();
+
+            // the module's own setters are no help here: assigning the asset rebuilds every
+            // reference as a fresh object, and assigning a reference afterwards is dropped because
+            // the module short-circuits when the new reference resolves to the action it already
+            // holds. Both leave ten anonymous copies serialized into the scene. Write the fields
+            // directly and the scene stores references to the importer's own objects instead
+            Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(ControlsPath);
+            SerializedObject serialized = new SerializedObject(module);
+            SetReference(serialized, "m_ActionsAsset", AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath));
+            SetReference(serialized, "m_PointAction", FindActionReference(subAssets, "Point"));
+            SetReference(serialized, "m_MoveAction", FindActionReference(subAssets, "Navigate"));
+            SetReference(serialized, "m_LeftClickAction", FindActionReference(subAssets, "Click"));
+            SetReference(serialized, "m_RightClickAction", FindActionReference(subAssets, "RightClick"));
+            SetReference(serialized, "m_MiddleClickAction", FindActionReference(subAssets, "MiddleClick"));
+            SetReference(serialized, "m_ScrollWheelAction", FindActionReference(subAssets, "ScrollWheel"));
+            SetReference(serialized, "m_SubmitAction", FindActionReference(subAssets, "Submit"));
+            SetReference(serialized, "m_CancelAction", FindActionReference(subAssets, "Cancel"));
+            SetReference(serialized, "m_TrackedDevicePositionAction",
+                FindActionReference(subAssets, "TrackedDevicePosition"));
+            SetReference(serialized, "m_TrackedDeviceOrientationAction",
+                FindActionReference(subAssets, "TrackedDeviceOrientation"));
+            serialized.ApplyModifiedProperties();
+        }
+
+        /// Finds the importer's reference for one UI action. The importer adds a second, hidden
+        /// reference per action for backwards compatibility, and assigning that one would wire the
+        /// module to an object the Input System means to retire, so only the visible one will do.
+        private static InputActionReference FindActionReference(Object[] subAssets, string actionName)
+        {
+            foreach (Object candidate in subAssets)
+            {
+                if (candidate is not InputActionReference reference ||
+                    (reference.hideFlags & HideFlags.HideInHierarchy) != 0)
+                {
+                    continue;
+                }
+
+                InputAction action = reference.action;
+                if (action != null && action.actionMap.name == "UI" && action.name == actionName)
+                {
+                    return reference;
+                }
+            }
+
+            // a null here silently stops one kind of menu input working, which is far harder to
+            // place later than a failure at authoring time
+            Debug.LogError(
+                $"{ControlsPath} has no UI/{actionName} action. Its UI map must name every action " +
+                "exactly as the Input System default does, or the UI module cannot bind to it.");
+            return null;
         }
 
         private static void RemoveLegacyUi()
