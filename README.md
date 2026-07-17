@@ -87,7 +87,7 @@ than failing as a null.
 - `Assets/Scenes/` contains the playable scene.
 - `Assets/Scripts/` contains presentation, input, and modular UI code as `Pong.Runtime`.
 - `Assets/Scripts/Gameplay/` contains rules, physics, and scoring as `Pong.Gameplay`, an assembly that references no input, UI, or platform package.
-- `Assets/UI/` contains the shared UI Toolkit document, independent theme style sheets and assets, panel settings, and content catalogs.
+- `Assets/UI/` contains the shared UI Toolkit document, independent theme style sheets and assets, panel settings, the Input Actions asset, and content catalogs.
 - `Assets/Tests/` contains automated Edit Mode and Play Mode tests.
 - `Assets/Art/` contains the small set of shared visual and physics assets.
 - `Assets/Settings/`, `Packages/`, and `ProjectSettings/` contain Unity configuration.

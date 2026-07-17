@@ -22,6 +22,7 @@ namespace Pong.Editor
         private const string FuturisticParticleMaterialPath = "Assets/UI/FuturisticParticles.mat";
         private const string CosmeticsPath = "Assets/UI/Cosmetics.asset";
         private const string InputProfilesPath = "Assets/UI/InputProfiles.asset";
+        private const string ControlsPath = "Assets/UI/PongControls.inputactions";
         private const string RetroThemeSheetPath = "Assets/UI/Themes/Retro.tss";
         private const string FuturisticThemeSheetPath = "Assets/UI/Themes/Futuristic.tss";
 
@@ -531,12 +532,60 @@ namespace Pong.Editor
             source.spatialBlend = 0f;
         }
 
+        /// Adding the module binds it to the Input System package's own default actions, which sit
+        /// in a package and cannot be edited. Points it at ours instead.
         private static void CreateEventSystem()
         {
             GameObject eventSystemObject = new GameObject("Event System");
             EventSystem eventSystem = eventSystemObject.AddComponent<EventSystem>();
             eventSystem.sendNavigationEvents = true;
-            eventSystemObject.AddComponent<InputSystemUIInputModule>();
+            InputSystemUIInputModule module = eventSystemObject.AddComponent<InputSystemUIInputModule>();
+
+            // the module's setters copy each reference into the scene instead of pointing at the
+            // asset, and drop the assignment outright once the action already matches
+            Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(ControlsPath);
+            SerializedObject serialized = new SerializedObject(module);
+            SetReference(serialized, "m_ActionsAsset", AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath));
+            SetReference(serialized, "m_PointAction", FindActionReference(subAssets, "Point"));
+            SetReference(serialized, "m_MoveAction", FindActionReference(subAssets, "Navigate"));
+            SetReference(serialized, "m_LeftClickAction", FindActionReference(subAssets, "Click"));
+            SetReference(serialized, "m_RightClickAction", FindActionReference(subAssets, "RightClick"));
+            SetReference(serialized, "m_MiddleClickAction", FindActionReference(subAssets, "MiddleClick"));
+            SetReference(serialized, "m_ScrollWheelAction", FindActionReference(subAssets, "ScrollWheel"));
+            SetReference(serialized, "m_SubmitAction", FindActionReference(subAssets, "Submit"));
+            SetReference(serialized, "m_CancelAction", FindActionReference(subAssets, "Cancel"));
+            SetReference(serialized, "m_TrackedDevicePositionAction",
+                FindActionReference(subAssets, "TrackedDevicePosition"));
+            SetReference(serialized, "m_TrackedDeviceOrientationAction",
+                FindActionReference(subAssets, "TrackedDeviceOrientation"));
+            serialized.ApplyModifiedProperties();
+        }
+
+        /// Finds the importer's reference for one UI action, skipping the hidden duplicate it keeps
+        /// for backwards compatibility.
+        private static InputActionReference FindActionReference(Object[] subAssets, string actionName)
+        {
+            foreach (Object candidate in subAssets)
+            {
+                if (candidate is not InputActionReference reference ||
+                    (reference.hideFlags & HideFlags.HideInHierarchy) != 0)
+                {
+                    continue;
+                }
+
+                InputAction action = reference.action;
+                if (action != null && action.actionMap.name == "UI" && action.name == actionName)
+                {
+                    return reference;
+                }
+            }
+
+            // the module matches actions by name and leaves a null rather than failing, so a rename
+            // here would cost a kind of menu input in silence
+            Debug.LogError(
+                $"{ControlsPath} has no UI/{actionName} action. Its UI map must name every action " +
+                "exactly as the Input System default does, or the UI module cannot bind to it.");
+            return null;
         }
 
         private static void RemoveLegacyUi()
