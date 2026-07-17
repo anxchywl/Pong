@@ -143,6 +143,12 @@ cancel itself out.
 The remaining `Gamepad.all` reads, in `PlayersView` and `SeatDescription`, enumerate devices so a
 player can pick one and so a pad can be numbered by plug order. That is device discovery, not input.
 
+`GameplayInputTests` presses keys on a virtual keyboard and watches the court, so the path from
+device to action to intent to physics is covered rather than assumed. It has to opt out of two
+Input System defaults first: a test runner holds no focus and no game view, and by default device
+state is wiped while unfocused and keys are routed away from an unfocused game view. Both defaults
+are right for a real game and wrong for a runner, so the fixture overrides them and puts them back.
+
 ## Dependency boundaries
 
 - `MatchScore` must remain independent of Unity APIs so its rules stay fast to test.
