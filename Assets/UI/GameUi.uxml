@@ -8,47 +8,49 @@
                     <ui:Label name="wordmark" text="PONG" class="wordmark" />
                     <ui:Label name="menu-eyebrow" text="QUICK MATCH" class="top-bar__meta" />
                 </ui:VisualElement>
-                <ui:VisualElement class="main-content">
-                    <ui:VisualElement class="main-content__navigation">
-                        <ui:Label name="menu-title" text="Find your rhythm." class="display-title" />
-                        <ui:Label name="menu-subtitle" text="Fast rallies, clean reads, no distractions." class="lede" />
-                        <ui:VisualElement class="nav-stack">
-                            <ui:Button name="play-button" text="PLAY" class="menu-button menu-button--primary" />
-                            <ui:Button name="players-button" text="PLAYERS" class="menu-button" />
-                            <ui:Button name="game-mode-button" text="GAME MODE" class="menu-button" />
-                            <ui:Button name="customization-button" text="CUSTOMIZATION" class="menu-button" />
-                            <ui:Button name="settings-button" text="SETTINGS" class="menu-button" />
+                <ui:ScrollView class="screen-fill" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement class="main-content">
+                        <ui:VisualElement class="main-content__navigation">
+                            <ui:Label name="menu-title" text="Find your rhythm." class="display-title" />
+                            <ui:Label name="menu-subtitle" text="Fast rallies, clean reads, no distractions." class="lede" />
+                            <ui:VisualElement class="nav-stack">
+                                <ui:Button name="play-button" text="PLAY" class="menu-button menu-button--primary" />
+                                <ui:Button name="players-button" text="PLAYERS" class="menu-button" />
+                                <ui:Button name="game-mode-button" text="GAME MODE" class="menu-button" />
+                                <ui:Button name="customization-button" text="CUSTOMIZATION" class="menu-button" />
+                                <ui:Button name="settings-button" text="SETTINGS" class="menu-button" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="menu-button-row">
+                                <ui:Button name="quit-button" text="QUIT" class="text-button text-button--danger" />
+                            </ui:VisualElement>
                         </ui:VisualElement>
-                        <ui:VisualElement class="menu-button-row">
-                            <ui:Button name="quit-button" text="QUIT" class="text-button text-button--danger" />
+                        <ui:VisualElement class="main-content__match">
+                        <ui:VisualElement class="match-preview panel">
+                            <ui:VisualElement class="match-preview__header">
+                                <ui:Label name="match-card-eyebrow" text="NEXT MATCH" class="eyebrow" />
+                                <ui:Label name="match-card-count" text="1 PLAYER" class="status-pill" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="match-preview__court">
+                                <ui:VisualElement class="preview-paddle preview-paddle--left" />
+                                <ui:VisualElement class="preview-net" />
+                                <ui:VisualElement class="preview-ball" />
+                                <ui:VisualElement class="preview-paddle preview-paddle--right" />
+                            </ui:VisualElement>
+                            <ui:Label name="lineup-eyebrow" text="LINEUP" class="eyebrow" />
+                            <ui:VisualElement name="menu-lineup" class="lineup" />
+                            <ui:VisualElement class="match-preview__spacer" />
+                            <ui:VisualElement class="detail-row">
+                                <ui:Label name="mode-caption" text="MODE" class="detail-row__label" />
+                                <ui:Label name="selected-mode-value" text="Classic" class="detail-row__value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="detail-row">
+                                <ui:Label name="world-caption" text="WORLD" class="detail-row__label" />
+                                <ui:Label name="selected-theme-value" text="Futuristic" class="detail-row__value" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement class="main-content__match">
-                    <ui:VisualElement class="match-preview panel">
-                        <ui:VisualElement class="match-preview__header">
-                            <ui:Label name="match-card-eyebrow" text="NEXT MATCH" class="eyebrow" />
-                            <ui:Label name="match-card-count" text="1 PLAYER" class="status-pill" />
-                        </ui:VisualElement>
-                        <ui:VisualElement class="match-preview__court">
-                            <ui:VisualElement class="preview-paddle preview-paddle--left" />
-                            <ui:VisualElement class="preview-net" />
-                            <ui:VisualElement class="preview-ball" />
-                            <ui:VisualElement class="preview-paddle preview-paddle--right" />
-                        </ui:VisualElement>
-                        <ui:Label name="lineup-eyebrow" text="LINEUP" class="eyebrow" />
-                        <ui:VisualElement name="menu-lineup" class="lineup" />
-                        <ui:VisualElement class="match-preview__spacer" />
-                        <ui:VisualElement class="detail-row">
-                            <ui:Label name="mode-caption" text="MODE" class="detail-row__label" />
-                            <ui:Label name="selected-mode-value" text="Classic" class="detail-row__value" />
-                        </ui:VisualElement>
-                        <ui:VisualElement class="detail-row">
-                            <ui:Label name="world-caption" text="WORLD" class="detail-row__label" />
-                            <ui:Label name="selected-theme-value" text="Futuristic" class="detail-row__value" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:VisualElement>
+                </ui:ScrollView>
                 <ui:VisualElement class="footer-bar">
                     <ui:Label name="menu-footer-hint" text="ENTER OR A TO CONFIRM" class="footer-bar__hint" />
                     <ui:Label name="menu-footer-mark" text="PONG  •  LOCAL BUILD" class="footer-bar__hint" />
@@ -64,17 +66,19 @@
                     </ui:VisualElement>
                     <ui:Label name="players-summary" text="1 PLAYER" class="selection-summary" />
                 </ui:VisualElement>
-                <ui:VisualElement class="court-lineup">
-                    <ui:VisualElement class="court-lineup__side">
-                        <ui:Label name="left-side-caption" text="LEFT SIDE" class="eyebrow" />
-                        <ui:VisualElement name="left-seats" class="seat-column" />
+                <ui:ScrollView class="screen-fill" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement class="court-lineup">
+                        <ui:VisualElement class="court-lineup__side">
+                            <ui:Label name="left-side-caption" text="LEFT SIDE" class="eyebrow" />
+                            <ui:VisualElement name="left-seats" class="seat-column" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="court-lineup__divider" />
+                        <ui:VisualElement class="court-lineup__side">
+                            <ui:Label name="right-side-caption" text="RIGHT SIDE" class="eyebrow" />
+                            <ui:VisualElement name="right-seats" class="seat-column" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement class="court-lineup__divider" />
-                    <ui:VisualElement class="court-lineup__side">
-                        <ui:Label name="right-side-caption" text="RIGHT SIDE" class="eyebrow" />
-                        <ui:VisualElement name="right-seats" class="seat-column" />
-                    </ui:VisualElement>
-                </ui:VisualElement>
+                </ui:ScrollView>
                 <ui:Label name="players-hint" text="A GOALKEEPER DEFENDS THE GOAL. AN ATTACKER MEETS THE BALL EARLY." class="input-hint input-hint--center" />
             </ui:VisualElement>
 
@@ -102,50 +106,52 @@
                     </ui:VisualElement>
                     <ui:Label name="customization-summary" text="CHANGES PREVIEW LIVE" class="selection-summary" />
                 </ui:VisualElement>
-                <ui:VisualElement class="workshop">
-                    <ui:VisualElement class="category-rail">
-                        <ui:Button name="shop-tab-theme" text="THEME" class="rail-button is-selected" />
-                        <ui:Button name="shop-tab-arena" text="ARENA" class="rail-button" />
-                        <ui:Button name="shop-tab-paddle" text="PADDLE" class="rail-button" />
-                        <ui:Button name="shop-tab-ball" text="BALL" class="rail-button" />
-                        <ui:Button name="shop-tab-hud" text="HUD" class="rail-button" />
-                        <ui:Button name="shop-tab-effects" text="EFFECTS" class="rail-button" />
-                        <ui:Button name="shop-tab-audio" text="AUDIO" class="rail-button" />
-                    </ui:VisualElement>
+                <ui:ScrollView class="screen-fill" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement class="workshop">
+                        <ui:VisualElement class="category-rail">
+                            <ui:Button name="shop-tab-theme" text="THEME" class="rail-button is-selected" />
+                            <ui:Button name="shop-tab-arena" text="ARENA" class="rail-button" />
+                            <ui:Button name="shop-tab-paddle" text="PADDLE" class="rail-button" />
+                            <ui:Button name="shop-tab-ball" text="BALL" class="rail-button" />
+                            <ui:Button name="shop-tab-hud" text="HUD" class="rail-button" />
+                            <ui:Button name="shop-tab-effects" text="EFFECTS" class="rail-button" />
+                            <ui:Button name="shop-tab-audio" text="AUDIO" class="rail-button" />
+                        </ui:VisualElement>
 
-                    <ui:VisualElement class="workshop__stage">
-                        <ui:VisualElement name="workshop-preview" class="workshop-preview">
-                            <ui:VisualElement name="preview-court" class="workshop-preview__court">
-                                <ui:VisualElement name="preview-paddle-left" class="preview-paddle preview-paddle--left" />
-                                <ui:VisualElement name="preview-net" class="preview-net" />
-                                <ui:VisualElement name="preview-ball" class="preview-ball" />
-                                <ui:VisualElement name="preview-paddle-right" class="preview-paddle preview-paddle--right" />
-                                <ui:VisualElement name="preview-hud" class="workshop-preview__hud">
-                                    <ui:Label name="preview-score" text="0   1" class="workshop-preview__score" />
+                        <ui:VisualElement class="workshop__stage">
+                            <ui:VisualElement name="workshop-preview" class="workshop-preview">
+                                <ui:VisualElement name="preview-court" class="workshop-preview__court">
+                                    <ui:VisualElement name="preview-paddle-left" class="preview-paddle preview-paddle--left" />
+                                    <ui:VisualElement name="preview-net" class="preview-net" />
+                                    <ui:VisualElement name="preview-ball" class="preview-ball" />
+                                    <ui:VisualElement name="preview-paddle-right" class="preview-paddle preview-paddle--right" />
+                                    <ui:VisualElement name="preview-hud" class="workshop-preview__hud">
+                                        <ui:Label name="preview-score" text="0   1" class="workshop-preview__score" />
+                                    </ui:VisualElement>
                                 </ui:VisualElement>
+                                <ui:Label name="workshop-preview-caption" text="LIVE PREVIEW" class="workshop-preview__caption" />
                             </ui:VisualElement>
-                            <ui:Label name="workshop-preview-caption" text="LIVE PREVIEW" class="workshop-preview__caption" />
+                            <ui:VisualElement name="shop-options" class="workshop__options" />
                         </ui:VisualElement>
-                        <ui:VisualElement name="shop-options" class="workshop__options" />
-                    </ui:VisualElement>
 
-                    <ui:VisualElement class="workshop__collection panel">
-                        <ui:Label name="collection-eyebrow" text="COLLECTION" class="eyebrow" />
-                        <ui:Label name="collection-title" text="Cabinet Pair" class="collection__title" />
-                        <ui:Label name="collection-description" text="" class="collection__description" />
-                        <ui:VisualElement name="collection-swatches" class="collection__swatches" />
-                        <ui:VisualElement class="collection__divider" />
-                        <ui:VisualElement class="detail-row">
-                            <ui:Label name="collection-owned-caption" text="UNLOCKED" class="detail-row__label" />
-                            <ui:Label name="collection-owned-value" text="4 / 4" class="detail-row__value" />
+                        <ui:VisualElement class="workshop__collection panel">
+                            <ui:Label name="collection-eyebrow" text="COLLECTION" class="eyebrow" />
+                            <ui:Label name="collection-title" text="Cabinet Pair" class="collection__title" />
+                            <ui:Label name="collection-description" text="" class="collection__description" />
+                            <ui:VisualElement name="collection-swatches" class="collection__swatches" />
+                            <ui:VisualElement class="collection__divider" />
+                            <ui:VisualElement class="detail-row">
+                                <ui:Label name="collection-owned-caption" text="UNLOCKED" class="detail-row__label" />
+                                <ui:Label name="collection-owned-value" text="4 / 4" class="detail-row__value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="detail-row">
+                                <ui:Label name="collection-theme-caption" text="BELONGS TO" class="detail-row__label" />
+                                <ui:Label name="collection-theme-value" text="Retro" class="detail-row__value" />
+                            </ui:VisualElement>
+                            <ui:Label name="collection-note" text="Cosmetics belong to their world and cannot be mixed across themes." class="collection__note" />
                         </ui:VisualElement>
-                        <ui:VisualElement class="detail-row">
-                            <ui:Label name="collection-theme-caption" text="BELONGS TO" class="detail-row__label" />
-                            <ui:Label name="collection-theme-value" text="Retro" class="detail-row__value" />
-                        </ui:VisualElement>
-                        <ui:Label name="collection-note" text="Cosmetics belong to their world and cannot be mixed across themes." class="collection__note" />
                     </ui:VisualElement>
-                </ui:VisualElement>
+                </ui:ScrollView>
 
                 <ui:VisualElement class="workshop__actions">
                     <ui:Label name="workshop-dirty" text="" class="workshop__dirty" />
@@ -164,119 +170,121 @@
                     </ui:VisualElement>
                     <ui:Label name="settings-summary" text="SAVED AUTOMATICALLY" class="selection-summary" />
                 </ui:VisualElement>
-                <ui:VisualElement class="workbench">
-                    <ui:VisualElement class="category-rail">
-                        <ui:Button name="settings-tab-gameplay" text="GAMEPLAY" class="rail-button is-selected" />
-                        <ui:Button name="settings-tab-audio" text="AUDIO" class="rail-button" />
-                        <ui:Button name="settings-tab-graphics" text="GRAPHICS" class="rail-button" />
-                        <ui:Button name="settings-tab-controls" text="CONTROLS" class="rail-button" />
-                        <ui:Button name="settings-tab-accessibility" text="ACCESSIBILITY" class="rail-button" />
+                <ui:ScrollView class="screen-fill" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement class="workbench">
+                        <ui:VisualElement class="category-rail">
+                            <ui:Button name="settings-tab-gameplay" text="GAMEPLAY" class="rail-button is-selected" />
+                            <ui:Button name="settings-tab-audio" text="AUDIO" class="rail-button" />
+                            <ui:Button name="settings-tab-graphics" text="GRAPHICS" class="rail-button" />
+                            <ui:Button name="settings-tab-controls" text="CONTROLS" class="rail-button" />
+                            <ui:Button name="settings-tab-accessibility" text="ACCESSIBILITY" class="rail-button" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="workbench__body">
+                            <ui:VisualElement name="settings-panel-gameplay" class="settings-section">
+                                <ui:Label name="settings-gameplay-title" text="Match rules and pacing" class="settings-section__subtitle" />
+                                <ui:VisualElement class="setting-row">
+                                    <ui:VisualElement class="setting-copy">
+                                        <ui:Label text="Points to win" class="setting-label" />
+                                        <ui:Label text="Applied when the next match starts" class="setting-description" />
+                                    </ui:VisualElement>
+                                    <ui:SliderInt name="points-slider" low-value="1" high-value="15" class="setting-control" />
+                                    <ui:Label name="points-value" text="5" class="setting-value" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:VisualElement class="setting-copy">
+                                        <ui:Label text="Game speed" class="setting-label" />
+                                        <ui:Label text="Adjusts the pace without changing the rules" class="setting-description" />
+                                    </ui:VisualElement>
+                                    <ui:Slider name="speed-slider" low-value="0.75" high-value="1.5" class="setting-control" />
+                                    <ui:Label name="speed-value" text="1.00×" class="setting-value" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row is-disabled-row">
+                                    <ui:VisualElement class="setting-copy">
+                                        <ui:Label text="AI difficulty" class="setting-label" />
+                                        <ui:Label text="Difficulty profiles are planned" class="setting-description" />
+                                    </ui:VisualElement>
+                                    <ui:Label text="COMING SOON" class="status-pill" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="settings-panel-audio" class="settings-section is-hidden">
+                                <ui:Label name="settings-audio-title" text="Independent volume channels" class="settings-section__subtitle" />
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="Master" class="setting-label setting-label--short" />
+                                    <ui:Slider name="master-slider" low-value="0" high-value="1" class="setting-control" />
+                                    <ui:Label name="master-value" text="80%" class="setting-value" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="Music" class="setting-label setting-label--short" />
+                                    <ui:Slider name="music-slider" low-value="0" high-value="1" class="setting-control" />
+                                    <ui:Label name="music-value" text="65%" class="setting-value" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="SFX" class="setting-label setting-label--short" />
+                                    <ui:Slider name="sfx-slider" low-value="0" high-value="1" class="setting-control" />
+                                    <ui:Label name="sfx-value" text="80%" class="setting-value" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="settings-panel-graphics" class="settings-section is-hidden">
+                                <ui:Label name="settings-graphics-title" text="Display and synchronization" class="settings-section__subtitle" />
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="Resolution" class="setting-label" />
+                                    <ui:DropdownField name="resolution-dropdown" class="dropdown-control" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="Fullscreen" class="setting-label" />
+                                    <ui:Toggle name="fullscreen-toggle" class="toggle-control" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="VSync" class="setting-label" />
+                                    <ui:Toggle name="vsync-toggle" class="toggle-control" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="settings-panel-accessibility" class="settings-section is-hidden">
+                                <ui:Label name="settings-accessibility-title" text="Comfort and readability" class="settings-section__subtitle" />
+                                <ui:VisualElement class="setting-row">
+                                    <ui:VisualElement class="setting-copy">
+                                        <ui:Label text="UI scale" class="setting-label" />
+                                        <ui:Label text="Scales every menu and HUD element" class="setting-description" />
+                                    </ui:VisualElement>
+                                    <ui:Slider name="ui-scale-slider" low-value="0.85" high-value="1.2" class="setting-control" />
+                                    <ui:Label name="scale-value" text="100%" class="setting-value" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row">
+                                    <ui:Label text="Reduced motion" class="setting-label" />
+                                    <ui:Toggle name="reduced-motion-toggle" class="toggle-control" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="setting-row is-disabled-row">
+                                    <ui:VisualElement class="setting-copy">
+                                        <ui:Label text="Colorblind palette" class="setting-label" />
+                                        <ui:Label text="Dedicated palettes are planned" class="setting-description" />
+                                    </ui:VisualElement>
+                                    <ui:Label text="COMING SOON" class="status-pill" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="settings-panel-controls" class="settings-section is-hidden">
+                                <ui:Label name="settings-controls-title" text="Keyboard and controller input" class="settings-section__subtitle" />
+                                <ui:VisualElement class="binding-row">
+                                    <ui:Label text="MOVE" class="binding-row__action" />
+                                    <ui:Label text="W / S  OR  ARROW KEYS" class="key-chip" />
+                                    <ui:Label text="LEFT STICK / D-PAD" class="key-chip" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="binding-row">
+                                    <ui:Label text="PAUSE" class="binding-row__action" />
+                                    <ui:Label text="ESC / P" class="key-chip" />
+                                    <ui:Label text="START" class="key-chip" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="binding-row is-disabled-row">
+                                    <ui:Label text="REBIND CONTROLS" class="binding-row__action" />
+                                    <ui:Label text="COMING SOON" class="status-pill" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement class="workbench__body">
-                        <ui:VisualElement name="settings-panel-gameplay" class="settings-section">
-                            <ui:Label name="settings-gameplay-title" text="Match rules and pacing" class="settings-section__subtitle" />
-                            <ui:VisualElement class="setting-row">
-                                <ui:VisualElement class="setting-copy">
-                                    <ui:Label text="Points to win" class="setting-label" />
-                                    <ui:Label text="Applied when the next match starts" class="setting-description" />
-                                </ui:VisualElement>
-                                <ui:SliderInt name="points-slider" low-value="1" high-value="15" class="setting-control" />
-                                <ui:Label name="points-value" text="5" class="setting-value" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:VisualElement class="setting-copy">
-                                    <ui:Label text="Game speed" class="setting-label" />
-                                    <ui:Label text="Adjusts the pace without changing the rules" class="setting-description" />
-                                </ui:VisualElement>
-                                <ui:Slider name="speed-slider" low-value="0.75" high-value="1.5" class="setting-control" />
-                                <ui:Label name="speed-value" text="1.00×" class="setting-value" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row is-disabled-row">
-                                <ui:VisualElement class="setting-copy">
-                                    <ui:Label text="AI difficulty" class="setting-label" />
-                                    <ui:Label text="Difficulty profiles are planned" class="setting-description" />
-                                </ui:VisualElement>
-                                <ui:Label text="COMING SOON" class="status-pill" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-
-                        <ui:VisualElement name="settings-panel-audio" class="settings-section is-hidden">
-                            <ui:Label name="settings-audio-title" text="Independent volume channels" class="settings-section__subtitle" />
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="Master" class="setting-label setting-label--short" />
-                                <ui:Slider name="master-slider" low-value="0" high-value="1" class="setting-control" />
-                                <ui:Label name="master-value" text="80%" class="setting-value" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="Music" class="setting-label setting-label--short" />
-                                <ui:Slider name="music-slider" low-value="0" high-value="1" class="setting-control" />
-                                <ui:Label name="music-value" text="65%" class="setting-value" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="SFX" class="setting-label setting-label--short" />
-                                <ui:Slider name="sfx-slider" low-value="0" high-value="1" class="setting-control" />
-                                <ui:Label name="sfx-value" text="80%" class="setting-value" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-
-                        <ui:VisualElement name="settings-panel-graphics" class="settings-section is-hidden">
-                            <ui:Label name="settings-graphics-title" text="Display and synchronization" class="settings-section__subtitle" />
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="Resolution" class="setting-label" />
-                                <ui:DropdownField name="resolution-dropdown" class="dropdown-control" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="Fullscreen" class="setting-label" />
-                                <ui:Toggle name="fullscreen-toggle" class="toggle-control" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="VSync" class="setting-label" />
-                                <ui:Toggle name="vsync-toggle" class="toggle-control" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-
-                        <ui:VisualElement name="settings-panel-accessibility" class="settings-section is-hidden">
-                            <ui:Label name="settings-accessibility-title" text="Comfort and readability" class="settings-section__subtitle" />
-                            <ui:VisualElement class="setting-row">
-                                <ui:VisualElement class="setting-copy">
-                                    <ui:Label text="UI scale" class="setting-label" />
-                                    <ui:Label text="Scales every menu and HUD element" class="setting-description" />
-                                </ui:VisualElement>
-                                <ui:Slider name="ui-scale-slider" low-value="0.85" high-value="1.2" class="setting-control" />
-                                <ui:Label name="scale-value" text="100%" class="setting-value" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row">
-                                <ui:Label text="Reduced motion" class="setting-label" />
-                                <ui:Toggle name="reduced-motion-toggle" class="toggle-control" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="setting-row is-disabled-row">
-                                <ui:VisualElement class="setting-copy">
-                                    <ui:Label text="Colorblind palette" class="setting-label" />
-                                    <ui:Label text="Dedicated palettes are planned" class="setting-description" />
-                                </ui:VisualElement>
-                                <ui:Label text="COMING SOON" class="status-pill" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-
-                        <ui:VisualElement name="settings-panel-controls" class="settings-section is-hidden">
-                            <ui:Label name="settings-controls-title" text="Keyboard and controller input" class="settings-section__subtitle" />
-                            <ui:VisualElement class="binding-row">
-                                <ui:Label text="MOVE" class="binding-row__action" />
-                                <ui:Label text="W / S  OR  ARROW KEYS" class="key-chip" />
-                                <ui:Label text="LEFT STICK / D-PAD" class="key-chip" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="binding-row">
-                                <ui:Label text="PAUSE" class="binding-row__action" />
-                                <ui:Label text="ESC / P" class="key-chip" />
-                                <ui:Label text="START" class="key-chip" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="binding-row is-disabled-row">
-                                <ui:Label text="REBIND CONTROLS" class="binding-row__action" />
-                                <ui:Label text="COMING SOON" class="status-pill" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:VisualElement>
+                </ui:ScrollView>
             </ui:VisualElement>
 
             <ui:VisualElement name="credits-screen" class="screen safe-area is-hidden">
@@ -287,13 +295,15 @@
                         <ui:Label name="credits-title" text="Credits" class="screen-title" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement class="credits-content panel">
-                    <ui:Label name="credits-mark" text="PONG" class="credits-mark" />
-                    <ui:Label name="credits-role" text="Design, engineering and game feel" class="credits-role" />
-                    <ui:Label text="Built as an open-source Unity 6 project with a focus on readable systems, deliberate interaction, and the timeless pleasure of a clean rally." class="credits-copy" />
-                    <ui:VisualElement class="credits-divider" />
-                    <ui:Label text="Made with Unity 6  •  Input System  •  UI Toolkit" class="input-hint" />
-                </ui:VisualElement>
+                <ui:ScrollView class="screen-fill" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement class="credits-content panel">
+                        <ui:Label name="credits-mark" text="PONG" class="credits-mark" />
+                        <ui:Label name="credits-role" text="Design, engineering and game feel" class="credits-role" />
+                        <ui:Label text="Built as an open-source Unity 6 project with a focus on readable systems, deliberate interaction, and the timeless pleasure of a clean rally." class="credits-copy" />
+                        <ui:VisualElement class="credits-divider" />
+                        <ui:Label text="Made with Unity 6  •  Input System  •  UI Toolkit" class="input-hint" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
             </ui:VisualElement>
         </ui:VisualElement>
 

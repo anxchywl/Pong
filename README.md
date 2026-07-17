@@ -49,11 +49,11 @@ The project targets desktop today. Nothing below is claimed without a check that
 | --- | --- |
 | macOS | compiles and runs in the editor; Edit Mode and Play Mode tests pass. No player build has been produced |
 | Windows, Linux | source compatible. No build has been attempted |
-| Android, iOS, iPadOS | source compatible only. Gameplay reads keyboard and gamepad devices directly, so a touch device has no way to move a paddle. Layouts carry fixed desktop dimensions and nothing reads `Screen.safeArea` |
+| Android, iOS, iPadOS | source compatible. The UI and the court adapt and safe areas are respected, but there is no touch input yet, so a paddle cannot be moved. No build has been attempted |
 
-The UI is laid out for desktop window sizes and scales uniformly from a 1920×1080 reference. It is
-not adaptive to phone or tablet dimensions, and the arena's camera needs an aspect ratio of at least
-1.32:1 to keep both goals on screen, so portrait orientations are not currently playable.
+The UI adapts to the room it has rather than the device it is on, and every screen is measured at
+phone, tablet and desktop widths. The court is framed for the window it is in, portrait included.
+Touch input is not implemented yet, so a phone or tablet can show the game but not play it.
 
 Cross-platform support is an incremental migration in progress. Do not describe a platform as
 supported here without the build, runtime, and device checks behind it.

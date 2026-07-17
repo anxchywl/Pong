@@ -47,6 +47,11 @@ never a branch in `PlayerPaddleInput`.
 - Adapt to available space and breakpoints, never to a device name or a platform define.
 - One UXML hierarchy. Adapt with USS classes on the root, never a second document.
 - No action may need hover. Hover may restyle and nothing else.
+- No screen may overflow the width it is given, and anything below the fold must be scrollable to.
+- A feature is finished when its UI, input and presentation suit Windows, macOS, Linux, Android,
+  iPhone and iPad. One that only works on one of them is incomplete, not done. The architecture is
+  in place for this: measure space, adapt with USS, read intent rather than devices, and no further
+  migration should be needed.
 - Runtime references are explicit serialized fields or same-object required components.
 - Generated Unity folders and secrets are never committed.
 

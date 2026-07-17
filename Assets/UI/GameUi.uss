@@ -1440,3 +1440,181 @@
 .layout--medium.layout--tall .main-content__navigation {
     width: auto;
 }
+
+/* Text wraps rather than runs off the edge. A title that fits still sits on one
+   line, so nothing on desktop moves; a long or translated one now breaks instead
+   of overflowing the screen it is on. */
+.display-title,
+.lede,
+.modal-title,
+.modal-copy,
+.screen-description,
+.seat-card__hint,
+.collection__description,
+.credits-line {
+    white-space: normal;
+}
+
+/* A modal is a fixed width because that reads well; it must still never be wider
+   than the screen showing it. */
+.modal-card {
+    max-width: 100%;
+}
+
+/* Compact: the side-by-side screens stop being side by side. */
+.layout--compact .workbench,
+.layout--compact .workshop,
+.layout--compact .court-lineup {
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* the rail stops being a column beside the panels and becomes a row above them */
+.layout--compact .category-rail {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 0;
+    margin-bottom: 10px;
+}
+
+.layout--compact .workshop__stage {
+    max-width: none;
+    margin-right: 0;
+}
+
+.layout--compact .workshop__collection {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    max-height: none;
+    align-self: stretch;
+    padding: 16px;
+}
+
+.layout--compact .credits-content {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin-top: 14px;
+    padding: 20px;
+}
+
+.layout--compact .modal-card {
+    padding: 20px;
+}
+
+.layout--compact .seat-card {
+    max-height: none;
+}
+
+/* Medium: a rail this wide costs a tablet more than it gives. */
+.layout--medium .category-rail {
+    width: 164px;
+    margin-right: 20px;
+}
+
+.layout--medium .credits-content {
+    min-width: 0;
+}
+
+.layout--medium .workshop__collection {
+    min-width: 0;
+}
+
+/* Upright, a tablet has the width for a row and not the shape for one. */
+.layout--medium.layout--tall .workbench,
+.layout--medium.layout--tall .workshop,
+.layout--medium.layout--tall .court-lineup {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.layout--medium.layout--tall .category-rail {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 0;
+    margin-bottom: 10px;
+}
+
+/* A minimum width is a promise the screen can be that wide. On a phone none of
+   these can keep it, and a minimum nothing can honour is just an overflow. */
+.layout--compact .settings-section,
+.layout--medium .settings-section,
+.layout--compact .selection-card,
+.layout--compact .cosmetic-card,
+.layout--compact .setting-copy {
+    min-width: 0;
+}
+
+/* the title and the lede were pinned to the width of the column that is no
+   longer there */
+.layout--compact .main-content__navigation > .display-title,
+.layout--compact .main-content__navigation > .lede,
+.layout--compact .main-content__navigation > .menu-button-row,
+.layout--compact .nav-stack,
+.layout--compact .menu-button-row {
+    width: auto;
+    align-self: stretch;
+}
+
+/* a label beside its control needs room for both. Stacked, each gets the width */
+.layout--compact .setting-row,
+.layout--compact .binding-row {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.layout--compact .setting-control,
+.layout--compact .dropdown-control,
+.layout--compact .binding-row__action {
+    width: auto;
+}
+
+.layout--compact .credits-copy,
+.layout--compact .confirmation-card {
+    width: auto;
+}
+
+/* a card grid with one column is a list, and a phone has room for a list */
+.layout--compact .card-grid,
+.layout--compact .settings-grid {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding-right: 0;
+}
+
+/* the wordmark and its subtitle cannot share a phone's top bar, and the subtitle
+   is the one repeating what the screen below already says */
+.layout--compact .top-bar__meta {
+    display: none;
+}
+
+/* two columns of settings need a desktop's width. A tablet gets one. */
+.layout--medium .settings-grid,
+.layout--medium .card-grid {
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.layout--medium .setting-copy {
+    min-width: 0;
+}
+
+/* A scroll container that still lets its content stretch. Where there is room the
+   child fills exactly as it did before, so the desktop layout is unmoved; where
+   there is not, it scrolls instead of clipping. */
+.screen-fill {
+    flex-grow: 1;
+}
+
+.screen-fill > .unity-scroll-view__content-viewport,
+.screen-fill .unity-scroll-view__content-container {
+    flex-grow: 1;
+}

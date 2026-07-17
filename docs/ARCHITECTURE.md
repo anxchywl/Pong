@@ -190,11 +190,43 @@ adapts without either sheet caring about import order.
 It measures room, never a device. A desktop window dragged narrow gets the phone layout, because it
 has the phone's problem. There is no platform define and no device check anywhere in the UI.
 
-`PanelSettings` uses `ConstantPhysicalSize`, and that is what makes the rest honest. Scaling from a
-1920 reference made every screen the same size in points, so a phone reported itself as wide as a
-desktop and no breakpoint could tell them apart. A point is now about a hundredth of an inch on any
-display: lengths are real, a 52 point button is a real thumb target, and a 1920x1080 desktop window
-is unchanged because it was already the reference.
+### Why the panel is measured in physical size
+
+`PanelSettings` uses `ConstantPhysicalSize`, and that is what makes the rest honest. A point is about
+a hundredth of an inch on any display: lengths are real, a 52 point button is a real thumb target,
+and a 1920x1080 desktop window is unchanged because it was already the reference.
+
+The alternative is a breakpoint system over a logical panel size — keep scaling from a reference and
+classify the result. It does not work here, and the reason is worth keeping:
+
+- **Scaling from a reference destroys the measurement.** With `ScaleWithScreenSize` the panel is
+  always about as wide as the reference, whatever it is running on. A phone reported 1920 points,
+  same as a desktop. There is no threshold that separates them because there is no difference left
+  to find. This is what the project did before, and why it carried a 470 point column: at that
+  reading it always fitted.
+- **Splitting the units is worse.** Breakpoints could come from real pixels while USS lengths stay
+  reference-relative. Then a rule and the class selecting it disagree about what a point is, and a
+  layout chosen for a phone is drawn at desktop proportions — precisely the "shrink the desktop"
+  outcome this phase exists to avoid.
+- **`ConstantPixelSize` measures the wrong thing.** A 1170 pixel phone and a 1170 pixel window are
+  the same number and nothing alike. Correcting for that means reading the density anyway, which is
+  what physical sizing already does, only by hand.
+
+So physical sizing is the only mode where lengths and breakpoints share one honest unit. What it
+costs:
+
+- **It trusts the reported density.** `fallbackDpi` is 96, so a display that reports nothing degrades
+  to points equalling pixels, which is right for a desktop and is where unknown density turns up.
+  Phones and tablets, where density actually varies, report it reliably.
+- **It has no idea how far away you are.** One reference treats a phone held at a foot like a monitor
+  at two. Platform conventions use a smaller unit on mobile for exactly this reason, so a compact
+  layout here comes out physically larger than a native one. That is a safe direction to be wrong in
+  for a party game, and compact typography is tuned in USS where it reads too large.
+- **Physical size is now a layout input.** A small window on a dense display is genuinely small and
+  gets the tablet layout. That is the stated principle working, not a bug, but it does mean a
+  windowed desktop build can show a layout desktop users may not expect.
+
+The costs are real and bounded; the alternative reintroduces the defect. It stays.
 
 | Size | From | Roughly |
 | --- | --- | --- |
@@ -202,10 +234,28 @@ is unchanged because it was already the reference.
 | Medium | 560 | a tablet |
 | Expanded | 1000 | a desktop window |
 
-Compact stacks the menu, drops the fixed navigation column, grows buttons to 52 points, and hides the
-preview court — a picture of a game that has not started, which the lineup below it describes in less
-room. Medium keeps the pair side by side but not desktop's density, and stacks anyway when a tablet
-is held upright. Expanded is the desktop layout the game already had, untouched.
+Compact stacks every screen that was a row — the menu, the lineup, the workshop, the settings bench —
+turns the category rail into a row of tabs above its panels, drops the fixed columns, grows buttons to
+52 points, stacks each setting over its control, and hides two things that repeat themselves: the
+preview court, which pictures a game that has not started, and the top bar's subtitle. Medium keeps
+the pair side by side but not desktop's density, narrows the rail, gives settings one column instead
+of two, and stacks anyway when a tablet is held upright. Expanded is the desktop layout the game
+already had, untouched.
+
+A minimum width is a promise the screen can be that wide, and on a phone none of the old ones could
+be kept, so they are lifted rather than fought. Text wraps everywhere: a title that fits still sits
+on one line, so nothing on desktop moves, but a long or translated one now breaks instead of running
+off the edge.
+
+Every screen scrolls when its content is taller than the room it has. The container lets children
+stretch where there is space, so the desktop layout is unmoved, and scrolls where there is not.
+Scrolling was added to the five screens measured to overflow, not to every screen by reflex — the
+game mode screen already had it.
+
+`ResponsiveScreenTests` measures this rather than trusting it: every screen at a phone upright, a
+phone on its side, a small tablet, a large tablet and a desktop window, asserting nothing runs off
+the edge, that anything below the fold can be scrolled to, and that the desktop's own geometry is
+still the width it always was.
 
 Hover only ever restyles. No rule reveals or enables anything on hover, so nothing is unreachable by
 touch, key or pad.
