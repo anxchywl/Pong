@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a responsive UI Toolkit front end and two complete, runtime-switchable visual identities.
+Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a desktop-first UI Toolkit front end and two complete, runtime-switchable visual identities.
 
 ## Gameplay
 
@@ -32,7 +32,7 @@ Each seat is driven by the input profile it was given, so two players can share 
 - deterministic serves and angle-based paddle rebounds
 - computer opponent with simple, readable tracking behavior
 - scoring, pause, win, and restart states, with remaining match progress always on the HUD
-- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow
+- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow, laid out for desktop window sizes
 - a customization workshop that previews every change live and only saves when you apply it
 - complete Retro and Futuristic design systems, each a Theme Style Sheet with its own typography, geometry, motion, audio, overlays, HUD and arena treatment
 - theme-scoped cosmetics across arena, paddle, ball, HUD, effects, and audio that cannot create visually inconsistent combinations
@@ -40,6 +40,23 @@ Each seat is driven by the input profile it was given, so two players can share 
 - persistent gameplay, audio, graphics, and accessibility preferences
 - mouse, keyboard, and controller-ready menu navigation with explicit focus states
 - Edit Mode tests for scoring, the lineup rules, the selection model, and theme parity, plus a Play Mode scene smoke test
+
+## Platform support
+
+The project targets desktop today. Nothing below is claimed without a check that was actually run.
+
+| Platform | State |
+| --- | --- |
+| macOS | compiles and runs in the editor; Edit Mode and Play Mode tests pass. No player build has been produced |
+| Windows, Linux | source compatible. No build has been attempted |
+| Android, iOS, iPadOS | source compatible only. Gameplay reads keyboard and gamepad devices directly, so a touch device has no way to move a paddle. Layouts carry fixed desktop dimensions and nothing reads `Screen.safeArea` |
+
+The UI is laid out for desktop window sizes and scales uniformly from a 1920×1080 reference. It is
+not adaptive to phone or tablet dimensions, and the arena's camera needs an aspect ratio of at least
+1.32:1 to keep both goals on screen, so portrait orientations are not currently playable.
+
+Cross-platform support is an incremental migration in progress. Do not describe a platform as
+supported here without the build, runtime, and device checks behind it.
 
 ## Requirements
 
@@ -68,7 +85,8 @@ than failing as a null.
 ## Project layout
 
 - `Assets/Scenes/` contains the playable scene.
-- `Assets/Scripts/` contains runtime gameplay, presentation, and modular UI code.
+- `Assets/Scripts/` contains presentation, input, and modular UI code as `Pong.Runtime`.
+- `Assets/Scripts/Gameplay/` contains rules, physics, and scoring as `Pong.Gameplay`, an assembly that references no input, UI, or platform package.
 - `Assets/UI/` contains the shared UI Toolkit document, independent theme style sheets and assets, panel settings, and content catalogs.
 - `Assets/Tests/` contains automated Edit Mode and Play Mode tests.
 - `Assets/Art/` contains the small set of shared visual and physics assets.

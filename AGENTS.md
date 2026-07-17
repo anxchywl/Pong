@@ -22,6 +22,12 @@ When documentation and the project disagree, verify behavior in Unity and update
 
 Keep these responsibilities separate. Do not add a global manager, service locator, or static mutable state.
 
+Gameplay lives in `Assets/Scripts/Gameplay/` as `Pong.Gameplay`, which references the engine and
+nothing else. Input, presentation, and UI live in `Assets/Scripts/` as `Pong.Runtime`, which
+references `Pong.Gameplay`. Never invert that dependency, and never add an input, UI, or platform
+package reference to `Pong.Gameplay` — the split exists so a hardware read inside gameplay fails to
+compile. See `docs/ARCHITECTURE.md` for what is still waiting to move across.
+
 ## Project invariants
 
 - The project has one enabled build scene: `Assets/Scenes/Main.unity`.
@@ -45,7 +51,8 @@ Keep these responsibilities separate. Do not add a global manager, service locat
 ## Unity rules
 
 - Use Unity `6000.5.3f1`.
-- Use the Input System package; do not add legacy input calls.
+- Use the Input System package; do not add legacy input calls. Using the package is not the same as
+  being device independent: gameplay must consume intent, not read devices.
 - Read input in `Update` and move physics bodies in `FixedUpdate`.
 - Use `Rigidbody2D` APIs for simulated objects instead of writing transforms.
 - Use private `[SerializeField]` fields and validation attributes for tunable values.

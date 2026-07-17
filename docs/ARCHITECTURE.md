@@ -34,7 +34,7 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 
 The app opens in the front end with gameplay suspended. Starting a match gives the selected settings to `MatchController`, which publishes a `MatchState` snapshot. A goal trigger reports the scoring side, and the controller either prepares another serve or stops the ball after a win. Restart resets the same state without reloading the scene.
 
-`GameUiController` subscribes to match state changes and delegates rendering to small views. `ScreenNavigator` owns front-end history; pause settings are presented over the paused match without changing game state. UI Toolkit provides one responsive document for menus, HUD, pause, confirmation, and results, avoiding mixed UI systems.
+`GameUiController` subscribes to match state changes and delegates rendering to small views. `ScreenNavigator` owns front-end history; pause settings are presented over the paused match without changing game state. UI Toolkit provides one document for menus, HUD, pause, confirmation, and results, avoiding mixed UI systems. That document is laid out for desktop window sizes and scales uniformly from a 1920×1080 reference; it does not yet adapt its layout to phone or tablet dimensions.
 
 ## Theming
 
@@ -80,9 +80,34 @@ paddle, so a later claim vacates the earlier seat rather than moving two paddles
 Keyboard layouts are catalog data rather than hardcoded keys, so several players share one keyboard.
 A future mode reads the same roster instead of inventing its own idea of who is playing.
 
+## Assemblies
+
+The runtime is split into two assemblies so the input boundary is enforced by the compiler rather
+than by review.
+
+| Assembly | Location | References |
+| --- | --- | --- |
+| `Pong.Gameplay` | `Assets/Scripts/Gameplay/` | nothing but the engine |
+| `Pong.Runtime` | `Assets/Scripts/` | `Pong.Gameplay`, `Unity.InputSystem`, `Unity.ugui` |
+
+`Pong.Gameplay` holds the rules, the score, the seat identities, and the physics bodies:
+`MatchScore`, `MatchState`, `PlayerSide`, `CourtSeat`, `SeatAssignment`, `PaddleMovement`,
+`BallController`, and `ComputerPaddleController`. It cannot reference the Input System, so a hardware
+read inside it is a compile error rather than a review comment. Gameplay consumes intent —
+`PaddleMovement.SetDirection` is the whole surface — and never asks which device produced it.
+
+`Pong.Runtime` holds input, presentation, and UI, and depends on `Pong.Gameplay` in that direction
+only. The dependency must never be inverted.
+
+Three types belong in `Pong.Gameplay` but cannot move there yet, because each reaches something that
+needs the Input System: `MatchController` reads `Keyboard.current` for pause and restart, `Goal`
+holds a `MatchController` reference, and `MatchRoster` reads `InputProfileCatalog.DefaultProfileId`.
+They move once input is expressed as actions rather than device reads.
+
 ## Dependency boundaries
 
 - `MatchScore` must remain independent of Unity APIs so its rules stay fast to test.
+- `Pong.Gameplay` must not reference the Input System, UI Toolkit, uGUI, or any platform package.
 - Gameplay components may expose read-only state needed by another component, but should not expose their internal physics objects.
 - Runtime dependencies should be serialized references or required components on the same object.
 - UI may observe match state but must not decide gameplay outcomes.
