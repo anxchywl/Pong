@@ -12,6 +12,7 @@ namespace Pong
         [SerializeField] private SeatRole role;
         [SerializeField] private PlayerPaddleInput humanInput;
         [SerializeField] private ComputerPaddleController computerInput;
+        [SerializeField] private TouchPaddleInput touchInput;
         [SerializeField] private SpriteRenderer paddleRenderer;
         [SerializeField] private SpriteRenderer glowRenderer;
 
@@ -29,7 +30,8 @@ namespace Pong
             SeatAssignment assignment,
             InputActionAsset controls,
             InputProfileDefinition profile,
-            float lengthScale
+            float lengthScale,
+            CourtRegion region
         )
         {
             gameObject.SetActive(assignment.IsOccupied);
@@ -40,10 +42,17 @@ namespace Pong
 
             Movement.SetLengthScale(lengthScale);
             bool human = assignment.Occupant == SeatOccupant.Human;
-            humanInput.enabled = human;
+            bool dragged = human && profile != null && profile.Kind == InputProfileKind.Touch;
+
+            humanInput.enabled = human && !dragged;
+            touchInput.enabled = dragged;
             computerInput.enabled = !human;
 
-            if (human)
+            if (dragged)
+            {
+                touchInput.Bind(region);
+            }
+            else if (human)
             {
                 humanInput.Bind(controls, profile, assignment.DeviceId);
             }

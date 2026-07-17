@@ -21,6 +21,7 @@ When documentation and the project disagree, verify behavior in Unity and update
 - `PlayerPaddleInput` and `ComputerPaddleController` provide movement intent.
 - `MatchShortcuts` turns the Pause and Restart actions into match commands.
 - `SeatDeviceWatcher` keeps a seat's claim across a pad disconnecting and reconnecting.
+- `TouchPaddleInput` drags a paddle; `CourtProjection` is the only presentation input may read.
 - `Goal` reports a score; `MatchHud` renders match state.
 - `ArenaFraming` frames the court for the space available; it never moves world geometry.
 - `SafeAreaLayout` insets content that must clear cutouts; backgrounds stay full bleed.

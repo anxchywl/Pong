@@ -59,7 +59,8 @@ namespace Pong
 
         public void Assign(CourtSeat seat, SeatAssignment assignment)
         {
-            if (assignment.Occupant == SeatOccupant.Human)
+            // a shared driver may sit in several seats at once, so it takes nobody's when it claims
+            if (assignment.Occupant == SeatOccupant.Human && assignment.Exclusive)
             {
                 ReleaseClaim(assignment.ProfileId, assignment.DeviceId, seat);
             }
@@ -95,13 +96,15 @@ namespace Pong
             return false;
         }
 
-        /// Finds the seat currently driven by a profile and device, if any.
+        /// Finds the seat currently driven by a profile and device, if any. A shared driver holds
+        /// no exclusive claim, so it is never found here.
         public bool TryFindClaim(string profileId, int deviceId, out CourtSeat claimed)
         {
             foreach (CourtSeat seat in CourtSeat.All)
             {
                 SeatAssignment assignment = Get(seat);
                 if (assignment.Occupant == SeatOccupant.Human &&
+                    assignment.Exclusive &&
                     assignment.ProfileId == profileId &&
                     assignment.DeviceId == deviceId)
                 {

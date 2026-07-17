@@ -16,13 +16,17 @@ Settings.
 
 Each seat is driven by the input profile it was given, so two players can share one keyboard.
 
-| Action | Keyboard | Gamepad |
-| --- | --- | --- |
-| Move (Keyboard W/S) | `W` / `S` | Left stick or D-pad |
-| Move (Keyboard Arrows) | `Up` / `Down` | Left stick or D-pad |
-| Pause | `P` or `Esc` | Start |
-| Restart | `R` | Select |
-| Back | `Esc` | B / East button |
+| Action | Keyboard | Gamepad | Touch |
+| --- | --- | --- | --- |
+| Move (Keyboard W/S) | `W` / `S` | Left stick or D-pad | Drag your side of the court |
+| Move (Keyboard Arrows) | `Up` / `Down` | Left stick or D-pad | Drag your side of the court |
+| Pause | `P` or `Esc` | Start | Pause on the HUD |
+| Restart | `R` | Select | Restart from the pause menu |
+| Back | `Esc` | B / East button | Back on the screen |
+
+Touch drags the paddle itself: there is no on-screen stick and no thumb button. Take a touch seat in
+**Players**, then drag your half of the court. Two to four players can drag at once, each answering
+to the part of the court nearest their own paddle.
 
 ## Features
 
@@ -49,11 +53,12 @@ The project targets desktop today. Nothing below is claimed without a check that
 | --- | --- |
 | macOS | compiles and runs in the editor; Edit Mode and Play Mode tests pass. No player build has been produced |
 | Windows, Linux | source compatible. No build has been attempted |
-| Android, iOS, iPadOS | source compatible. The UI and the court adapt and safe areas are respected, but there is no touch input yet, so a paddle cannot be moved. No build has been attempted |
+| Android, iOS, iPadOS | source compatible. The UI and the court adapt, safe areas are respected, and touch drags the paddles. No build has been attempted and no device has run it |
 
 The UI adapts to the room it has rather than the device it is on, and every screen is measured at
-phone, tablet and desktop widths. The court is framed for the window it is in, portrait included.
-Touch input is not implemented yet, so a phone or tablet can show the game but not play it.
+phone, tablet and desktop widths. The court is framed for the window it is in, portrait included, and
+a paddle is dragged with a finger. All of it is verified in the editor against simulated devices;
+none of it has been built for or run on a phone or tablet.
 
 Cross-platform support is an incremental migration in progress. Do not describe a platform as
 supported here without the build, runtime, and device checks behind it.

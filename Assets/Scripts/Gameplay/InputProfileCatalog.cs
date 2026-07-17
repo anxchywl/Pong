@@ -7,7 +7,8 @@ namespace Pong
     public enum InputProfileKind
     {
         Keyboard,
-        Gamepad
+        Gamepad,
+        Touch
     }
 
     [CreateAssetMenu(menuName = "Pong/Input/Input Profile Catalog")]
@@ -46,7 +47,8 @@ namespace Pong
         /// Names a control scheme in PongControls. The bindings live there, not here.
         public string ControlScheme => controlScheme;
 
-        /// Gamepad profiles need a device to be meaningful; keyboard profiles never do.
+        /// Gamepad profiles need a device to be meaningful. A keyboard is shared by its schemes and
+        /// a touchscreen by its regions, so neither ever does.
         public bool RequiresDevice => kind == InputProfileKind.Gamepad;
     }
 }

@@ -111,15 +111,21 @@ namespace Pong
 
             foreach (InputProfileDefinition profile in profiles.Profiles)
             {
+                // offering touch on a machine without a touchscreen would seat a player who cannot play
+                if (profile.Kind == InputProfileKind.Touch && Touchscreen.current == null)
+                {
+                    continue;
+                }
+
                 if (!profile.RequiresDevice)
                 {
-                    AddIfFree(options, SeatAssignment.Human(profile.Id, SeatAssignment.NoDevice), seat);
+                    AddIfFree(options, SeatAssignment.For(profile, SeatAssignment.NoDevice), seat);
                     continue;
                 }
 
                 foreach (Gamepad gamepad in Gamepad.all)
                 {
-                    AddIfFree(options, SeatAssignment.Human(profile.Id, gamepad.deviceId), seat);
+                    AddIfFree(options, SeatAssignment.For(profile, gamepad.deviceId), seat);
                 }
             }
 
@@ -129,7 +135,8 @@ namespace Pong
 
         private void AddIfFree(List<SeatAssignment> options, SeatAssignment candidate, CourtSeat seat)
         {
-            bool taken = roster.TryFindClaim(candidate.ProfileId, candidate.DeviceId, out CourtSeat holder) &&
+            bool taken = candidate.Exclusive &&
+                roster.TryFindClaim(candidate.ProfileId, candidate.DeviceId, out CourtSeat holder) &&
                 !holder.Equals(seat);
             if (!taken)
             {

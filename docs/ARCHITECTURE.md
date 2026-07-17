@@ -19,6 +19,8 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 | `MatchRoster` | Owns the lineup rules: goalkeeper before attacker, one profile per paddle |
 | `SeatDirector` | Pushes the roster onto the court's paddles and owns the paddle length rule |
 | `SeatDeviceWatcher` | Pauses when a seated pad leaves and rebinds when it returns |
+| `TouchPaddleInput` | Drags one paddle with a finger that begins inside the seat's band |
+| `CourtProjection` | Turns a screen point into a court point; the only presentation input may read |
 | `PaddleSeat` | One physical paddle: its seat, its renderers, and which intent drives it |
 | `InputProfileCatalog` | Keyboard layouts and gamepad profiles as data, each naming a control scheme |
 | `Goal` | Reports which side scored when the ball enters a trigger |
@@ -275,6 +277,33 @@ padding and the safe inset lands on the screens inside it, so the two compose ra
 cutout in pixels: a dense display would otherwise inset twice as far as it should. `SafeAreaTests`
 covers a phone upright, the same phone turned sideways where the notch becomes a side inset, a
 high-density display, and a screen that is not ready yet.
+
+## Touch
+
+A finger drags a paddle directly. There is no on-screen stick and no button: the paddle is the
+control.
+
+It is not placed where the finger is. It is asked to head there, at exactly the speed it has always
+moved, so a drag produces the same intent a key or a stick does and gameplay reads one number
+whichever sent it. No rule changes to make a phone work. Nothing filters the finger either — a
+smoothed drag only adds the lag it claims to remove.
+
+Each seat answers to a band of the court. Alone, a paddle owns its whole half: anywhere on your side
+drags your paddle. Sharing a side, the half splits between the two paddles midway between them, read
+from where they actually stand. Bands never overlap, so four fingers drive four paddles and nothing
+has to arbitrate who owns which. A finger is claimed where it lands and kept until it lifts, even if
+it wanders across the halfway line: having grabbed your paddle you should not lose it by dragging too
+far.
+
+`TouchPaddleInput` asks `CourtProjection` where on the court a finger is, and that is all input knows
+about presentation. The camera already carries whatever the framing strategy decided, so a court
+drawn sideways needs no separate path — `TouchInputTests` rolls the camera a quarter turn and drags
+again to prove it.
+
+A touchscreen is one device that several seats read, told apart by region rather than hardware. That
+makes it the first driver that is not exclusive: `SeatAssignment.For` reads the shareable rule off
+the profile so no call site has to remember it, because forgetting it silently evicts whoever was
+already sitting there.
 
 ## Devices
 

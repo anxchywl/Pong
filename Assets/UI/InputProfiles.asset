@@ -28,3 +28,8 @@ MonoBehaviour:
     hint: Left stick or D-pad
     kind: 1
     controlScheme: Gamepad
+  - id: touch
+    displayName: Touch
+    hint: Drag your side of the court
+    kind: 2
+    controlScheme: Touch

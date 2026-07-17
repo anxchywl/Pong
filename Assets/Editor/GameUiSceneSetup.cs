@@ -99,7 +99,7 @@ namespace Pong.Editor
             catalog.name = "InputProfiles";
             SerializedObject serialized = new SerializedObject(catalog);
             SerializedProperty list = serialized.FindProperty("profiles");
-            list.arraySize = 3;
+            list.arraySize = 4;
             // the layout belongs in the name: two players sharing a keyboard must tell their
             // seats apart at a glance, not by reading the subtitle
             SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard W/S",
@@ -108,6 +108,8 @@ namespace Pong.Editor
                 "Right of the board", InputProfileKind.Keyboard, "KeyboardRight");
             SetProfile(list.GetArrayElementAtIndex(2), "gamepad", "Gamepad",
                 "Left stick or D-pad", InputProfileKind.Gamepad, "Gamepad");
+            SetProfile(list.GetArrayElementAtIndex(3), "touch", "Touch",
+                "Drag your side of the court", InputProfileKind.Touch, "Touch");
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalog);
             return catalog;
@@ -637,6 +639,7 @@ namespace Pong.Editor
             Camera camera = FindComponent<Camera>("Main Camera");
             camera.orthographicSize = CameraSize;
             Ensure<ArenaFraming>(camera.gameObject);
+            Ensure<CourtProjection>(camera.gameObject);
             EditorUtility.SetDirty(camera);
         }
 
@@ -705,6 +708,11 @@ namespace Pong.Editor
         {
             PlayerPaddleInput human = Ensure<PlayerPaddleInput>(paddle);
             ComputerPaddleController computer = Ensure<ComputerPaddleController>(paddle);
+            TouchPaddleInput touch = Ensure<TouchPaddleInput>(paddle);
+
+            SerializedObject touchSerialized = new SerializedObject(touch);
+            SetReference(touchSerialized, "projection", FindComponent<CourtProjection>("Main Camera"));
+            touchSerialized.ApplyModifiedPropertiesWithoutUndo();
 
             SerializedObject computerSerialized = new SerializedObject(computer);
             SetReference(computerSerialized, "ball", FindComponent<BallController>("Ball"));
@@ -731,6 +739,7 @@ namespace Pong.Editor
             SetEnum(serialized, "role", role);
             SetReference(serialized, "humanInput", human);
             SetReference(serialized, "computerInput", computer);
+            SetReference(serialized, "touchInput", touch);
             SetReference(serialized, "paddleRenderer", renderer);
             SetReference(serialized, "glowRenderer",
                 CreateGlow(renderer, "Paddle Glow", new Vector3(1.85f, 1.16f, 1f)));
