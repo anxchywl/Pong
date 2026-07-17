@@ -25,7 +25,8 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 | `GameUiController` | Composes UI views, routes user intent, and observes match state |
 | `ScreenNavigator` / `ScreenHost` | Maintain deterministic front-end navigation and visible screens |
 | `MatchHud` / screen views | Render one focused part of the UI document |
-| `ArenaFraming` | Keeps the whole court on screen at any aspect, and lays it along the screen in portrait |
+| `ArenaFraming` | Frames the court for the space available; the only thing that knows the screen's shape |
+| `SafeAreaLayout` | Insets content that must clear cutouts, leaving backgrounds full bleed |
 | `GamePresentation` | Applies the active theme and scoped cosmetics to renderers, glow layers, particles, audio, and the camera |
 | `GameTheme` / `ThemeCatalog` | Define independent visual identities and make them runtime-switchable |
 | `GameModeCatalog` / `CosmeticCatalog` | Provide data-driven mode and theme-scoped cosmetic content |
@@ -145,24 +146,52 @@ cancel itself out.
 The remaining `Gamepad.all` reads, in `PlayersView` and `SeatDescription`, enumerate devices so a
 player can pick one and so a pad can be numbered by plug order. That is device discovery, not input.
 
-## Framing and orientation
+## Adaptive presentation
 
-The court is 19.2 by 9.4 world units and never changes. What changes is how it is framed.
+The court is 19.2 by 9.4 world units and never changes. Neither do the rules, the input, the themes
+or the UI hierarchy. What adapts is presentation, and it is the only layer that knows the shape of
+the screen it is drawing onto.
 
-`ArenaFraming` reads the window's aspect each time it changes and asks `ArenaFrame` for a size and a
-roll. In landscape the camera keeps the framing the game has always had — a 16:9 or ultrawide window
-needs less room than that, and the band it leaves above the wall is where the HUD lives — and pulls
-back only when a narrow window such as 4:3 would otherwise crop a goal. It used to clear the goals by
-a tenth of a unit at 4:3, which was luck rather than design.
+This is a boundary, not a detail. Nothing outside presentation may ask whether the screen is portrait
+or what the camera is doing, so the strategy below can be replaced without touching a game system.
 
-In portrait the camera rolls a quarter turn, so the court's long axis runs down the screen's long
-axis and the paddles sit at the top and bottom. Nothing in the world moves and no rule changes: it is
-the same match seen sideways, and `PlayerSide.Left` is simply drawn at the bottom. This is why
-portrait needs no zooming out to fit and no separate arena: a court laid along a phone is a court
-that suits a phone.
+`ArenaFraming` reads the available space each time it changes and asks `ArenaFrame` for a framing.
+It reads space, not the device: a narrow desktop window is a narrow window, not a phone.
+
+The current strategy is one implementation, not the architecture:
+
+- In landscape it keeps the framing the game has always had — a 16:9 or ultrawide window needs less
+  room than that, and the band it leaves above the wall is where the HUD lives — and pulls back only
+  when a narrow window such as 4:3 would otherwise crop a goal. It used to clear the goals by a tenth
+  of a unit at 4:3, which was luck rather than design.
+- In portrait it rolls the camera a quarter turn, so the court's long axis runs down the screen's
+  long axis and the paddles sit at the top and bottom. Nothing in the world moves and no rule
+  changes: it is the same match seen sideways, and `PlayerSide.Left` is simply drawn at the bottom.
+  A court laid along a phone is a court that suits a phone, rather than one zoomed out until a
+  landscape layout happens to fit.
+
+A future strategy could letterbox, shorten the court, or lay it out differently again. Gameplay,
+input and the UI would not notice, because none of them read the roll: anything needing to relate the
+screen to the court goes through the camera, which already carries whatever the strategy decided.
 
 `ArenaFrame` is pure maths, so `ArenaFrameTests` checks every shape a screen comes in — ultrawide
 through phone portrait — rather than every device.
+
+## Safe areas
+
+`SafeAreaLayout` keeps readable and interactive content clear of notches, rounded corners and gesture
+areas. Elements opt in with the `safe-area` class, and they are inset with padding rather than moved,
+so a background, a scrim or an overlay still reaches every edge. A screen should look like it runs
+under the cutout; its buttons should not sit beneath one.
+
+Inset: the six screens, the HUD, the pause, win and quit layers, and the debug overlay. Full bleed:
+`game-ui`, `screen-layer`'s backdrop, and `theme-overlay`. `screen-layer` keeps its own design
+padding and the safe inset lands on the screens inside it, so the two compose rather than fight.
+
+`SafeArea` is pure maths in panel points, not pixels, because the panel is measured in points and a
+cutout in pixels: a dense display would otherwise inset twice as far as it should. `SafeAreaTests`
+covers a phone upright, the same phone turned sideways where the notch becomes a side inset, a
+high-density display, and a screen that is not ready yet.
 
 ## Devices
 

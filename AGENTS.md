@@ -22,7 +22,8 @@ When documentation and the project disagree, verify behavior in Unity and update
 - `MatchShortcuts` turns the Pause and Restart actions into match commands.
 - `SeatDeviceWatcher` keeps a seat's claim across a pad disconnecting and reconnecting.
 - `Goal` reports a score; `MatchHud` renders match state.
-- `ArenaFraming` frames the court for the window; it never moves world geometry.
+- `ArenaFraming` frames the court for the space available; it never moves world geometry.
+- `SafeAreaLayout` insets content that must clear cutouts; backgrounds stay full bleed.
 
 Keep these responsibilities separate. Do not add a global manager, service locator, or static mutable state.
 
@@ -41,6 +42,9 @@ never a branch in `PlayerPaddleInput`.
 - Paddle movement is clamped to the arena and performed through `Rigidbody2D`.
 - Ball launch behavior is deterministic.
 - The whole court stays on screen at every aspect ratio, portrait included.
+- Only presentation knows the screen's shape. Gameplay, input, themes and UI never read the
+  orientation or the camera's roll, so the framing strategy can change without touching them.
+- Adapt to available space and breakpoints, never to a device name or a platform define.
 - Runtime references are explicit serialized fields or same-object required components.
 - Generated Unity folders and secrets are never committed.
 

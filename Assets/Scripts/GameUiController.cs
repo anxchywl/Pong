@@ -28,6 +28,7 @@ namespace Pong
         private GameSettings settings;
         private UiAudioFeedback audioFeedback;
         private UiThemePresenter themePresenter;
+        private SafeAreaLayout safeArea;
         private MainMenuView mainMenu;
         private PlayersView playersView;
         private Button playButton;
@@ -78,6 +79,7 @@ namespace Pong
             settings.Sanitize();
             audioFeedback = new UiAudioFeedback(GetComponent<AudioSource>());
             themePresenter = new UiThemePresenter(root, document.panelSettings);
+            safeArea = new SafeAreaLayout(root);
 
             BuildViews();
             ApplySettings();
@@ -98,6 +100,7 @@ namespace Pong
 
         private void Update()
         {
+            safeArea.Refresh();
             UpdateDebugDisplay();
         }
 

@@ -3,7 +3,7 @@
          own, so a theme's rules land after the structure they are overriding rather than before -->
     <ui:VisualElement name="game-ui" class="game-ui">
         <ui:VisualElement name="screen-layer" class="screen-layer">
-            <ui:VisualElement name="main-menu-screen" class="screen screen--main">
+            <ui:VisualElement name="main-menu-screen" class="screen safe-area screen--main">
                 <ui:VisualElement class="top-bar">
                     <ui:Label name="wordmark" text="PONG" class="wordmark" />
                     <ui:Label name="menu-eyebrow" text="QUICK MATCH" class="top-bar__meta" />
@@ -55,7 +55,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="players-screen" class="screen is-hidden">
+            <ui:VisualElement name="players-screen" class="screen safe-area is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="players-back-button" text="BACK" class="back-button" />
                     <ui:VisualElement class="screen-header__titles">
@@ -78,7 +78,7 @@
                 <ui:Label name="players-hint" text="A GOALKEEPER DEFENDS THE GOAL. AN ATTACKER MEETS THE BALL EARLY." class="input-hint input-hint--center" />
             </ui:VisualElement>
 
-            <ui:VisualElement name="game-mode-screen" class="screen is-hidden">
+            <ui:VisualElement name="game-mode-screen" class="screen safe-area is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="mode-back-button" text="BACK" class="back-button" />
                     <ui:VisualElement class="screen-header__titles">
@@ -93,7 +93,7 @@
                 </ui:ScrollView>
             </ui:VisualElement>
 
-            <ui:VisualElement name="customization-screen" class="screen is-hidden">
+            <ui:VisualElement name="customization-screen" class="screen safe-area is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="customization-back-button" text="BACK" class="back-button" />
                     <ui:VisualElement class="screen-header__titles">
@@ -155,7 +155,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="settings-screen" class="screen is-hidden">
+            <ui:VisualElement name="settings-screen" class="screen safe-area is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="settings-back-button" text="BACK" class="back-button" />
                     <ui:VisualElement class="screen-header__titles">
@@ -279,7 +279,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="credits-screen" class="screen is-hidden">
+            <ui:VisualElement name="credits-screen" class="screen safe-area is-hidden">
                 <ui:VisualElement class="screen-header">
                     <ui:Button name="credits-back-button" text="BACK" class="back-button" />
                     <ui:VisualElement class="screen-header__titles">
@@ -297,7 +297,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="hud" class="hud is-hidden" picking-mode="Ignore">
+        <ui:VisualElement name="hud" class="hud safe-area is-hidden" picking-mode="Ignore">
             <ui:VisualElement class="hud__bar">
                 <ui:VisualElement class="hud__slot hud__slot--start">
                     <ui:Label name="hud-mode" text="CLASSIC" class="hud__mode-label" />
@@ -322,7 +322,7 @@
             <ui:Label name="hud-status" text="" class="hud__status" />
         </ui:VisualElement>
 
-        <ui:VisualElement name="pause-menu" class="modal-layer is-hidden">
+        <ui:VisualElement name="pause-menu" class="modal-layer safe-area is-hidden">
             <ui:VisualElement class="modal-card pause-card">
                 <ui:Label name="pause-eyebrow" text="MATCH PAUSED" class="eyebrow" />
                 <ui:Label name="pause-title" text="Take a breath." class="modal-title" />
@@ -335,7 +335,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="win-panel" class="modal-layer is-hidden">
+        <ui:VisualElement name="win-panel" class="modal-layer safe-area is-hidden">
             <ui:VisualElement class="modal-card win-card">
                 <ui:Label text="FINAL SCORE" class="eyebrow" />
                 <ui:Label name="win-title" text="MATCH WON" class="modal-title" />
@@ -345,7 +345,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="quit-confirmation" class="modal-layer modal-layer--top is-hidden">
+        <ui:VisualElement name="quit-confirmation" class="modal-layer modal-layer--top safe-area is-hidden">
             <ui:VisualElement class="modal-card confirmation-card">
                 <ui:Label text="LEAVE THE COURT?" class="eyebrow" />
                 <ui:Label text="Quit Pong" class="modal-title" />
@@ -359,7 +359,7 @@
 
         <ui:VisualElement name="theme-overlay" class="theme-overlay" picking-mode="Ignore" />
 
-        <ui:VisualElement name="debug-panel" class="debug-panel is-hidden">
+        <ui:VisualElement name="debug-panel" class="debug-panel safe-area is-hidden">
             <ui:Label name="debug-fps" text="0 FPS" class="debug-panel__text" />
             <ui:Label text="DEVELOPMENT" class="debug-panel__badge" />
         </ui:VisualElement>
