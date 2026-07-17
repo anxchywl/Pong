@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a desktop-first UI Toolkit front end and two complete, runtime-switchable visual identities.
+Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a UI Toolkit front end that adapts to the room it has, and two complete, runtime-switchable visual identities.
 
 ## Gameplay
 
@@ -32,14 +32,14 @@ Each seat is driven by the input profile it was given, so two players can share 
 - deterministic serves and angle-based paddle rebounds
 - computer opponent with simple, readable tracking behavior
 - scoring, pause, win, and restart states, with remaining match progress always on the HUD
-- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow, laid out for desktop window sizes
+- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow, each laid out for the space it is given rather than scaled down to fit
 - a customization workshop that previews every change live and only saves when you apply it
 - complete Retro and Futuristic design systems, each a Theme Style Sheet with its own typography, geometry, motion, audio, overlays, HUD and arena treatment
 - theme-scoped cosmetics across arena, paddle, ball, HUD, effects, and audio that cannot create visually inconsistent combinations
 - runtime theme switching with persistent, independent cosmetic selections for each world
 - persistent gameplay, audio, graphics, and accessibility preferences
 - mouse, keyboard, and controller-ready menu navigation with explicit focus states
-- Edit Mode tests for scoring, the lineup rules, the selection model, and theme parity, plus a Play Mode scene smoke test
+- Edit Mode tests for scoring, the lineup rules, the selection model, theme parity, arena framing and safe areas, plus Play Mode tests that press real keys and measure every screen at phone, tablet and desktop widths
 
 ## Platform support
 
