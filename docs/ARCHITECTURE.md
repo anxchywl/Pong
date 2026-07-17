@@ -27,6 +27,7 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 | `MatchHud` / screen views | Render one focused part of the UI document |
 | `ArenaFraming` | Frames the court for the space available; the only thing that knows the screen's shape |
 | `SafeAreaLayout` | Insets content that must clear cutouts, leaving backgrounds full bleed |
+| `ResponsiveLayout` | Puts the room the panel has onto the root as classes, so USS can answer |
 | `GamePresentation` | Applies the active theme and scoped cosmetics to renderers, glow layers, particles, audio, and the camera |
 | `GameTheme` / `ThemeCatalog` | Define independent visual identities and make them runtime-switchable |
 | `GameModeCatalog` / `CosmeticCatalog` | Provide data-driven mode and theme-scoped cosmetic content |
@@ -176,6 +177,38 @@ screen to the court goes through the camera, which already carries whatever the 
 
 `ArenaFrame` is pure maths, so `ArenaFrameTests` checks every shape a screen comes in — ultrawide
 through phone portrait — rather than every device.
+
+## Adaptive UI
+
+One UXML, one set of views, one theme model. What changes with room is USS.
+
+`ResponsiveLayout` measures the panel's own resolved size and puts the answer on the root as classes:
+`layout--compact`, `layout--medium` or `layout--expanded`, plus `layout--tall` or `layout--wide`.
+Every adaptive rule is a descendant of one of those, which also means it outranks the base rule it
+adapts without either sheet caring about import order.
+
+It measures room, never a device. A desktop window dragged narrow gets the phone layout, because it
+has the phone's problem. There is no platform define and no device check anywhere in the UI.
+
+`PanelSettings` uses `ConstantPhysicalSize`, and that is what makes the rest honest. Scaling from a
+1920 reference made every screen the same size in points, so a phone reported itself as wide as a
+desktop and no breakpoint could tell them apart. A point is now about a hundredth of an inch on any
+display: lengths are real, a 52 point button is a real thumb target, and a 1920x1080 desktop window
+is unchanged because it was already the reference.
+
+| Size | From | Roughly |
+| --- | --- | --- |
+| Compact | under 560 | a phone either way up, or any window squeezed that far |
+| Medium | 560 | a tablet |
+| Expanded | 1000 | a desktop window |
+
+Compact stacks the menu, drops the fixed navigation column, grows buttons to 52 points, and hides the
+preview court — a picture of a game that has not started, which the lineup below it describes in less
+room. Medium keeps the pair side by side but not desktop's density, and stacks anyway when a tablet
+is held upright. Expanded is the desktop layout the game already had, untouched.
+
+Hover only ever restyles. No rule reveals or enables anything on hover, so nothing is unreachable by
+touch, key or pad.
 
 ## Safe areas
 

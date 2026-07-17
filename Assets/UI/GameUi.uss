@@ -1337,3 +1337,106 @@
 .reduced-motion * {
     transition-duration: 0s;
 }
+
+/* ---------------------------------------------------------------------------
+   Adaptive layout
+   
+   Driven by the room the panel has, never by a device. A desktop window dragged
+   narrow gets the phone layout, because it has the phone's problem. Every rule
+   here is a descendant of a root class, so it outranks the base rule it adapts
+   without either sheet having to care about order.
+   --------------------------------------------------------------------------- */
+
+/* Compact: a phone either way up, or any window squeezed that far.
+   The menu stops sitting side by side and stacks. */
+.layout--compact .screen-layer {
+    padding: 14px 16px 12px 16px;
+}
+
+.layout--compact .main-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 0 8px 0;
+}
+
+.layout--compact .main-content__navigation {
+    width: auto;
+    flex-shrink: 1;
+    justify-content: flex-start;
+}
+
+.layout--compact .nav-stack {
+    width: auto;
+    align-self: auto;
+    margin-top: 14px;
+}
+
+/* a thumb needs a bigger target than a cursor, and there is width to spend
+   now that the column is gone */
+.layout--compact .menu-button {
+    height: 52px;
+    max-width: none;
+    font-size: 15px;
+}
+
+.layout--compact .match-preview {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    padding: 16px;
+}
+
+/* the preview court is a picture of a game that has not started. On a phone the
+   lineup below it says the same thing in less room */
+.layout--compact .match-preview__court,
+.layout--compact .match-preview__spacer {
+    display: none;
+}
+
+.layout--compact .top-bar {
+    height: auto;
+    min-height: 44px;
+}
+
+.layout--compact .back-button,
+.layout--compact .text-button {
+    min-height: 44px;
+}
+
+.layout--compact .display-title {
+    font-size: 30px;
+}
+
+.layout--compact .footer-bar {
+    display: none;
+}
+
+/* Medium: a tablet. Room for the pair, but not for desktop's density. */
+.layout--medium .main-content__navigation {
+    width: 44%;
+}
+
+.layout--medium .nav-stack {
+    width: auto;
+    align-self: stretch;
+}
+
+.layout--medium .menu-button {
+    height: 48px;
+    max-width: none;
+}
+
+.layout--medium .back-button,
+.layout--medium .text-button {
+    min-height: 44px;
+}
+
+/* A tablet held upright has the width for a row and not the shape for one. */
+.layout--medium.layout--tall .main-content {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.layout--medium.layout--tall .main-content__navigation {
+    width: auto;
+}

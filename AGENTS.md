@@ -45,6 +45,8 @@ never a branch in `PlayerPaddleInput`.
 - Only presentation knows the screen's shape. Gameplay, input, themes and UI never read the
   orientation or the camera's roll, so the framing strategy can change without touching them.
 - Adapt to available space and breakpoints, never to a device name or a platform define.
+- One UXML hierarchy. Adapt with USS classes on the root, never a second document.
+- No action may need hover. Hover may restyle and nothing else.
 - Runtime references are explicit serialized fields or same-object required components.
 - Generated Unity folders and secrets are never committed.
 

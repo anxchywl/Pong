@@ -29,6 +29,7 @@ namespace Pong
         private UiAudioFeedback audioFeedback;
         private UiThemePresenter themePresenter;
         private SafeAreaLayout safeArea;
+        private ResponsiveLayout responsive;
         private MainMenuView mainMenu;
         private PlayersView playersView;
         private Button playButton;
@@ -80,6 +81,7 @@ namespace Pong
             audioFeedback = new UiAudioFeedback(GetComponent<AudioSource>());
             themePresenter = new UiThemePresenter(root, document.panelSettings);
             safeArea = new SafeAreaLayout(root);
+            responsive = new ResponsiveLayout(root);
 
             BuildViews();
             ApplySettings();
@@ -100,6 +102,7 @@ namespace Pong
 
         private void Update()
         {
+            responsive.Refresh();
             safeArea.Refresh();
             UpdateDebugDisplay();
         }

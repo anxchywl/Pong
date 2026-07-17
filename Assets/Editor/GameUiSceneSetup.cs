@@ -75,10 +75,15 @@ namespace Pong.Editor
         {
             PanelSettings settings = LoadOrCreate<PanelSettings>(PanelSettingsPath);
             settings.name = "GameUiPanelSettings";
-            settings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-            settings.referenceResolution = new Vector2Int(1920, 1080);
-            settings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
-            settings.match = 0.5f;
+
+            // scaling from a reference resolution made every screen the same size in points, so a
+            // phone reported itself as wide as a desktop and no breakpoint could tell them apart.
+            // Physical sizing means a point is about a hundredth of an inch everywhere, so lengths
+            // are real, touch targets are the size they claim, and the room a layout has is the room
+            // it actually has. A 1920x1080 desktop window is unchanged: it was already the reference
+            settings.scaleMode = PanelScaleMode.ConstantPhysicalSize;
+            settings.referenceDpi = 96f;
+            settings.fallbackDpi = 96f;
             settings.sortingOrder = 10;
 
             // a theme's sheet is assigned at runtime; this is only what the editor shows before
