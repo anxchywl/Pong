@@ -1,11 +1,7 @@
 {
-    "name": "Pong.Runtime",
+    "name": "Pong.Gameplay",
     "rootNamespace": "Pong",
-    "references": [
-        "Pong.Gameplay",
-        "Unity.InputSystem",
-        "Unity.ugui"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

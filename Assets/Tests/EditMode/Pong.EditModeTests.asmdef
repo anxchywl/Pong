@@ -2,7 +2,8 @@
     "name": "Pong.EditModeTests",
     "rootNamespace": "Pong.Tests",
     "references": [
-        "Pong.Runtime"
+        "Pong.Runtime",
+        "Pong.Gameplay"
     ],
     "includePlatforms": [
         "Editor"

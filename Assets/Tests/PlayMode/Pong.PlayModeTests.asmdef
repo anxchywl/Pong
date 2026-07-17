@@ -2,7 +2,8 @@
     "name": "Pong.PlayModeTests",
     "rootNamespace": "Pong.Tests",
     "references": [
-        "Pong.Runtime"
+        "Pong.Runtime",
+        "Pong.Gameplay"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
