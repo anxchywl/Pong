@@ -51,8 +51,8 @@ The project targets desktop today. Nothing below is claimed without a check that
 
 | Platform | State |
 | --- | --- |
-| macOS | compiles and runs in the editor; Edit Mode and Play Mode tests pass. No player build has been produced |
-| Windows, Linux | source compatible. No build has been attempted |
+| macOS | builds as a universal player (`Pong > Build > macOS`), launches, and reaches the front end with a clean log. A full match on the player has not been verified by hand |
+| Windows, Linux | build entries exist under `Pong > Build`, but neither has been built or run |
 | Android, iOS, iPadOS | source compatible. The UI and the court adapt, safe areas are respected, and touch drags the paddles. No build has been attempted and no device has run it |
 
 The UI adapts to the room it has rather than the device it is on, and every screen is measured at
