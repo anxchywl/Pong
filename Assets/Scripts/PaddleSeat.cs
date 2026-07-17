@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Pong
 {
@@ -24,7 +25,12 @@ namespace Pong
         // resolved lazily because a vacant seat is configured while its object is inactive
         private PaddleMovement Movement => movement != null ? movement : movement = GetComponent<PaddleMovement>();
 
-        public void Configure(SeatAssignment assignment, InputProfileDefinition profile, float lengthScale)
+        public void Configure(
+            SeatAssignment assignment,
+            InputActionAsset controls,
+            InputProfileDefinition profile,
+            float lengthScale
+        )
         {
             gameObject.SetActive(assignment.IsOccupied);
             if (!assignment.IsOccupied)
@@ -39,7 +45,7 @@ namespace Pong
 
             if (human)
             {
-                humanInput.Bind(profile, assignment.DeviceId);
+                humanInput.Bind(controls, profile, assignment.DeviceId);
             }
         }
     }

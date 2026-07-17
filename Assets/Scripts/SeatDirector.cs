@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Pong
 {
@@ -8,6 +9,7 @@ namespace Pong
     {
         [SerializeField] private PaddleSeat[] seats;
         [SerializeField] private InputProfileCatalog profiles;
+        [SerializeField] private InputActionAsset controls;
 
         [Tooltip("Paddle length when a side is defended by two players, relative to a lone paddle. " +
             "Balances the extra interception depth a pair gains. Needs playtesting.")]
@@ -34,7 +36,7 @@ namespace Pong
             {
                 SeatAssignment assignment = Roster.Get(seat.Seat);
                 float lengthScale = Roster.OccupiedCount(seat.Seat.Side) > 1 ? pairedPaddleLength : 1f;
-                seat.Configure(assignment, profiles.Find(assignment.ProfileId), lengthScale);
+                seat.Configure(assignment, controls, profiles.Find(assignment.ProfileId), lengthScale);
             }
         }
     }

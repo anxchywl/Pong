@@ -13,6 +13,7 @@ namespace Pong
         [SerializeField] private ThemeCatalog themes;
         [SerializeField] private CosmeticCatalog cosmetics;
         [SerializeField] private GamePresentation presentation;
+        [SerializeField] private InputActionAsset controls;
 
         private UIDocument document;
         private VisualElement root;
@@ -35,6 +36,8 @@ namespace Pong
         private CustomizationView customizationView;
         private MatchHud hud;
         private PauseMenuView pauseMenu;
+        private InputAction cancel;
+        private InputAction debugToggle;
         private bool settingsOpenedFromPause;
         private bool debugVisible;
         private float nextFpsUpdate;
@@ -79,6 +82,7 @@ namespace Pong
             BuildViews();
             ApplySettings();
             ApplyThemeAndCosmetics();
+            HookShortcuts();
             match.StateChanged += HandleMatchStateChanged;
             navigator.Changed += HandleScreenChanged;
             seats.Roster.Changed += HandleRosterChanged;
@@ -94,12 +98,12 @@ namespace Pong
 
         private void Update()
         {
-            HandleShortcuts();
             UpdateDebugDisplay();
         }
 
         private void OnDisable()
         {
+            UnhookShortcuts();
             if (match != null)
             {
                 match.StateChanged -= HandleMatchStateChanged;
@@ -185,20 +189,47 @@ namespace Pong
             root.Q<Button>("quit-confirm-button").clicked += QuitGame;
         }
 
-        private void HandleShortcuts()
+        /// Back is the UI map's own Cancel, the same action the menus navigate with, so escape and
+        /// the gamepad's east button arrive here without this screen naming either one.
+        private void HookShortcuts()
         {
-            bool keyboardCancel = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
-            bool gamepadCancel = Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
-            if (keyboardCancel || gamepadCancel)
+            InputActionMap ui = controls.FindActionMap("UI");
+            cancel = ui.FindAction("Cancel");
+            cancel.performed += HandleCancel;
+
+            debugToggle = controls.FindActionMap("Debug").FindAction("ToggleOverlay");
+            debugToggle.performed += HandleDebugToggle;
+            debugToggle.Enable();
+        }
+
+        private void UnhookShortcuts()
+        {
+            if (cancel != null)
             {
-                HandleEscape();
+                cancel.performed -= HandleCancel;
             }
 
-            if (Debug.isDebugBuild && Keyboard.current != null && Keyboard.current.f10Key.wasPressedThisFrame)
+            if (debugToggle != null)
             {
-                debugVisible = !debugVisible;
-                debugPanel.EnableInClassList("is-hidden", !debugVisible);
+                debugToggle.performed -= HandleDebugToggle;
+                debugToggle.Disable();
             }
+        }
+
+        private void HandleCancel(InputAction.CallbackContext context)
+        {
+            HandleEscape();
+        }
+
+        private void HandleDebugToggle(InputAction.CallbackContext context)
+        {
+            if (!Debug.isDebugBuild)
+            {
+                return;
+            }
+
+            debugVisible = !debugVisible;
+            debugPanel.EnableInClassList("is-hidden", !debugVisible);
         }
 
         private void HandleEscape()

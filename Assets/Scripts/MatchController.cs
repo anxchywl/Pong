@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Pong
 {
@@ -32,19 +31,6 @@ namespace Pong
         private void Start()
         {
             EnterFrontEnd();
-        }
-
-        private void Update()
-        {
-            if (PauseWasPressed() && phase is MatchPhase.Serving or MatchPhase.Playing or MatchPhase.Paused)
-            {
-                TogglePause();
-            }
-
-            if (RestartWasPressed() && phase is not MatchPhase.FrontEnd)
-            {
-                RestartMatch();
-            }
         }
 
         private void OnDisable()
@@ -144,21 +130,6 @@ namespace Pong
         {
             phase = value;
             StateChanged?.Invoke(State);
-        }
-
-        private static bool PauseWasPressed()
-        {
-            bool keyboardPressed = Keyboard.current != null &&
-                Keyboard.current.pKey.wasPressedThisFrame;
-            bool gamepadPressed = Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame;
-            return keyboardPressed || gamepadPressed;
-        }
-
-        private static bool RestartWasPressed()
-        {
-            bool keyboardPressed = Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame;
-            bool gamepadPressed = Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame;
-            return keyboardPressed || gamepadPressed;
         }
     }
 }

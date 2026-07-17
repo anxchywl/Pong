@@ -135,17 +135,6 @@
                 },
                 {
                     "name": "",
-                    "id": "fa28467f-de2f-456d-be56-3604e0a3c6d5",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardLeft;KeyboardRight",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "995019ec-dc24-4b39-bdfc-78b0af0286ea",
                     "path": "<Gamepad>/start",
                     "interactions": "",
@@ -690,6 +679,34 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "178b9e73-deb6-412b-92f6-844d3768d93d",
+            "actions": [
+                {
+                    "name": "ToggleOverlay",
+                    "type": "Button",
+                    "id": "c05dcfca-68b1-4d52-8d63-f26aeaa39bae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "153a0beb-f1a8-4200-9b4b-70ee36094060",
+                    "path": "<Keyboard>/f10",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardLeft;KeyboardRight",
+                    "action": "ToggleOverlay",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

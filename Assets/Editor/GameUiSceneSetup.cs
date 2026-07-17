@@ -47,6 +47,7 @@ namespace Pong.Editor
         public static void Run()
         {
             UnityEngine.SceneManagement.Scene scene = EditorSceneManager.OpenScene(ScenePath);
+            InputActionAsset controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath);
             PanelSettings panelSettings = CreatePanelSettings();
             InputProfileCatalog inputProfiles = CreateInputProfiles();
             GameModeCatalog gameModes = CreateGameModes();
@@ -58,11 +59,12 @@ namespace Pong.Editor
 
             RemoveLegacyUi();
             FrameArena();
-            SeatDirector seats = CreateSeats(inputProfiles, out PaddleSeat[] paddles);
+            SeatDirector seats = CreateSeats(inputProfiles, controls, out PaddleSeat[] paddles);
+            CreateMatchShortcuts(controls);
             GameObject uiObject = CreateUiObject(panelSettings);
-            CreateEventSystem();
+            CreateEventSystem(controls);
             WirePresentation(uiObject.GetComponent<GamePresentation>(), paddles);
-            WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics);
+            WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics, controls);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
@@ -95,11 +97,11 @@ namespace Pong.Editor
             // the layout belongs in the name: two players sharing a keyboard must tell their
             // seats apart at a glance, not by reading the subtitle
             SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard W/S",
-                "Left of the board", InputProfileKind.Keyboard, Key.W, Key.S);
+                "Left of the board", InputProfileKind.Keyboard, "KeyboardLeft");
             SetProfile(list.GetArrayElementAtIndex(1), "keyboard-arrows", "Keyboard Arrows",
-                "Right of the board", InputProfileKind.Keyboard, Key.UpArrow, Key.DownArrow);
+                "Right of the board", InputProfileKind.Keyboard, "KeyboardRight");
             SetProfile(list.GetArrayElementAtIndex(2), "gamepad", "Gamepad",
-                "Left stick or D-pad", InputProfileKind.Gamepad, Key.None, Key.None);
+                "Left stick or D-pad", InputProfileKind.Gamepad, "Gamepad");
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalog);
             return catalog;
@@ -111,16 +113,14 @@ namespace Pong.Editor
             string displayName,
             string hint,
             InputProfileKind kind,
-            Key moveUp,
-            Key moveDown
+            string controlScheme
         )
         {
             property.FindPropertyRelative("id").stringValue = id;
             property.FindPropertyRelative("displayName").stringValue = displayName;
             property.FindPropertyRelative("hint").stringValue = hint;
             property.FindPropertyRelative("kind").enumValueIndex = (int)kind;
-            property.FindPropertyRelative("moveUpKey").intValue = (int)moveUp;
-            property.FindPropertyRelative("moveDownKey").intValue = (int)moveDown;
+            property.FindPropertyRelative("controlScheme").stringValue = controlScheme;
         }
 
         private static GameModeCatalog CreateGameModes()
@@ -534,7 +534,18 @@ namespace Pong.Editor
 
         /// Adding the module binds it to the Input System package's own default actions, which sit
         /// in a package and cannot be edited. Points it at ours instead.
-        private static void CreateEventSystem()
+        /// Pause and restart read input, and the match must not. They live beside it instead.
+        private static void CreateMatchShortcuts(InputActionAsset controls)
+        {
+            MatchController match = Object.FindAnyObjectByType<MatchController>();
+            MatchShortcuts shortcuts = Ensure<MatchShortcuts>(match.gameObject);
+            SerializedObject serialized = new SerializedObject(shortcuts);
+            SetReference(serialized, "match", match);
+            SetReference(serialized, "controls", controls);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void CreateEventSystem(InputActionAsset controls)
         {
             GameObject eventSystemObject = new GameObject("Event System");
             EventSystem eventSystem = eventSystemObject.AddComponent<EventSystem>();
@@ -545,7 +556,7 @@ namespace Pong.Editor
             // asset, and drop the assignment outright once the action already matches
             Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(ControlsPath);
             SerializedObject serialized = new SerializedObject(module);
-            SetReference(serialized, "m_ActionsAsset", AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath));
+            SetReference(serialized, "m_ActionsAsset", controls);
             SetReference(serialized, "m_PointAction", FindActionReference(subAssets, "Point"));
             SetReference(serialized, "m_MoveAction", FindActionReference(subAssets, "Navigate"));
             SetReference(serialized, "m_LeftClickAction", FindActionReference(subAssets, "Click"));
@@ -610,7 +621,11 @@ namespace Pong.Editor
 
         /// The court gains an attacker column ahead of each goalkeeper. The goalkeepers stay exactly
         /// where they were, so a one-per-side lineup is the same match it has always been.
-        private static SeatDirector CreateSeats(InputProfileCatalog profiles, out PaddleSeat[] seats)
+        private static SeatDirector CreateSeats(
+            InputProfileCatalog profiles,
+            InputActionAsset controls,
+            out PaddleSeat[] seats
+        )
         {
             GameObject keeperLeft = GameObject.Find("Player Paddle");
             GameObject keeperRight = GameObject.Find("Computer Paddle");
@@ -642,6 +657,7 @@ namespace Pong.Editor
 
             SerializedObject serialized = new SerializedObject(director);
             SetReference(serialized, "profiles", profiles);
+            SetReference(serialized, "controls", controls);
             SerializedProperty seatProperty = serialized.FindProperty("seats");
             seatProperty.arraySize = seats.Length;
             for (int index = 0; index < seats.Length; index++)
@@ -762,7 +778,8 @@ namespace Pong.Editor
             SeatDirector seats,
             GameModeCatalog gameModes,
             ThemeCatalog themes,
-            CosmeticCatalog cosmetics
+            CosmeticCatalog cosmetics,
+            InputActionAsset controls
         )
         {
             SerializedObject serialized = new SerializedObject(controller);
@@ -772,6 +789,7 @@ namespace Pong.Editor
             SetReference(serialized, "themes", themes);
             SetReference(serialized, "cosmetics", cosmetics);
             SetReference(serialized, "presentation", controller.GetComponent<GamePresentation>());
+            SetReference(serialized, "controls", controls);
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

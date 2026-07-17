@@ -8,17 +8,18 @@ The runtime separates game rules, movement, input, presentation, and UI without 
 
 | Type | Responsibility |
 | --- | --- |
-| `MatchController` | Owns match lifecycle, front-end suspension, pause, restart, speed, and score transitions |
+| `MatchController` | Owns match lifecycle, front-end suspension, pause, restart, speed, and score transitions. Offers them as commands and reads no input |
 | `MatchScore` | Tracks points and determines the winner without Unity dependencies |
 | `BallController` | Serves the ball and controls collision response and rally speed |
 | `PaddleMovement` | Applies bounded kinematic movement from normalized intent, and derives its travel from the arena and its own measured height |
-| `PlayerPaddleInput` | Converts one input profile's keys or gamepad into movement intent |
+| `PlayerPaddleInput` | Turns one seat's Move action into movement intent, under the profile's control scheme |
+| `MatchShortcuts` | Drives pause and restart from the Gameplay map, so the match reads no input |
 | `ComputerPaddleController` | Produces simple movement intent from ball state |
 | `CourtSeat` / `SeatAssignment` | Identify a seat and who occupies it, without Unity dependencies |
 | `MatchRoster` | Owns the lineup rules: goalkeeper before attacker, one profile per paddle |
 | `SeatDirector` | Pushes the roster onto the court's paddles and owns the paddle length rule |
 | `PaddleSeat` | One physical paddle: its seat, its renderers, and which intent drives it |
-| `InputProfileCatalog` | Keyboard layouts and gamepad profiles as data |
+| `InputProfileCatalog` | Keyboard layouts and gamepad profiles as data, each naming a control scheme |
 | `Goal` | Reports which side scored when the ball enters a trigger |
 | `GameUiController` | Composes UI views, routes user intent, and observes match state |
 | `ScreenNavigator` / `ScreenHost` | Maintain deterministic front-end navigation and visible screens |
@@ -106,11 +107,12 @@ They move once input is expressed as actions rather than device reads.
 
 ## Input
 
-`Assets/UI/PongControls.inputactions` is the project's own Input Actions asset. It holds two maps:
+`Assets/UI/PongControls.inputactions` is the project's own Input Actions asset. It holds three maps:
 
 - **UI** drives menu navigation and is bound by the scene's `InputSystemUIInputModule`.
 - **Gameplay** describes `Move`, `Pause`, and `Restart` as intent, under the `KeyboardLeft`,
   `KeyboardRight`, and `Gamepad` schemes.
+- **Debug** carries the overlay toggle, so even a debug shortcut is an action rather than a key.
 
 Adding an `InputSystemUIInputModule` binds it to the Input System package's own default actions,
 which live inside an immutable package: nothing in this project could add a binding or a scheme to
@@ -122,10 +124,23 @@ action there costs a kind of menu input silently; `UiInputBindingTests` exists t
 The UI map still carries the default's Joystick and XR bindings. They are inherited rather than
 intended, and can be pruned once there is a reason to touch them.
 
-Using the Input System package is not the same as being device independent. Gameplay still reads
-`Keyboard.current` and `Gamepad.all` directly, and the Gameplay map is not consumed yet: paddles,
-pause, and restart continue to poll devices. Routing them through these actions is what lets
-`MatchController`, `Goal`, and `MatchRoster` move into `Pong.Gameplay`.
+Nothing reads a device to play. A seat's `InputProfileDefinition` names a control scheme rather than
+a key pair, and `PlayerPaddleInput` binds `Gameplay/Move` under that scheme. Each paddle gets its own
+copy of the asset, which is what lets two seats read one keyboard without sharing enabled state: the
+scheme tells them apart. Only a gamepad seat pins itself to a device, because one pad must not drive
+two paddles.
+
+`MatchShortcuts` drives pause and restart from the same map, deliberately unmasked and unpaired, so
+either answers to whoever reaches them on a shared screen. It sits beside `MatchController` rather
+than inside it, so the match offers commands and never learns a keyboard exists.
+
+Back is the UI map's own `Cancel`, the same action the menus navigate with, so escape and the
+gamepad's east button reach `GameUiController` without it naming either. `Pause` is deliberately not
+bound to escape: escape already arrives as `Cancel`, and binding both would toggle pause twice and
+cancel itself out.
+
+The remaining `Gamepad.all` reads, in `PlayersView` and `SeatDescription`, enumerate devices so a
+player can pick one and so a pad can be numbered by plug order. That is device discovery, not input.
 
 ## Dependency boundaries
 
