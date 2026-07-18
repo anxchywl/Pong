@@ -17,17 +17,19 @@ MonoBehaviour:
     displayName: Keyboard W/S
     hint: Left of the board
     kind: 0
-    moveUpKey: 37
-    moveDownKey: 33
+    controlScheme: KeyboardLeft
   - id: keyboard-arrows
     displayName: Keyboard Arrows
     hint: Right of the board
     kind: 0
-    moveUpKey: 63
-    moveDownKey: 64
+    controlScheme: KeyboardRight
   - id: gamepad
     displayName: Gamepad
     hint: Left stick or D-pad
     kind: 1
-    moveUpKey: 0
-    moveDownKey: 0
+    controlScheme: Gamepad
+  - id: touch
+    displayName: Touch
+    hint: Drag your side of the court
+    kind: 2
+    controlScheme: Touch

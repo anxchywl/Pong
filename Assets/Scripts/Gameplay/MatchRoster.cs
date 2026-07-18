@@ -59,7 +59,8 @@ namespace Pong
 
         public void Assign(CourtSeat seat, SeatAssignment assignment)
         {
-            if (assignment.Occupant == SeatOccupant.Human)
+            // a shared driver may sit in several seats at once, so it takes nobody's when it claims
+            if (assignment.Occupant == SeatOccupant.Human && assignment.Exclusive)
             {
                 ReleaseClaim(assignment.ProfileId, assignment.DeviceId, seat);
             }
@@ -74,13 +75,36 @@ namespace Pong
             Assign(seat, SeatAssignment.Empty);
         }
 
-        /// Finds the seat currently driven by a profile and device, if any.
+        /// True when a seat is driven by this device. Keyboard seats carry no device, so they never
+        /// answer to one leaving.
+        public bool IsDeviceClaimed(int deviceId)
+        {
+            if (deviceId == SeatAssignment.NoDevice)
+            {
+                return false;
+            }
+
+            foreach (CourtSeat seat in CourtSeat.All)
+            {
+                SeatAssignment assignment = Get(seat);
+                if (assignment.Occupant == SeatOccupant.Human && assignment.DeviceId == deviceId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// Finds the seat currently driven by a profile and device, if any. A shared driver holds
+        /// no exclusive claim, so it is never found here.
         public bool TryFindClaim(string profileId, int deviceId, out CourtSeat claimed)
         {
             foreach (CourtSeat seat in CourtSeat.All)
             {
                 SeatAssignment assignment = Get(seat);
                 if (assignment.Occupant == SeatOccupant.Human &&
+                    assignment.Exclusive &&
                     assignment.ProfileId == profileId &&
                     assignment.DeviceId == deviceId)
                 {

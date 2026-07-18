@@ -9,6 +9,57 @@ namespace Pong.Tests
         private static readonly CourtSeat RightKeeper = new CourtSeat(PlayerSide.Right, SeatRole.Goalkeeper);
         private static readonly CourtSeat RightAttacker = new CourtSeat(PlayerSide.Right, SeatRole.Attacker);
 
+        /// One touchscreen, several seats. They are told apart by where a finger lands, so the
+        /// roster must not treat the second player as the first one moving.
+        [Test]
+        public void Assign_LetsASharedDriverSitInSeveralSeats()
+        {
+            MatchRoster roster = new MatchRoster();
+            SeatAssignment touch = SeatAssignment.Human("touch", SeatAssignment.NoDevice, exclusive: false);
+
+            roster.Assign(new CourtSeat(PlayerSide.Left, SeatRole.Goalkeeper), touch);
+            roster.Assign(new CourtSeat(PlayerSide.Right, SeatRole.Goalkeeper), touch);
+
+            Assert.That(roster.Get(new CourtSeat(PlayerSide.Left, SeatRole.Goalkeeper)).Occupant,
+                Is.EqualTo(SeatOccupant.Human), "the second touch player evicted the first");
+            Assert.That(roster.HumanCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Assign_StillMovesAnExclusiveDriverRatherThanCloneIt()
+        {
+            MatchRoster roster = new MatchRoster();
+            SeatAssignment pad = SeatAssignment.Human("gamepad", 7);
+
+            roster.Assign(new CourtSeat(PlayerSide.Left, SeatRole.Goalkeeper), pad);
+            roster.Assign(new CourtSeat(PlayerSide.Right, SeatRole.Goalkeeper), pad);
+
+            Assert.That(roster.Get(new CourtSeat(PlayerSide.Left, SeatRole.Goalkeeper)).IsOccupied,
+                Is.False, "one pad ended up driving two paddles");
+        }
+
+        [Test]
+        public void IsDeviceClaimed_FindsTheSeatDrivenByAPad()
+        {
+            MatchRoster roster = new MatchRoster();
+            roster.Assign(
+                new CourtSeat(PlayerSide.Right, SeatRole.Goalkeeper),
+                SeatAssignment.Human("gamepad", 42)
+            );
+
+            Assert.That(roster.IsDeviceClaimed(42), Is.True);
+            Assert.That(roster.IsDeviceClaimed(7), Is.False);
+        }
+
+        [Test]
+        public void IsDeviceClaimed_IgnoresKeyboardSeats()
+        {
+            MatchRoster roster = new MatchRoster();
+
+            // the default lineup seats a keyboard player, whose device id is NoDevice
+            Assert.That(roster.IsDeviceClaimed(SeatAssignment.NoDevice), Is.False);
+        }
+
         [Test]
         public void Reset_SeatsOneHumanAgainstOneComputer()
         {

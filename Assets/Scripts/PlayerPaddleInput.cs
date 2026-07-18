@@ -3,94 +3,87 @@ using UnityEngine.InputSystem;
 
 namespace Pong
 {
-    /// Drives one paddle from the input profile its seat was assigned. Keyboard profiles carry their
-    /// own key pair, so several players can share one keyboard; gamepad profiles bind to one device.
+    /// Turns one seat's Move action into paddle intent. The seat's profile picks a control scheme;
+    /// which keys or which stick that means is PongControls' business, not this component's.
     [RequireComponent(typeof(PaddleMovement))]
     public sealed class PlayerPaddleInput : MonoBehaviour
     {
-        private const float StickDeadZone = 0.15f;
-
         private PaddleMovement paddle;
-        private InputProfileDefinition profile;
-        private int deviceId;
-        private Gamepad boundGamepad;
+        private InputActionAsset controls;
+        private InputAction move;
 
         private void Awake()
         {
             paddle = GetComponent<PaddleMovement>();
         }
 
-        public void Bind(InputProfileDefinition value, int device)
+        /// Gives this paddle its own copy of the actions, masked to the profile's scheme. A copy per
+        /// paddle is what lets two seats read one keyboard without sharing enabled state.
+        public void Bind(InputActionAsset source, InputProfileDefinition profile, int deviceId)
         {
-            profile = value;
-            deviceId = device;
-            boundGamepad = null;
+            Release();
+            if (source == null || profile == null)
+            {
+                return;
+            }
+
+            controls = Instantiate(source);
+            InputActionMap gameplay = controls.FindActionMap("Gameplay");
+            gameplay.bindingMask = InputBinding.MaskByGroup(profile.ControlScheme);
+
+            // a gamepad seat drives one pad and must ignore the others. A keyboard seat is already
+            // told apart by its scheme, so leaving its devices open costs nothing
+            if (profile.RequiresDevice)
+            {
+                Gamepad pad = FindGamepad(deviceId);
+                if (pad == null)
+                {
+                    Release();
+                    return;
+                }
+
+                controls.devices = new InputDevice[] { pad };
+            }
+
+            gameplay.Enable();
+            move = gameplay.FindAction("Move");
         }
 
         private void OnDisable()
         {
             paddle.SetDirection(0f);
+            Release();
         }
 
         private void Update()
         {
-            paddle.SetDirection(profile == null ? 0f : ReadDirection());
+            paddle.SetDirection(move == null ? 0f : move.ReadValue<float>());
         }
 
-        private float ReadDirection()
+        private void Release()
         {
-            return profile.Kind == InputProfileKind.Gamepad ? ReadGamepad() : ReadKeyboard();
+            move = null;
+            if (controls == null)
+            {
+                return;
+            }
+
+            controls.Disable();
+            Destroy(controls);
+            controls = null;
         }
 
-        private float ReadKeyboard()
+        private static Gamepad FindGamepad(int deviceId)
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
-            {
-                return 0f;
-            }
-
-            float direction = 0f;
-            direction += keyboard[profile.MoveUpKey].isPressed ? 1f : 0f;
-            direction -= keyboard[profile.MoveDownKey].isPressed ? 1f : 0f;
-            return direction;
-        }
-
-        private float ReadGamepad()
-        {
-            Gamepad gamepad = ResolveGamepad();
-            if (gamepad == null)
-            {
-                return 0f;
-            }
-
-            float direction = gamepad.leftStick.y.ReadValue();
-            if (Mathf.Abs(direction) < StickDeadZone)
-            {
-                direction = gamepad.dpad.y.ReadValue();
-            }
-
-            return Mathf.Clamp(direction, -1f, 1f);
-        }
-
-        private Gamepad ResolveGamepad()
-        {
-            if (boundGamepad != null && boundGamepad.added && boundGamepad.deviceId == deviceId)
-            {
-                return boundGamepad;
-            }
-
-            boundGamepad = null;
             foreach (Gamepad candidate in Gamepad.all)
             {
                 if (candidate.deviceId == deviceId)
                 {
-                    boundGamepad = candidate;
-                    break;
+                    return candidate;
                 }
             }
 
-            return boundGamepad;
+            return null;
         }
     }
 }

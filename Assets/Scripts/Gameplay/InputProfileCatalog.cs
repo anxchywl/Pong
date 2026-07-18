@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Pong
 {
     public enum InputProfileKind
     {
         Keyboard,
-        Gamepad
+        Gamepad,
+        Touch
     }
 
     [CreateAssetMenu(menuName = "Pong/Input/Input Profile Catalog")]
@@ -28,8 +28,8 @@ namespace Pong
         public InputProfileDefinition Default => Find(DefaultProfileId) ?? (profiles.Count == 0 ? null : profiles[0]);
     }
 
-    /// A way to drive one paddle. Keyboard profiles carry their own key pair so several players can
-    /// share one keyboard; gamepad profiles are bound to a device at assignment time.
+    /// A way to drive one paddle. The profile names a control scheme in PongControls rather than
+    /// keys, so two players can share one keyboard without either knowing which keys the other has.
     [Serializable]
     public sealed class InputProfileDefinition
     {
@@ -37,17 +37,18 @@ namespace Pong
         [SerializeField] private string displayName;
         [SerializeField] private string hint;
         [SerializeField] private InputProfileKind kind;
-        [SerializeField] private Key moveUpKey = Key.W;
-        [SerializeField] private Key moveDownKey = Key.S;
+        [SerializeField] private string controlScheme;
 
         public string Id => id;
         public string DisplayName => displayName;
         public string Hint => hint;
         public InputProfileKind Kind => kind;
-        public Key MoveUpKey => moveUpKey;
-        public Key MoveDownKey => moveDownKey;
 
-        /// Gamepad profiles need a device to be meaningful; keyboard profiles never do.
+        /// Names a control scheme in PongControls. The bindings live there, not here.
+        public string ControlScheme => controlScheme;
+
+        /// Gamepad profiles need a device to be meaningful. A keyboard is shared by its schemes and
+        /// a touchscreen by its regions, so neither ever does.
         public bool RequiresDevice => kind == InputProfileKind.Gamepad;
     }
 }

@@ -47,6 +47,7 @@ namespace Pong.Editor
         public static void Run()
         {
             UnityEngine.SceneManagement.Scene scene = EditorSceneManager.OpenScene(ScenePath);
+            InputActionAsset controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath);
             PanelSettings panelSettings = CreatePanelSettings();
             InputProfileCatalog inputProfiles = CreateInputProfiles();
             GameModeCatalog gameModes = CreateGameModes();
@@ -58,11 +59,13 @@ namespace Pong.Editor
 
             RemoveLegacyUi();
             FrameArena();
-            SeatDirector seats = CreateSeats(inputProfiles, out PaddleSeat[] paddles);
+            SeatDirector seats = CreateSeats(inputProfiles, controls, out PaddleSeat[] paddles);
+            CreateMatchShortcuts(controls);
+            CreateSeatDeviceWatcher(seats);
             GameObject uiObject = CreateUiObject(panelSettings);
-            CreateEventSystem();
+            CreateEventSystem(controls);
             WirePresentation(uiObject.GetComponent<GamePresentation>(), paddles);
-            WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics);
+            WireController(uiObject.GetComponent<GameUiController>(), seats, gameModes, themes, cosmetics, controls);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
@@ -72,10 +75,15 @@ namespace Pong.Editor
         {
             PanelSettings settings = LoadOrCreate<PanelSettings>(PanelSettingsPath);
             settings.name = "GameUiPanelSettings";
-            settings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-            settings.referenceResolution = new Vector2Int(1920, 1080);
-            settings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
-            settings.match = 0.5f;
+
+            // scaling from a reference resolution made every screen the same size in points, so a
+            // phone reported itself as wide as a desktop and no breakpoint could tell them apart.
+            // Physical sizing means a point is about a hundredth of an inch everywhere, so lengths
+            // are real, touch targets are the size they claim, and the room a layout has is the room
+            // it actually has. A 1920x1080 desktop window is unchanged: it was already the reference
+            settings.scaleMode = PanelScaleMode.ConstantPhysicalSize;
+            settings.referenceDpi = 96f;
+            settings.fallbackDpi = 96f;
             settings.sortingOrder = 10;
 
             // a theme's sheet is assigned at runtime; this is only what the editor shows before
@@ -91,15 +99,17 @@ namespace Pong.Editor
             catalog.name = "InputProfiles";
             SerializedObject serialized = new SerializedObject(catalog);
             SerializedProperty list = serialized.FindProperty("profiles");
-            list.arraySize = 3;
+            list.arraySize = 4;
             // the layout belongs in the name: two players sharing a keyboard must tell their
             // seats apart at a glance, not by reading the subtitle
             SetProfile(list.GetArrayElementAtIndex(0), "keyboard-wasd", "Keyboard W/S",
-                "Left of the board", InputProfileKind.Keyboard, Key.W, Key.S);
+                "Left of the board", InputProfileKind.Keyboard, "KeyboardLeft");
             SetProfile(list.GetArrayElementAtIndex(1), "keyboard-arrows", "Keyboard Arrows",
-                "Right of the board", InputProfileKind.Keyboard, Key.UpArrow, Key.DownArrow);
+                "Right of the board", InputProfileKind.Keyboard, "KeyboardRight");
             SetProfile(list.GetArrayElementAtIndex(2), "gamepad", "Gamepad",
-                "Left stick or D-pad", InputProfileKind.Gamepad, Key.None, Key.None);
+                "Left stick or D-pad", InputProfileKind.Gamepad, "Gamepad");
+            SetProfile(list.GetArrayElementAtIndex(3), "touch", "Touch",
+                "Drag your side of the court", InputProfileKind.Touch, "Touch");
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalog);
             return catalog;
@@ -111,16 +121,14 @@ namespace Pong.Editor
             string displayName,
             string hint,
             InputProfileKind kind,
-            Key moveUp,
-            Key moveDown
+            string controlScheme
         )
         {
             property.FindPropertyRelative("id").stringValue = id;
             property.FindPropertyRelative("displayName").stringValue = displayName;
             property.FindPropertyRelative("hint").stringValue = hint;
             property.FindPropertyRelative("kind").enumValueIndex = (int)kind;
-            property.FindPropertyRelative("moveUpKey").intValue = (int)moveUp;
-            property.FindPropertyRelative("moveDownKey").intValue = (int)moveDown;
+            property.FindPropertyRelative("controlScheme").stringValue = controlScheme;
         }
 
         private static GameModeCatalog CreateGameModes()
@@ -532,25 +540,42 @@ namespace Pong.Editor
             source.spatialBlend = 0f;
         }
 
-        /// Adding the module binds it to the Input System package's own default actions, which live
-        /// inside an immutable package: the project cannot add a binding or a scheme to them.
-        /// Repointing it at the project's asset re-resolves every reference by map and action name,
-        /// so the UI map must keep naming its actions exactly as the package default does.
-        private static void CreateEventSystem()
+        /// Adding the module binds it to the Input System package's own default actions, which sit
+        /// in a package and cannot be edited. Points it at ours instead.
+        /// Pads arriving and leaving are a device concern, so this watches them beside the seats
+        /// rather than inside them.
+        private static void CreateSeatDeviceWatcher(SeatDirector seats)
+        {
+            SeatDeviceWatcher watcher = Ensure<SeatDeviceWatcher>(seats.gameObject);
+            SerializedObject serialized = new SerializedObject(watcher);
+            SetReference(serialized, "seats", seats);
+            SetReference(serialized, "match", Object.FindAnyObjectByType<MatchController>());
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// Pause and restart read input, and the match must not. They live beside it instead.
+        private static void CreateMatchShortcuts(InputActionAsset controls)
+        {
+            MatchController match = Object.FindAnyObjectByType<MatchController>();
+            MatchShortcuts shortcuts = Ensure<MatchShortcuts>(match.gameObject);
+            SerializedObject serialized = new SerializedObject(shortcuts);
+            SetReference(serialized, "match", match);
+            SetReference(serialized, "controls", controls);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void CreateEventSystem(InputActionAsset controls)
         {
             GameObject eventSystemObject = new GameObject("Event System");
             EventSystem eventSystem = eventSystemObject.AddComponent<EventSystem>();
             eventSystem.sendNavigationEvents = true;
             InputSystemUIInputModule module = eventSystemObject.AddComponent<InputSystemUIInputModule>();
 
-            // the module's own setters are no help here: assigning the asset rebuilds every
-            // reference as a fresh object, and assigning a reference afterwards is dropped because
-            // the module short-circuits when the new reference resolves to the action it already
-            // holds. Both leave ten anonymous copies serialized into the scene. Write the fields
-            // directly and the scene stores references to the importer's own objects instead
+            // the module's setters copy each reference into the scene instead of pointing at the
+            // asset, and drop the assignment outright once the action already matches
             Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(ControlsPath);
             SerializedObject serialized = new SerializedObject(module);
-            SetReference(serialized, "m_ActionsAsset", AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath));
+            SetReference(serialized, "m_ActionsAsset", controls);
             SetReference(serialized, "m_PointAction", FindActionReference(subAssets, "Point"));
             SetReference(serialized, "m_MoveAction", FindActionReference(subAssets, "Navigate"));
             SetReference(serialized, "m_LeftClickAction", FindActionReference(subAssets, "Click"));
@@ -566,9 +591,8 @@ namespace Pong.Editor
             serialized.ApplyModifiedProperties();
         }
 
-        /// Finds the importer's reference for one UI action. The importer adds a second, hidden
-        /// reference per action for backwards compatibility, and assigning that one would wire the
-        /// module to an object the Input System means to retire, so only the visible one will do.
+        /// Finds the importer's reference for one UI action, skipping the hidden duplicate it keeps
+        /// for backwards compatibility.
         private static InputActionReference FindActionReference(Object[] subAssets, string actionName)
         {
             foreach (Object candidate in subAssets)
@@ -586,8 +610,8 @@ namespace Pong.Editor
                 }
             }
 
-            // a null here silently stops one kind of menu input working, which is far harder to
-            // place later than a failure at authoring time
+            // the module matches actions by name and leaves a null rather than failing, so a rename
+            // here would cost a kind of menu input in silence
             Debug.LogError(
                 $"{ControlsPath} has no UI/{actionName} action. Its UI map must name every action " +
                 "exactly as the Input System default does, or the UI module cannot bind to it.");
@@ -607,16 +631,25 @@ namespace Pong.Editor
 
         /// Pulls the camera back so the court no longer runs edge to edge and the HUD has margin
         /// to live in. Nothing in the world moves, so the match plays exactly as before.
+        ///
+        /// ArenaFraming takes it from here at runtime, where the window's shape is known. The size
+        /// set here is what a 16:9 window keeps, and what the editor shows before play.
         private static void FrameArena()
         {
             Camera camera = FindComponent<Camera>("Main Camera");
             camera.orthographicSize = CameraSize;
+            Ensure<ArenaFraming>(camera.gameObject);
+            Ensure<CourtProjection>(camera.gameObject);
             EditorUtility.SetDirty(camera);
         }
 
         /// The court gains an attacker column ahead of each goalkeeper. The goalkeepers stay exactly
         /// where they were, so a one-per-side lineup is the same match it has always been.
-        private static SeatDirector CreateSeats(InputProfileCatalog profiles, out PaddleSeat[] seats)
+        private static SeatDirector CreateSeats(
+            InputProfileCatalog profiles,
+            InputActionAsset controls,
+            out PaddleSeat[] seats
+        )
         {
             GameObject keeperLeft = GameObject.Find("Player Paddle");
             GameObject keeperRight = GameObject.Find("Computer Paddle");
@@ -648,6 +681,7 @@ namespace Pong.Editor
 
             SerializedObject serialized = new SerializedObject(director);
             SetReference(serialized, "profiles", profiles);
+            SetReference(serialized, "controls", controls);
             SerializedProperty seatProperty = serialized.FindProperty("seats");
             seatProperty.arraySize = seats.Length;
             for (int index = 0; index < seats.Length; index++)
@@ -674,6 +708,11 @@ namespace Pong.Editor
         {
             PlayerPaddleInput human = Ensure<PlayerPaddleInput>(paddle);
             ComputerPaddleController computer = Ensure<ComputerPaddleController>(paddle);
+            TouchPaddleInput touch = Ensure<TouchPaddleInput>(paddle);
+
+            SerializedObject touchSerialized = new SerializedObject(touch);
+            SetReference(touchSerialized, "projection", FindComponent<CourtProjection>("Main Camera"));
+            touchSerialized.ApplyModifiedPropertiesWithoutUndo();
 
             SerializedObject computerSerialized = new SerializedObject(computer);
             SetReference(computerSerialized, "ball", FindComponent<BallController>("Ball"));
@@ -700,6 +739,7 @@ namespace Pong.Editor
             SetEnum(serialized, "role", role);
             SetReference(serialized, "humanInput", human);
             SetReference(serialized, "computerInput", computer);
+            SetReference(serialized, "touchInput", touch);
             SetReference(serialized, "paddleRenderer", renderer);
             SetReference(serialized, "glowRenderer",
                 CreateGlow(renderer, "Paddle Glow", new Vector3(1.85f, 1.16f, 1f)));
@@ -768,7 +808,8 @@ namespace Pong.Editor
             SeatDirector seats,
             GameModeCatalog gameModes,
             ThemeCatalog themes,
-            CosmeticCatalog cosmetics
+            CosmeticCatalog cosmetics,
+            InputActionAsset controls
         )
         {
             SerializedObject serialized = new SerializedObject(controller);
@@ -778,6 +819,7 @@ namespace Pong.Editor
             SetReference(serialized, "themes", themes);
             SetReference(serialized, "cosmetics", cosmetics);
             SetReference(serialized, "presentation", controller.GetComponent<GamePresentation>());
+            SetReference(serialized, "controls", controls);
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

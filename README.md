@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a desktop-first UI Toolkit front end and two complete, runtime-switchable visual identities.
+Pong is a polished, extensible Unity 6 take on the arcade classic. It pairs deterministic 2D gameplay with a UI Toolkit front end that adapts to the room it has, and two complete, runtime-switchable visual identities.
 
 ## Gameplay
 
@@ -16,13 +16,17 @@ Settings.
 
 Each seat is driven by the input profile it was given, so two players can share one keyboard.
 
-| Action | Keyboard | Gamepad |
-| --- | --- | --- |
-| Move (Keyboard W/S) | `W` / `S` | Left stick or D-pad |
-| Move (Keyboard Arrows) | `Up` / `Down` | Left stick or D-pad |
-| Pause | `P` or `Esc` | Start |
-| Restart | `R` | Select |
-| Back | `Esc` | B / East button |
+| Action | Keyboard | Gamepad | Touch |
+| --- | --- | --- | --- |
+| Move (Keyboard W/S) | `W` / `S` | Left stick or D-pad | Drag your side of the court |
+| Move (Keyboard Arrows) | `Up` / `Down` | Left stick or D-pad | Drag your side of the court |
+| Pause | `P` or `Esc` | Start | Pause on the HUD |
+| Restart | `R` | Select | Restart from the pause menu |
+| Back | `Esc` | B / East button | Back on the screen |
+
+Touch drags the paddle itself: there is no on-screen stick and no thumb button. Take a touch seat in
+**Players**, then drag your half of the court. Two to four players can drag at once, each answering
+to the part of the court nearest their own paddle.
 
 ## Features
 
@@ -32,14 +36,14 @@ Each seat is driven by the input profile it was given, so two players can share 
 - deterministic serves and angle-based paddle rebounds
 - computer opponent with simple, readable tracking behavior
 - scoring, pause, win, and restart states, with remaining match progress always on the HUD
-- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow, laid out for desktop window sizes
+- a UI Toolkit main menu, players screen, game mode library, categorised settings, credits, and pause flow, each laid out for the space it is given rather than scaled down to fit
 - a customization workshop that previews every change live and only saves when you apply it
 - complete Retro and Futuristic design systems, each a Theme Style Sheet with its own typography, geometry, motion, audio, overlays, HUD and arena treatment
 - theme-scoped cosmetics across arena, paddle, ball, HUD, effects, and audio that cannot create visually inconsistent combinations
 - runtime theme switching with persistent, independent cosmetic selections for each world
 - persistent gameplay, audio, graphics, and accessibility preferences
 - mouse, keyboard, and controller-ready menu navigation with explicit focus states
-- Edit Mode tests for scoring, the lineup rules, the selection model, and theme parity, plus a Play Mode scene smoke test
+- Edit Mode tests for scoring, the lineup rules, the selection model, theme parity, arena framing and safe areas, plus Play Mode tests that press real keys and measure every screen at phone, tablet and desktop widths
 
 ## Platform support
 
@@ -47,13 +51,15 @@ The project targets desktop today. Nothing below is claimed without a check that
 
 | Platform | State |
 | --- | --- |
-| macOS | compiles and runs in the editor; Edit Mode and Play Mode tests pass. No player build has been produced |
-| Windows, Linux | source compatible. No build has been attempted |
-| Android, iOS, iPadOS | source compatible only. Gameplay reads keyboard and gamepad devices directly, so a touch device has no way to move a paddle. Layouts carry fixed desktop dimensions and nothing reads `Screen.safeArea` |
+| macOS | builds as a universal player (`Pong > Build > macOS`), launches with a clean log, and a full match has been played to a win on it |
+| Windows, Linux | players build cleanly (`Pong > Build`) as PE32+ and ELF x86-64 binaries. Neither has been launched: there is no Windows or Linux machine here |
+| Android | an installable APK builds (`Pong > Build > Android`): IL2CPP, ARM64, minSdk 26. No device has run it |
+| iOS, iPadOS | the Xcode project generates and compiles unsigned against a device SDK. Signing, a developer account and hardware are needed to go further |
 
-The UI is laid out for desktop window sizes and scales uniformly from a 1920×1080 reference. It is
-not adaptive to phone or tablet dimensions, and the arena's camera needs an aspect ratio of at least
-1.32:1 to keep both goals on screen, so portrait orientations are not currently playable.
+The UI adapts to the room it has rather than the device it is on, and every screen is measured at
+phone, tablet and desktop widths. The court is framed for the window it is in, portrait included, and
+a paddle is dragged with a finger. Every platform now builds from this repository; what remains
+unverified is behavior on physical devices, which no simulator can stand in for.
 
 Cross-platform support is an incremental migration in progress. Do not describe a platform as
 supported here without the build, runtime, and device checks behind it.

@@ -19,7 +19,12 @@ When documentation and the project disagree, verify behavior in Unity and update
 - `BallController` owns serving, velocity, and collision response.
 - `PaddleMovement` owns bounded physics movement.
 - `PlayerPaddleInput` and `ComputerPaddleController` provide movement intent.
+- `MatchShortcuts` turns the Pause and Restart actions into match commands.
+- `SeatDeviceWatcher` keeps a seat's claim across a pad disconnecting and reconnecting.
+- `TouchPaddleInput` drags a paddle; `CourtProjection` is the only presentation input may read.
 - `Goal` reports a score; `MatchHud` renders match state.
+- `ArenaFraming` frames the court for the space available; it never moves world geometry.
+- `SafeAreaLayout` insets content that must clear cutouts; backgrounds stay full bleed.
 
 Keep these responsibilities separate. Do not add a global manager, service locator, or static mutable state.
 
@@ -27,7 +32,8 @@ Gameplay lives in `Assets/Scripts/Gameplay/` as `Pong.Gameplay`, which reference
 nothing else. Input, presentation, and UI live in `Assets/Scripts/` as `Pong.Runtime`, which
 references `Pong.Gameplay`. Never invert that dependency, and never add an input, UI, or platform
 package reference to `Pong.Gameplay` — the split exists so a hardware read inside gameplay fails to
-compile. See `docs/ARCHITECTURE.md` for what is still waiting to move across.
+compile. A new device becomes a control scheme in `PongControls` and an `InputProfileCatalog` entry,
+never a branch in `PlayerPaddleInput`.
 
 ## Project invariants
 
@@ -36,6 +42,17 @@ compile. See `docs/ARCHITECTURE.md` for what is still waiting to move across.
 - A goal awards one point and prepares the next serve toward the conceding side.
 - Paddle movement is clamped to the arena and performed through `Rigidbody2D`.
 - Ball launch behavior is deterministic.
+- The whole court stays on screen at every aspect ratio, portrait included.
+- Only presentation knows the screen's shape. Gameplay, input, themes and UI never read the
+  orientation or the camera's roll, so the framing strategy can change without touching them.
+- Adapt to available space and breakpoints, never to a device name or a platform define.
+- One UXML hierarchy. Adapt with USS classes on the root, never a second document.
+- No action may need hover. Hover may restyle and nothing else.
+- No screen may overflow the width it is given, and anything below the fold must be scrollable to.
+- A feature is finished when its UI, input and presentation suit Windows, macOS, Linux, Android,
+  iPhone and iPad. One that only works on one of them is incomplete, not done. The architecture is
+  in place for this: measure space, adapt with USS, read intent rather than devices, and no further
+  migration should be needed.
 - Runtime references are explicit serialized fields or same-object required components.
 - Generated Unity folders and secrets are never committed.
 

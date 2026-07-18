@@ -8,9 +8,8 @@ using UnityEngine.TestTools;
 
 namespace Pong.Tests
 {
-    /// The UI module resolves its actions by name and leaves a null behind when one does not match,
-    /// so a renamed or missing action costs a kind of menu input without failing anything. These
-    /// assert the scene binds every one of them to the project's own asset.
+    /// A renamed or missing UI action resolves to null rather than failing, so menu input can stop
+    /// working in silence. These pin the bindings down.
     public sealed class UiInputBindingTests
     {
         private static readonly string[] ExpectedActions =
@@ -74,8 +73,8 @@ namespace Pong.Tests
             }
         }
 
-        /// Gameplay has its own map from here on. Nothing consumes it yet, so this only asserts it
-        /// exists and is addressed by the names the paddles and match will bind to.
+        /// Nothing consumes the Gameplay map yet, so this only pins the names the paddles and the
+        /// match will bind to.
         [UnityTest]
         public IEnumerator Controls_DescribeGameplayAsActions()
         {

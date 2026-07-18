@@ -7,7 +7,7 @@ namespace Pong
 {
     /// The lineup screen. Laid out like the court itself: left side on the left, right on the
     /// right, goalkeeper above attacker, so a seat's position is its paddle's position.
-    public sealed class PlayersView
+    public sealed class PlayersView : IDisposable
     {
         private readonly MatchRoster roster;
         private readonly InputProfileCatalog profiles;
@@ -29,7 +29,23 @@ namespace Pong
             leftSeats = root.Q<VisualElement>("left-seats");
             rightSeats = root.Q<VisualElement>("right-seats");
             summary = root.Q<Label>("players-summary");
+
+            // the cards name the pads on this machine, so one arriving or leaving dates them
+            InputSystem.onDeviceChange += HandleDeviceChange;
             Render();
+        }
+
+        public void Dispose()
+        {
+            InputSystem.onDeviceChange -= HandleDeviceChange;
+        }
+
+        private void HandleDeviceChange(InputDevice device, InputDeviceChange change)
+        {
+            if (device is Gamepad)
+            {
+                Render();
+            }
         }
 
         public void Render()
@@ -95,15 +111,21 @@ namespace Pong
 
             foreach (InputProfileDefinition profile in profiles.Profiles)
             {
+                // offering touch on a machine without a touchscreen would seat a player who cannot play
+                if (profile.Kind == InputProfileKind.Touch && Touchscreen.current == null)
+                {
+                    continue;
+                }
+
                 if (!profile.RequiresDevice)
                 {
-                    AddIfFree(options, SeatAssignment.Human(profile.Id, SeatAssignment.NoDevice), seat);
+                    AddIfFree(options, SeatAssignment.For(profile, SeatAssignment.NoDevice), seat);
                     continue;
                 }
 
                 foreach (Gamepad gamepad in Gamepad.all)
                 {
-                    AddIfFree(options, SeatAssignment.Human(profile.Id, gamepad.deviceId), seat);
+                    AddIfFree(options, SeatAssignment.For(profile, gamepad.deviceId), seat);
                 }
             }
 
@@ -113,7 +135,8 @@ namespace Pong
 
         private void AddIfFree(List<SeatAssignment> options, SeatAssignment candidate, CourtSeat seat)
         {
-            bool taken = roster.TryFindClaim(candidate.ProfileId, candidate.DeviceId, out CourtSeat holder) &&
+            bool taken = candidate.Exclusive &&
+                roster.TryFindClaim(candidate.ProfileId, candidate.DeviceId, out CourtSeat holder) &&
                 !holder.Equals(seat);
             if (!taken)
             {

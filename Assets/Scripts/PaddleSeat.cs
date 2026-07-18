@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Pong
 {
@@ -11,6 +12,7 @@ namespace Pong
         [SerializeField] private SeatRole role;
         [SerializeField] private PlayerPaddleInput humanInput;
         [SerializeField] private ComputerPaddleController computerInput;
+        [SerializeField] private TouchPaddleInput touchInput;
         [SerializeField] private SpriteRenderer paddleRenderer;
         [SerializeField] private SpriteRenderer glowRenderer;
 
@@ -24,7 +26,13 @@ namespace Pong
         // resolved lazily because a vacant seat is configured while its object is inactive
         private PaddleMovement Movement => movement != null ? movement : movement = GetComponent<PaddleMovement>();
 
-        public void Configure(SeatAssignment assignment, InputProfileDefinition profile, float lengthScale)
+        public void Configure(
+            SeatAssignment assignment,
+            InputActionAsset controls,
+            InputProfileDefinition profile,
+            float lengthScale,
+            CourtRegion region
+        )
         {
             gameObject.SetActive(assignment.IsOccupied);
             if (!assignment.IsOccupied)
@@ -34,12 +42,19 @@ namespace Pong
 
             Movement.SetLengthScale(lengthScale);
             bool human = assignment.Occupant == SeatOccupant.Human;
-            humanInput.enabled = human;
+            bool dragged = human && profile != null && profile.Kind == InputProfileKind.Touch;
+
+            humanInput.enabled = human && !dragged;
+            touchInput.enabled = dragged;
             computerInput.enabled = !human;
 
-            if (human)
+            if (dragged)
             {
-                humanInput.Bind(profile, assignment.DeviceId);
+                touchInput.Bind(region);
+            }
+            else if (human)
+            {
+                humanInput.Bind(controls, profile, assignment.DeviceId);
             }
         }
     }
